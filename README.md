@@ -24,8 +24,3 @@ Se planea crear una aplicación web, con el fin de realizar las distintas compra
 ## Estructura del repositorio
 
 Se utiliza un sistema de carpetas en el cuál se abarcaran diferentes elementos esenciales para el desarrollo del proyecto. En el caso del diseño hay una carpeta llamada "design" la cual contendrá un diagrama del diseño de la base de datos y diferentes mockups del diseño de la aplicación.
-
-## License
-
-Copyrigth 2022. , Cristopher Hernández Calderón cristopher.hernandezcalderon@ucr.ac.cr, Sebastián Rodríguez Tencio sebastian.rodrigueztencio@ucr.ac.cr, Yordi Robles Siles yordi.robles@ucr.ac.cr, 
-Gabriel González Flores gabriel.gonzalezflores@ucr.ac.cr, James Araya Rodríguez james.araya@ucr.ac.cr. Universidad de Costa Rica. CC BY 4.0
