@@ -8,5 +8,9 @@ namespace LoCoMPro_LV.Models
         [Required]
         [StringLength(100, MinimumLength = 2)]
         public string NameProduct { get; set; }
+
+        public ICollection<Record> Record { get; set; }
+
+        public ICollection<Associated> Associated { get; set;}
     }
 }

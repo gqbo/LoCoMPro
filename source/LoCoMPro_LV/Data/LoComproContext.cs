@@ -17,6 +17,8 @@ namespace LoCoMPro_LV.Data
         public DbSet<GeneratorUser> GeneratorUsers { get; set; }
         public DbSet<Record> Records { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Associated> Associated { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -28,6 +30,7 @@ namespace LoCoMPro_LV.Data
             builder.Entity<GeneratorUser>().ToTable("GeneratorUser");
             builder.Entity<Record>().ToTable("Record");
             builder.Entity<Category>().ToTable("Category");
+            builder.Entity<Associated>().ToTable("Associated");
 
             builder.Entity<ApplicationUser>().HasKey(e => e.UserName);
             builder.Entity<ApplicationUser>().Property(e => e.UserName).IsRequired();
@@ -47,7 +50,10 @@ namespace LoCoMPro_LV.Data
                 .HasKey(ca => new {ca.NameCategory});
 
             builder.Entity<Record>()
-                .HasKey(r => new { r.NameRecord, r.RecordDate });
+                .HasKey(r => new { r.NameGenerator, r.RecordDate });
+            
+            builder.Entity<Associated>()
+                .HasKey(a => new { a.NameProduct, a.NameCategory });
 
             builder.Entity<ApplicationUser>()
                 .HasOne(c => c.Canton)
@@ -74,10 +80,25 @@ namespace LoCoMPro_LV.Data
                 .WithMany(r => r.Record)
                 .HasForeignKey(r => new { r.NameGenerator });
 
+            builder.Entity<Record>()
+                .HasOne(c => c.Product)
+                .WithMany(r => r.Record)
+                .HasForeignKey(r => new { r.NameProduct });
+
             builder.Entity<Category>()
                 .HasOne(ca => ca.TopCategory)
                 .WithMany(ca => ca.Categories)
                 .HasForeignKey(ca => new { ca.NameTopCategory});
+
+            builder.Entity<Associated>()
+                .HasOne(ca => ca.Product)
+                .WithMany(a => a.Associated)
+                .HasForeignKey(a => new { a.NameProduct});
+
+            builder.Entity<Associated>()
+                .HasOne(ca => ca.Category)
+                .WithMany(a => a.Associated)
+                .HasForeignKey(a => new { a.NameCategory});
 
             builder.Entity<ApplicationUser>().Ignore(e => e.Id);
             builder.Entity<ApplicationUser>().Ignore(e => e.PhoneNumber);

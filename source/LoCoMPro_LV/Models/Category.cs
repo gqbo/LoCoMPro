@@ -15,5 +15,7 @@ namespace LoCoMPro_LV.Models
         public Category TopCategory { get; set; }
 
         public ICollection<Category> Categories { get; set;}
+
+        public ICollection<Associated> Associated { get; set;}
     }
 }
