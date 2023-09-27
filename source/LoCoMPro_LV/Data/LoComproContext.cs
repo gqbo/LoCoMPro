@@ -15,6 +15,7 @@ namespace LoCoMPro_LV.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<GeneratorUser> GeneratorUsers { get; set; }
+        public DbSet<Record> Records { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -24,6 +25,7 @@ namespace LoCoMPro_LV.Data
             builder.Entity<Product>().ToTable("Product");
             builder.Entity<Store>().ToTable("Store");
             builder.Entity<GeneratorUser>().ToTable("GeneratorUser");
+            builder.Entity<Record>().ToTable("Record");
 
             builder.Entity<ApplicationUser>().HasKey(e => e.UserName);
             builder.Entity<ApplicationUser>().Property(e => e.UserName).IsRequired();
@@ -56,6 +58,16 @@ namespace LoCoMPro_LV.Data
                 .HasOne(c => c.Canton)
                 .WithMany(s => s.Store)
                 .HasForeignKey(s => new { s.NameProvince, s.NameCanton });
+
+            builder.Entity<Record>()
+                .HasOne(c => c.Store)
+                .WithMany(r => r.Record)
+                .HasForeignKey(r => new { r.NameStore });
+
+            builder.Entity<Record>()
+                .HasOne(c => c.GeneratorUser)
+                .WithMany(r => r.Record)
+                .HasForeignKey(r => new { r.NameGenerator });
 
             builder.Entity<ApplicationUser>().Ignore(e => e.Id);
             builder.Entity<ApplicationUser>().Ignore(e => e.PhoneNumber);

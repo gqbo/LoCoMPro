@@ -10,5 +10,7 @@ namespace LoCoMPro_LV.Models
         public string UserName { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
+
+        public ICollection<Record> Record { get; set; }
     }
 }

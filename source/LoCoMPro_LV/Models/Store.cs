@@ -14,5 +14,7 @@ namespace LoCoMPro_LV.Models
         public  string NameCanton { get; set; }
 
         public Canton Canton { get; set; }
+
+        public ICollection<Record> Record { get; set; }
     }
 }
