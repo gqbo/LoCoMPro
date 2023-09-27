@@ -111,7 +111,7 @@ namespace LoCoMPro_LV.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -120,7 +120,7 @@ namespace LoCoMPro_LV.Migrations
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        column: x => x.UserName,
                         principalTable: "AspNetUsers",
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
@@ -133,14 +133,14 @@ namespace LoCoMPro_LV.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false)
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        column: x => x.UserName,
                         principalTable: "AspNetUsers",
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
@@ -150,12 +150,12 @@ namespace LoCoMPro_LV.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserName, x.RoleId });
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
@@ -164,7 +164,7 @@ namespace LoCoMPro_LV.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        column: x => x.UserName,
                         principalTable: "AspNetUsers",
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
@@ -174,17 +174,17 @@ namespace LoCoMPro_LV.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserName, x.LoginProvider, x.Name });
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        column: x => x.UserName,
                         principalTable: "AspNetUsers",
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
@@ -203,14 +203,14 @@ namespace LoCoMPro_LV.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
+                name: "IX_AspNetUserClaims_UserName",
                 table: "AspNetUserClaims",
-                column: "UserId");
+                column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
+                name: "IX_AspNetUserLogins_UserName",
                 table: "AspNetUserLogins",
-                column: "UserId");
+                column: "UserName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
