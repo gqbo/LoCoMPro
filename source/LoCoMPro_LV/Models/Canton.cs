@@ -15,5 +15,6 @@ namespace LoCoMPro_LV.Models
         public string NameProvince { get; set; }
         public Province Province { get; set; }
         public ICollection<ApplicationUser> ApplicationUser { get; set; }
+        public ICollection<Store> Store { get; set; }
     }
 }
