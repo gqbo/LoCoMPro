@@ -12,10 +12,15 @@ namespace LoCoMPro_LV.Data
         }
 
         public DbSet<Province> Provinces { get; set; }
+        public DbSet<Product> Products { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Province>().ToTable("Province");
+            builder.Entity<Product>().ToTable("Product");
 
             builder.Entity<ApplicationUser>().HasKey(e => e.UserName);
             builder.Entity<ApplicationUser>().Property(e => e.UserName).IsRequired();
@@ -33,7 +38,6 @@ namespace LoCoMPro_LV.Data
                 .WithMany(e => e.ApplicationUser)
                 .HasForeignKey(e => new { e.NameProvince, e.NameCanton });
 
-            builder.Entity<Province>().ToTable("Province");
 
             builder.Entity<ApplicationUser>().Ignore(e => e.Id);
             builder.Entity<ApplicationUser>().Ignore(e => e.PhoneNumber);
