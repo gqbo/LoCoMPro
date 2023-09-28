@@ -20,6 +20,12 @@ namespace LoCoMPro_LV.Models
         [StringLength(100, MinimumLength = 2)]
         public string NameStore { get; set; }
 
+        [StringLength(50, MinimumLength = 2)]
+        public  string NameProvince { get; set; }
+
+        [StringLength(50, MinimumLength = 2)]
+        public  string NameCanton { get; set; }
+
         [StringLength(100, MinimumLength = 2)]
         public string NameProduct { get; set; }
 

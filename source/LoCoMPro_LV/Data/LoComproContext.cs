@@ -12,6 +12,7 @@ namespace LoCoMPro_LV.Data
         }
 
         public DbSet<Province> Provinces { get; set; }
+        public DbSet<Canton> Cantons { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<GeneratorUser> GeneratorUsers { get; set; }
@@ -25,6 +26,7 @@ namespace LoCoMPro_LV.Data
             base.OnModelCreating(builder);
 
             builder.Entity<Province>().ToTable("Province");
+            builder.Entity<Canton>().ToTable("Cantons");
             builder.Entity<Product>().ToTable("Product");
             builder.Entity<Store>().ToTable("Store");
             builder.Entity<GeneratorUser>().ToTable("GeneratorUser");
@@ -44,7 +46,7 @@ namespace LoCoMPro_LV.Data
                 .HasKey(c => new { c.NameProvince, c.NameCanton});
 
             builder.Entity<Store>()
-                .HasKey(s => new {s.NameStore});
+                .HasKey(s => new {s.NameStore, s.NameProvince, s.NameCanton});
 
             builder.Entity<Category>()
                 .HasKey(ca => new {ca.NameCategory});
@@ -73,7 +75,7 @@ namespace LoCoMPro_LV.Data
             builder.Entity<Record>()
                 .HasOne(c => c.Store)
                 .WithMany(r => r.Record)
-                .HasForeignKey(r => new { r.NameStore });
+                .HasForeignKey(r => new { r.NameStore, r.NameProvince, r.NameCanton });
 
             builder.Entity<Record>()
                 .HasOne(c => c.GeneratorUser)
