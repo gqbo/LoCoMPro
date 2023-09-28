@@ -1,26 +1,73 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+.navbar {
+    padding: 4mm;
+    background-color: #114358;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    height: 90px;
 }
 
-a {
-  color: #0077cc;
+.navbar-collapse {
+    align-items: center;
+    justify-content: space-between;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.nav-link, .navbar-brand {
+    color: #FFF !important;
+}
+!important
+
+.nav-link {
+    font-family: 'Roboto' !important;
+    font-size: 20px !important;
+    font-style: normal !important;
+    font-weight: 300 !important;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.navbar-brand {
+    font-family: 'Belleza' !important;
+    font-size: 45px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: normal !important;
+    text-decoration-line: underline !important;
+    font-weight: 300 !important;
+}
+
+.navbar_button {
+    font-size: 18px;
+    color: #e1e1e1;
+    cursor: pointer;
+    position: relative;
+    border: none;
+    background: none;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: color;
+}
+
+.navbar_button:focus, .navbar_button:hover {
+    color: #fff;
+}
+
+.navbar_button:focus:after, .navbar_button:hover:after {
+    width: 100%;
+    left: 0%;
+}
+
+.navbar_button:after {
+    content: "";
+    pointer-events: none;
+    bottom: -2px;
+    left: 50%;
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: #fff;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: width, left;
 }
 
 .border-top {
