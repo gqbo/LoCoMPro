@@ -126,7 +126,7 @@ namespace LoCoMPro_LV.Data
             {
                 new Product{NameProduct = "Apple Iphone 11 64gb"},
                 new Product{NameProduct = "Apple Iphone 12 64gb"},
-                new Product{NameProduct = "Apple Iphone 13 120gb"},
+                new Product{NameProduct = "Apple Iphone 13 128gb"},
                 new Product{NameProduct = "Terreneitor"},
                 new Product{NameProduct = "Pantalón bershka gris"}
             };
@@ -315,6 +315,89 @@ namespace LoCoMPro_LV.Data
                     AccessFailedCount = 0},
             };
             context.ApplicationUsers.AddRange(application_user);
+            context.SaveChanges();
+
+            var generator_user = new GeneratorUser[]{
+                new GeneratorUser{UserName = "brad", ApplicationUser = application_user[0]},
+                new GeneratorUser{UserName = "cristopher", ApplicationUser = application_user[1]},
+                new GeneratorUser{UserName = "gabriel", ApplicationUser = application_user[2]},
+                new GeneratorUser{UserName = "james", ApplicationUser = application_user[3]},
+                new GeneratorUser{UserName = "keanu", ApplicationUser = application_user[4]},
+                new GeneratorUser{UserName = "natalie", ApplicationUser = application_user[5]},
+                new GeneratorUser{UserName = "sebastian", ApplicationUser = application_user[6]},
+                new GeneratorUser{UserName = "yordi", ApplicationUser = application_user[7]},
+                new GeneratorUser{UserName = "emma", ApplicationUser = application_user[8]},
+                new GeneratorUser{UserName = "anne", ApplicationUser = application_user[9]}
+            };
+
+            context.GeneratorUsers.AddRange(generator_user);
+            context.SaveChanges();
+
+            var records = new Record[]{
+                new Record{NameGenerator="anne", GeneratorUser = generator_user[0], RecordDate = DateTime.Parse("2022-1-18"), Price = 250000,
+                    NameStore = "Ishop", NameProvince = "San José", NameCanton = "Tibás", NameProduct = "Apple Iphone 11 64gb", Store = stores[0], Product = products[0]},
+
+                new Record{NameGenerator="brad", GeneratorUser = generator_user[1], RecordDate = DateTime.Parse("2023-8-27"), Price = 275000,
+                    NameStore = "Ishop", NameProvince = "Puntarenas", NameCanton = "Puntarenas", NameProduct = "Apple Iphone 11 64gb", Store = stores[3], Product = products[0]},
+
+                new Record{NameGenerator="cristopher", GeneratorUser = generator_user[2], RecordDate = DateTime.Parse("2021-3-11"), Price = 255000,
+                    NameStore = "Ishop", NameProvince = "San José", NameCanton = "Tibás", NameProduct = "Apple Iphone 11 64gb", Store = stores[0], Product = products[0]},
+
+                new Record{NameGenerator="emma", GeneratorUser = generator_user[3], RecordDate = DateTime.Parse("2022-2-12"), Price = 350000,
+                    NameStore = "Ishop", NameProvince = "San José", NameCanton = "Tibás", NameProduct = "Apple Iphone 12 64gb", Store = stores[0], Product = products[1]},
+
+                new Record{NameGenerator="gabriel", GeneratorUser = generator_user[4],  RecordDate = DateTime.Parse("2021-2-12"), Price = 375000,
+                    NameStore = "Ishop", NameProvince = "San José", NameCanton = "Tibás", NameProduct = "Apple Iphone 12 64gb", Store = stores[0], Product = products[1]},
+
+                new Record{NameGenerator="james",GeneratorUser = generator_user[5],  RecordDate = DateTime.Parse("2021-2-12"), Price = 455000,
+                    NameStore = "Ishop", NameProvince = "Limón", NameCanton = "Guácimo", NameProduct = "Apple Iphone 13 128gb", Store = stores[6], Product = products[2]},
+
+                new Record{NameGenerator="keanu", GeneratorUser = generator_user[6], RecordDate = DateTime.Parse("2023-4-25"), Price = 50000,
+                    NameStore = "Toys", NameProvince = "Cartago", NameCanton = "Turrialba", NameProduct = "Terreneitor", Store = stores[5], Product = products[3]},
+
+                new Record{NameGenerator="natalie",GeneratorUser = generator_user[7],  RecordDate = DateTime.Parse("2023-5-10"), Price = 70000,
+                    NameStore = "Toys", NameProvince = "Cartago", NameCanton = "Turrialba", NameProduct = "Terreneitor", Store = stores[5], Product = products[3]},
+
+                new Record{NameGenerator="sebastian",GeneratorUser = generator_user[8], RecordDate = DateTime.Parse("2023-9-7"), Price = 60000,
+                    NameStore = "Toys", NameProvince = "Guanacaste", NameCanton = "Santa Cruz", NameProduct = "Terreneitor", Store = stores[8], Product = products[3]},
+
+                new Record{NameGenerator="yordi",GeneratorUser = generator_user[9], RecordDate = DateTime.Parse("2022-2-15"), Price = 20000,
+                    NameStore = "Bershka", NameProvince = "Heredia", NameCanton = "Heredia", NameProduct = "Pantalón bershka gris", Store = stores[1], Product = products[4]},
+
+                new Record{NameGenerator="Maria007",GeneratorUser = generator_user[0], RecordDate = DateTime.Parse("2022-2-21"), Price = 22000,
+                    NameStore = "Bershka", NameProvince = "Heredia", NameCanton = "Heredia", NameProduct = "Pantalón bershka gris", Store = stores[1], Product = products[4]},
+
+                new Record{NameGenerator="BrayanCS",GeneratorUser = generator_user[0], RecordDate = DateTime.Parse("2022-2-16"), Price = 27000,
+                    NameStore = "Bershka", NameProvince = "Alajuela", NameCanton = "Zarcero", NameProduct = "Pantalón bershka gris", Store = stores[4], Product = products[4]},
+
+                new Record{NameGenerator="MelissaUnU",GeneratorUser = generator_user[0], RecordDate = DateTime.Parse("2022-3-4"), Price = 23000,
+                    NameStore = "Bershka", NameProvince = "San José", NameCanton = "Desamparados", NameProduct = "Pantalón bershka gris", Store = stores[7], Product = products[4]},
+            };
+            context.Records.AddRange(records);
+            context.SaveChanges();
+
+            var categories = new Category[]
+            {
+                new Category{NameCategory = "Carros", NameTopCategory = "Juguetes"},
+                new Category{NameCategory = "Ropa", NameTopCategory = "Moda"},
+                new Category{NameCategory = "Pantalon", NameTopCategory = "Ropa"},
+                new Category{NameCategory = "Celulares", NameTopCategory = "Tecnologia"},
+                new Category{NameCategory = "Juguetes"},
+                new Category{NameCategory = "Moda"},
+                new Category{NameCategory = "Tecnologia"}
+            };
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
+
+            var associated = new Associated[]
+            {
+                new Associated{NameProduct = "Apple Iphone 11 64gb" , NameCategory = "Celulares", Product = products[0], Category = categories[3]},
+                new Associated{NameProduct = "Apple Iphone 12 64gb" , NameCategory = "Celulares", Product = products[1], Category = categories[3]},
+                new Associated{NameProduct = "Apple Iphone 13 128gb" , NameCategory = "Celulares", Product = products[2], Category = categories[3]},
+                new Associated{NameProduct = "Terreneitor" , NameCategory = "Carros", Product = products[3], Category = categories[0]},
+                new Associated{NameProduct = "Pantalón bershka gris" , NameCategory = "Pantalon", Product = products[4], Category = categories[1]}
+            };
+            context.Associated.AddRange(associated);
             context.SaveChanges();
         }
     }
