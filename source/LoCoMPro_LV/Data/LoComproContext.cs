@@ -15,11 +15,11 @@ namespace LoCoMPro_LV.Data
         public DbSet<Canton> Cantons { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Store> Stores { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<GeneratorUser> GeneratorUsers { get; set; }
         public DbSet<Record> Records { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Associated> Associated { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

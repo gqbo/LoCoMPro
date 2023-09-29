@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LoCoMPro_LV.Migrations
 {
     /// <inheritdoc />
-    public partial class Create_User_Canton_Province : Migration
+    public partial class Create_Models : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,6 +23,34 @@ namespace LoCoMPro_LV.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    NameCategory = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NameTopCategory = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.NameCategory);
+                    table.ForeignKey(
+                        name: "FK_Category_Category_NameTopCategory",
+                        column: x => x.NameTopCategory,
+                        principalTable: "Category",
+                        principalColumn: "NameCategory");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Product",
+                columns: table => new
+                {
+                    NameProduct = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product", x => x.NameProduct);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,7 +86,31 @@ namespace LoCoMPro_LV.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Canton",
+                name: "Associated",
+                columns: table => new
+                {
+                    NameProduct = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NameCategory = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Associated", x => new { x.NameProduct, x.NameCategory });
+                    table.ForeignKey(
+                        name: "FK_Associated_Category_NameCategory",
+                        column: x => x.NameCategory,
+                        principalTable: "Category",
+                        principalColumn: "NameCategory",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Associated_Product_NameProduct",
+                        column: x => x.NameProduct,
+                        principalTable: "Product",
+                        principalColumn: "NameProduct",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cantons",
                 columns: table => new
                 {
                     NameCanton = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -66,9 +118,9 @@ namespace LoCoMPro_LV.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Canton", x => new { x.NameProvince, x.NameCanton });
+                    table.PrimaryKey("PK_Cantons", x => new { x.NameProvince, x.NameCanton });
                     table.ForeignKey(
-                        name: "FK_Canton_Province_NameProvince",
+                        name: "FK_Cantons_Province_NameProvince",
                         column: x => x.NameProvince,
                         principalTable: "Province",
                         principalColumn: "NameProvince",
@@ -99,10 +151,29 @@ namespace LoCoMPro_LV.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.UserName);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_Canton_NameProvince_NameCanton",
+                        name: "FK_AspNetUsers_Cantons_NameProvince_NameCanton",
                         columns: x => new { x.NameProvince, x.NameCanton },
-                        principalTable: "Canton",
+                        principalTable: "Cantons",
                         principalColumns: new[] { "NameProvince", "NameCanton" });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Store",
+                columns: table => new
+                {
+                    NameStore = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NameProvince = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NameCanton = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Store", x => new { x.NameStore, x.NameProvince, x.NameCanton });
+                    table.ForeignKey(
+                        name: "FK_Store_Cantons_NameProvince_NameCanton",
+                        columns: x => new { x.NameProvince, x.NameCanton },
+                        principalTable: "Cantons",
+                        principalColumns: new[] { "NameProvince", "NameCanton" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,7 +182,7 @@ namespace LoCoMPro_LV.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -120,7 +191,7 @@ namespace LoCoMPro_LV.Migrations
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserName,
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
@@ -133,14 +204,14 @@ namespace LoCoMPro_LV.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserName,
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
@@ -150,12 +221,12 @@ namespace LoCoMPro_LV.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserName, x.RoleId });
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
@@ -164,7 +235,7 @@ namespace LoCoMPro_LV.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserName,
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
@@ -174,20 +245,71 @@ namespace LoCoMPro_LV.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserName, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "UserName",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GeneratorUser",
+                columns: table => new
+                {
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GeneratorUser", x => x.UserName);
+                    table.ForeignKey(
+                        name: "FK_GeneratorUser_AspNetUsers_UserName",
                         column: x => x.UserName,
                         principalTable: "AspNetUsers",
                         principalColumn: "UserName",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Record",
+                columns: table => new
+                {
+                    NameGenerator = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    RecordDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Price = table.Column<float>(type: "real", nullable: false),
+                    NameStore = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NameProvince = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NameCanton = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NameProduct = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Record", x => new { x.NameGenerator, x.RecordDate });
+                    table.ForeignKey(
+                        name: "FK_Record_GeneratorUser_NameGenerator",
+                        column: x => x.NameGenerator,
+                        principalTable: "GeneratorUser",
+                        principalColumn: "UserName",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Record_Product_NameProduct",
+                        column: x => x.NameProduct,
+                        principalTable: "Product",
+                        principalColumn: "NameProduct");
+                    table.ForeignKey(
+                        name: "FK_Record_Store_NameStore_NameProvince_NameCanton",
+                        columns: x => new { x.NameStore, x.NameProvince, x.NameCanton },
+                        principalTable: "Store",
+                        principalColumns: new[] { "NameStore", "NameProvince", "NameCanton" });
                 });
 
             migrationBuilder.CreateIndex(
@@ -203,14 +325,14 @@ namespace LoCoMPro_LV.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserName",
+                name: "IX_AspNetUserClaims_UserId",
                 table: "AspNetUserClaims",
-                column: "UserName");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserName",
+                name: "IX_AspNetUserLogins_UserId",
                 table: "AspNetUserLogins",
-                column: "UserName");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
@@ -233,6 +355,31 @@ namespace LoCoMPro_LV.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Associated_NameCategory",
+                table: "Associated",
+                column: "NameCategory");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Category_NameTopCategory",
+                table: "Category",
+                column: "NameTopCategory");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Record_NameProduct",
+                table: "Record",
+                column: "NameProduct");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Record_NameStore_NameProvince_NameCanton",
+                table: "Record",
+                columns: new[] { "NameStore", "NameProvince", "NameCanton" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Store_NameProvince_NameCanton",
+                table: "Store",
+                columns: new[] { "NameProvince", "NameCanton" });
         }
 
         /// <inheritdoc />
@@ -254,13 +401,31 @@ namespace LoCoMPro_LV.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Associated");
+
+            migrationBuilder.DropTable(
+                name: "Record");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Category");
+
+            migrationBuilder.DropTable(
+                name: "GeneratorUser");
+
+            migrationBuilder.DropTable(
+                name: "Product");
+
+            migrationBuilder.DropTable(
+                name: "Store");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Canton");
+                name: "Cantons");
 
             migrationBuilder.DropTable(
                 name: "Province");
