@@ -4,7 +4,21 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="SearchString">Buscar producto:</label>
+                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <div>
+                    <input type="submit" value="Buscar" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

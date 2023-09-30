@@ -1,0 +1,77 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Records.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="SearchString">Nombre del Producto:</label>
+                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <div>
+                    <input type="submit" value="Buscar" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].Store)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Record)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.NameProduct)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Store.NameStore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecordDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Store.Canton.Province.NameProvince)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Store.Canton.NameCanton)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
