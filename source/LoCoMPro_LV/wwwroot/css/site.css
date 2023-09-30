@@ -21,3 +21,71 @@ body {
     margin-bottom: 60px;
     background-color: #f1ece7;
 }
+
+.navbar {
+    padding: 4mm;
+    background-color: #114358;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    height: 90px;
+}
+
+.navbar-collapse {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-link, .navbar-brand {
+    color: #FFF !important;
+}
+
+.nav-link {
+    font-family: 'Roboto' !important;
+    font-size: 20px !important;
+    font-style: normal !important;
+    font-weight: 300 !important;
+}
+
+.navbar-brand {
+    font-family: 'Belleza' !important;
+    font-size: 45px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: normal !important;
+    text-decoration-line: underline !important;
+    font-weight: 300 !important;
+}
+
+.navbar_button {
+    font-size: 18px;
+    color: #e1e1e1;
+    cursor: pointer;
+    position: relative;
+    border: none;
+    background: none;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: color;
+}
+
+.navbar_button:focus, .navbar_button:hover {
+    color: #fff;
+}
+
+    .navbar_button:focus:after, .navbar_button:hover:after {
+        width: 100%;
+        left: 0%;
+    }
+
+.navbar_button:after {
+    content: "";
+    pointer-events: none;
+    bottom: -2px;
+    left: 50%;
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: #fff;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: width, left;
+}
