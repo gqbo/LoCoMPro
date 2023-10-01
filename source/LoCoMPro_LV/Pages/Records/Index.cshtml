@@ -49,29 +49,31 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Record)
+        @foreach (var firstItem in Model.Record)
         {
+
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Product.NameProduct)
-
+                    @Html.DisplayFor(modelItem => firstItem.NameProduct)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.NameStore)
+                    @Html.DisplayFor(modelItem => firstItem.NameStore)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RecordDate)
+                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.Canton.Province.NameProvince)
+                    @Html.DisplayFor(modelItem => firstItem.NameProvince)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.Canton.NameCanton)
+                    @Html.DisplayFor(modelItem => firstItem.NameCanton)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Html.DisplayFor(modelItem => firstItem.Price)
                 </td>
             </tr>
         }
+
     </tbody>
+
 </table>
