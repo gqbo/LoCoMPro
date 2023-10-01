@@ -12,6 +12,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<LoComproContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LoComproContext") ?? throw new InvalidOperationException("Connection string 'SchoolContext' not found.")));
 
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<LoComproContext>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
