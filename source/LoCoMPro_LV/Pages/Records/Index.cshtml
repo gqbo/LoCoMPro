@@ -1,0 +1,60 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Records.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].GeneratorUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].Store)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].Product)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Record) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GeneratorUser.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Store.NameStore)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.NameProduct)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
