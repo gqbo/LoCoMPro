@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,11 +11,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<LoComproContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("LoComproContext") ?? throw new InvalidOperationException("Connection string 'LoComproContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LoComproContext") ?? throw new InvalidOperationException("Connection string 'SchoolContext' not found.")));
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<LoComproContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.Password.RequiredLength = 6;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredUniqueChars = 1;
+    options.Password.RequireDigit = true;
+}).AddEntityFrameworkStores<LoComproContext>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<LoComproContext>();
+    DbInitializer.Initialize(context);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

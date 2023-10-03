@@ -71,8 +71,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
             [Display(Name = "Usuario")]
             public string UserName { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "La contraseña debe tener una longitud mínima de 6 caracteres y no puede exceder los 100 caracteres.", MinimumLength = 6)]
+            [Required(ErrorMessage = "La contraseña es obligatoria.")]
             [DataType(DataType.Password)]
             [Display(Name = "Contraseña")]
             public string Password { get; set; }
@@ -126,7 +125,23 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
                 }
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    //ModelState.AddModelError(string.Empty, error.Description);
+                    if (error.Code == "PasswordRequiresDigit")
+                    {
+                        ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un número.");
+                    }
+                    else if (error.Code == "PasswordTooShort")
+                    {
+                        ModelState.AddModelError(string.Empty, "La contraseña debe tener una longitud mínima de 6 caracteres.");
+                    }
+                    else if (error.Code == "PasswordRequiresUniqueChars")
+                    {
+                        ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un carácter único.");
+                    }
+                    else if (!Input.Password.Any(char.IsUpper))
+                    {
+                        ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un carácter en mayúscula.");
+                    }
                 }
             }
 
