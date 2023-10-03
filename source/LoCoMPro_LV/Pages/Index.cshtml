@@ -4,21 +4,22 @@
     ViewData["Title"] = "Home page";
 }
 
-<form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+<div class="container container-index index align-items-center">
     <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="SearchString">Buscar producto:</label>
-                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label>&nbsp;</label>
-                <div>
-                    <input type="submit" value="Buscar" class="btn btn-primary" />
+        <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+            <div class="col buscar-form">
+                <div class="form-group">
+                    <label class="searchString" for="SearchString">Nombre del producto</label>
+                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
                 </div>
             </div>
-        </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <div class="form-group">
+                    <div>
+                        <input class="search_button btn btn-primary" type="submit" value="Buscar" />
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>

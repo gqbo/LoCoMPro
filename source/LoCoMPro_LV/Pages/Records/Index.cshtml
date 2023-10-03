@@ -5,45 +5,42 @@
     ViewData["Title"] = "Index";
 }
 
-<form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+<div class="container container-search index align-items-center">
     <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="SearchString">Nombre del Producto:</label>
-                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label>&nbsp;</label>
-                <div>
-                    <input type="submit" value="Buscar" class="btn btn-primary" />
+        <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+            <div class="col buscar-form">
+                <div class="form-group">
+                    <label class="searchString" for="SearchString">Nombre del producto</label>
+                    <div class="input-group mb-3">
+                        <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
+                        <input class=" loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar">
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</form>
+</div>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Product)
+                Producto
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Store)
+                Establecimiento
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                Fecha de Registro
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
+                Provincia
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
+                Cantón
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Price)
+                Precio
             </th>
             <th></th>
         </tr>
