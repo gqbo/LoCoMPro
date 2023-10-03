@@ -10,16 +10,35 @@
             <div class="col buscar-form">
                 <div class="form-group">
                     <label class="searchString" for="SearchString">Nombre del producto</label>
-                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
+                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
                 </div>
             </div>
             <div class="col d-flex justify-content-center align-items-center">
                 <div class="form-group">
                     <div>
-                        <input class="search_button btn btn-primary" type="submit" value="Buscar" />
+                        <input class="search_button btn btn-primary" type="submit" value="Buscar" disabled id="searchButton" />
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("searchButton");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
+</script>
+
+

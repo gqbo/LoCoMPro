@@ -5,6 +5,7 @@
     ViewData["Title"] = "Index";
 }
 
+
 <div class="container container-search index align-items-center">
     <div class="row">
         <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
@@ -12,8 +13,8 @@
                 <div class="form-group">
                     <label class="searchString" for="SearchString">Nombre del producto</label>
                     <div class="input-group mb-3">
-                        <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
-                        <input class=" loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar">
+                        <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                        <input class="loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar" disabled>
                     </div>
                 </div>
             </div>
@@ -21,26 +22,47 @@
     </div>
 </div>
 
+
+<script>
+    // Asegura que la función "toggleSearchButton()" se ejecute al cargar la página.
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    // Habilita o deshabilita el botón de búsqueda según si el campo de texto está vacío o no.
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("button-addon2");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
+</script>
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                Producto
+                @Html.DisplayNameFor(model => model.Record[0].NameProduct)
             </th>
             <th>
-                Establecimiento
+                @Html.DisplayNameFor(model => model.Record[0].NameStore)
             </th>
             <th>
-                Fecha de Registro
+                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
             </th>
             <th>
-                Provincia
+                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
             </th>
             <th>
-                Cantón
+                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
             </th>
             <th>
-                Precio
+                @Html.DisplayNameFor(model => model.Record[0].Price)
             </th>
             <th></th>
         </tr>
