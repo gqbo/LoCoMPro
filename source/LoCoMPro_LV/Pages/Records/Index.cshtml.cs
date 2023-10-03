@@ -1,10 +1,20 @@
-﻿using LoCoMPro_LV.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 
-namespace LoCoMPro_LV.Pages
+namespace LoCoMPro_LV.Pages.Records
 {
     public class IndexModel : PageModel
     {
@@ -30,12 +40,19 @@ namespace LoCoMPro_LV.Pages
                 recordsQuery = recordsQuery.Where(s => s.NameProduct.Contains(SearchString));
             }
 
-            Record = await recordsQuery
-                .Include(r => r.GeneratorUser)
-                .Include(r => r.Product)
-                .Include(r => r.Store)
-                .Include(r => r.Store.Canton.Province)
+            var groupedRecordsQuery = from record in recordsQuery
+                                      group record by new
+                                      { record.NameProduct, record.NameStore, record.NameCanton, record.NameProvince } into recordGroup
+                                      orderby recordGroup.Key.NameProduct descending
+                                      select recordGroup;
+
+            Record = await groupedRecordsQuery
+                .Select(group => group.OrderByDescending(r => r.RecordDate).FirstOrDefault())
                 .ToListAsync();
+
         }
+
+
     }
 }
+
