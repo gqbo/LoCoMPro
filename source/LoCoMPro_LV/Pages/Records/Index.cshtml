@@ -95,7 +95,7 @@
         var provinceDropdown = document.getElementById("Province");
         var cantonDropdown = document.getElementById("Canton");
 
-        // Obtiene las opciones de cantones para cada provincia
+        // Opciones de cantones para cada provincia
         var cantonsByProvince = {
             "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
             "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],
@@ -109,26 +109,28 @@
         // Función para actualizar las opciones del dropdown de cantones
         function actualizarDropdownCantones() {
             var selectedProvince = provinceDropdown.value;
-            cantonDropdown.innerHTML = ''; // Limpiar opciones anteriores
+            cantonDropdown.innerHTML = ''; // Limpia todas las opciones anteriores
 
             var defaultOption = document.createElement("option");
             defaultOption.value = "";
             defaultOption.text = "Todos";
             cantonDropdown.appendChild(defaultOption);
 
-            // Agregar las opciones de cantones basadas en la provincia seleccionada
-            cantonsByProvince[selectedProvince].forEach(function (canton) {
-                var option = document.createElement("option");
-                option.value = canton;
-                option.text = canton;
-                cantonDropdown.appendChild(option);
-            });
+            // Verificar si selectedProvince está definido y existe en cantonsByProvince
+            if (selectedProvince && cantonsByProvince[selectedProvince]) {
+                // Agregar las opciones de cantones basadas en la provincia seleccionada
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
         }
 
-        // Agregar un manejador de eventos de cambio al dropdown de provincias
+        // Maneja eventos de cambio al dropdown de provincias
         provinceDropdown.addEventListener("change", actualizarDropdownCantones);
 
-        // Llamar a la función para inicializar el dropdown de cantones con la selección inicial
         actualizarDropdownCantones();
     });
 </script>

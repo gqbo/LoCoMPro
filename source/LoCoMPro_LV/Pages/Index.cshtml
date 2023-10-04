@@ -114,20 +114,23 @@
         // Función para actualizar las opciones del dropdown de cantones
         function actualizarDropdownCantones() {
             var selectedProvince = provinceDropdown.value;
-            cantonDropdown.innerHTML = ''; // Limpiar opciones anteriores
+            cantonDropdown.innerHTML = ''; // Limpiar todas las opciones anteriores
 
             var defaultOption = document.createElement("option");
             defaultOption.value = "";
             defaultOption.text = "Todos";
             cantonDropdown.appendChild(defaultOption);
 
-            // Agregar las opciones de cantones basadas en la provincia seleccionada
-            cantonsByProvince[selectedProvince].forEach(function (canton) {
-                var option = document.createElement("option");
-                option.value = canton;
-                option.text = canton;
-                cantonDropdown.appendChild(option);
-            });
+            // Verificar si selectedProvince está definido y existe en cantonsByProvince
+            if (selectedProvince && cantonsByProvince[selectedProvince]) {
+                // Agregar las opciones de cantones basadas en la provincia seleccionada
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
         }
 
         // Agregar un manejador de eventos de cambio al dropdown de provincias
