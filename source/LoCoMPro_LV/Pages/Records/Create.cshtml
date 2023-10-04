@@ -1,64 +1,56 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Records.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Registro";
 }
 
-<h1>Create</h1>
+<h1>Crear Registro</h1>
 
-<h4>Record</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Record.NameGenerator" class="control-label"></label>
-                <select asp-for="Record.NameGenerator" class ="form-control" asp-items="ViewBag.NameGenerator"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.RecordDate" class="control-label"></label>
-                <input asp-for="Record.RecordDate" class="form-control" />
-                <span asp-validation-for="Record.RecordDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.Description" class="control-label"></label>
-                <input asp-for="Record.Description" class="form-control" />
-                <span asp-validation-for="Record.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.Price" class="control-label"></label>
-                <input asp-for="Record.Price" class="form-control" />
-                <span asp-validation-for="Record.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameStore" class="control-label"></label>
-                <select asp-for="Record.NameStore" class ="form-control" asp-items="ViewBag.NameStore"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameProvince" class="control-label"></label>
-                <select asp-for="Record.NameProvince" class ="form-control" asp-items="ViewBag.NameProvince"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameCanton" class="control-label"></label>
-                <select asp-for="Record.NameCanton" class ="form-control" asp-items="ViewBag.NameCanton"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameProduct" class="control-label"></label>
-                <select asp-for="Record.NameProduct" class ="form-control" asp-items="ViewBag.NameProduct"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Record.NameGenerator"></label>
+        <input asp-for="Record.NameGenerator" class="form-control" />
+        <span asp-validation-for="Record.NameGenerator"></span>
     </div>
-</div>
+    <div class="form-group">
+        <label asp-for="Record.RecordDate"></label>
+        <input asp-for="Record.RecordDate" class="form-control" />
+        <span asp-validation-for="Record.RecordDate"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Record.Description"></label>
+        <input asp-for="Record.Description" class="form-control" />
+        <span asp-validation-for="Record.Description"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Record.Price"></label>
+        <input asp-for="Record.Price" class="form-control" />
+        <span asp-validation-for="Record.Price"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Record.NameStore"></label>
+        <input asp-for="Record.NameStore" class="form-control" />
+        <span asp-validation-for="Record.NameStore"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Record.NameProvince"></label>
+        <input asp-for="Record.NameProvince" class="form-control" />
+        <span asp-validation-for="Record.NameProvince"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Record.NameCanton"></label>
+        <input asp-for="Record.NameCanton" class="form-control" />
+        <span asp-validation-for="Record.NameCanton"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Record.NameProduct"></label>
+        <input asp-for="Record.NameProduct" class="form-control" />
+        <span asp-validation-for="Record.NameProduct"></span>
+    </div>
+    <!-- Agrega campos adicionales del formulario aquí -->
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<a asp-page="./Index">Volver a la lista</a>
+
