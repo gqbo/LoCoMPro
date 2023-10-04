@@ -1,9 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -16,9 +21,24 @@ namespace LoCoMPro_LV.Pages.Records
             _context = context;
         }
 
-        public IActionResult OnGet()
+        //  public IList<Record> Record { get; set; } = default!;
+        public SelectList Provinces { get; set; }
+
+        public SelectList Cantons { get; set; }
+        
+     
+
+        public async Task OnGetAsync()
         {
-            return Page();
+
+            // Se cargan las listas de provincias, cantones y las diferentes categorías
+            var provinces = await _context.Provinces.ToListAsync();
+            var cantons = await _context.Cantons.ToListAsync();
+            
+            // Se crea un SelectList para provincias y categorías
+            Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
+            Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
+            
         }
 
         [BindProperty]
@@ -56,7 +76,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             // Solicitar info del usuario registrado
 
-            // Record.GeneratorUser = XXXXXXXXXX
+                     // Record.GeneratorUser = XXXXXXXXXX
 
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();

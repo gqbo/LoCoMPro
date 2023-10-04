@@ -28,14 +28,16 @@
         <span asp-validation-for="Record.NameStore"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Record.NameProvince"></label>
-        <input asp-for="Record.NameProvince" class="form-control" />
-        <span asp-validation-for="Record.NameProvince"></span>
+        <label for="Province">Provincia</label>
+        <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control">
+            <option value="">Todas</option>
+        </select>
     </div>
     <div class="form-group">
-        <label asp-for="Record.NameCanton"></label>
-        <input asp-for="Record.NameCanton" class="form-control" />
-        <span asp-validation-for="Record.NameCanton"></span>
+        <label for="Canton">Cantón</label>
+        <select id="Canton" name="Record.NameCanton" asp-items="Model.Cantons" class="form-control">
+            <option value="">Todos</option>
+        </select>
     </div>
     <div class="form-group">
         <label asp-for="Record.NameProduct"></label>
@@ -49,3 +51,48 @@
 
 <a asp-page="./Index">Volver a la lista</a>
 
+
+
+<script>
+    // Espera a que el documento esté completamente cargado
+    document.addEventListener("DOMContentLoaded", function () {
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+
+        // Obtiene las opciones de cantones para cada provincia
+        var cantonsByProvince = {
+            "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
+            "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],
+            "Heredia": ["Heredia", "Barva", "Santo Domingo", "Santa Bárbara", "San Rafael", "San Isidro", "Belén", "Flores", "San Pablo", "Sarapiquí"],
+            "Cartago": ["Cartago", "Paraíso", "La Unión", "Jiménez", "Turrialba", "Alvarado", "Oreamuno", "El Guarco"],
+            "Puntarenas": ["Puntarenas", "Esparza", "Buenos Aires", "Montes de Oro", "Osa", "Quepos", "Golfito", "Coto Brus", "Parrita", "Corredores", "Garabito", "Puerto Jiménez", "Monte Verde"],
+            "Guanacaste": ["Liberia", "Nicoya", "Santa Cruz", "Bagaces", "Carrillo", "Cañas", "Abangares", "Tilarán", "Nandayure", "La Cruz", "Hojancha"],
+            "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"]
+        };
+
+        // Función para actualizar las opciones del dropdown de cantones
+        function actualizarDropdownCantones() {
+            var selectedProvince = provinceDropdown.value;
+            cantonDropdown.innerHTML = ''; // Limpiar opciones anteriores
+
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Todos";
+            cantonDropdown.appendChild(defaultOption);
+
+            // Agregar las opciones de cantones basadas en la provincia seleccionada
+            cantonsByProvince[selectedProvince].forEach(function (canton) {
+                var option = document.createElement("option");
+                option.value = canton;
+                option.text = canton;
+                cantonDropdown.appendChild(option);
+            });
+        }
+
+        // Agregar un manejador de eventos de cambio al dropdown de provincias
+        provinceDropdown.addEventListener("change", actualizarDropdownCantones);
+
+        // Llamar a la función para inicializar el dropdown de cantones con la selección inicial
+        actualizarDropdownCantones();
+    });
+</script>
