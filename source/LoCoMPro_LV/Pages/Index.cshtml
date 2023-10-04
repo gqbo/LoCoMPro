@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Inicio - LoCoMPro";
 }
 
 <script>
@@ -14,53 +14,71 @@
     };
 </script>
 
-<form method="get" asp-page="/Records/Index">
+<div class="container container-index index align-items-center">
     <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="SearchString">Buscar producto</label>
-                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label>&nbsp;</label>
-                <div>
-                    <input type="submit" value="Buscar" class="btn btn-primary" formmethod="get" />
+        <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+            <div class="col buscar-form">
+                <div class="form-group">
+                    <label class="searchString" for="SearchString">Nombre del producto</label>
+                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
                     <input type="button" value="Búsqueda avanzada" class="btn btn-primary" id="ShowAdvancedSearch" />
                 </div>
             </div>
-        </div>
+            <div id="advancedSearch" style="display: none;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Province">Provincia</label>
+                            <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Canton">Cantón</label>
+                            <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Category">Categoría</label>
+                            <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <div class="form-group">
+                    <div>
+                        <input class="search_button btn btn-primary" type="submit" value="Buscar" disabled id="searchButton" />
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-    <div id="advancedSearch" style="display: none;">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="Province">Provincia</label>
-                    <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control">
-                        <option value="">Todas</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="Canton">Cantón</label>
-                    <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control">
-                        <option value="">Todos</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="Category">Categoría</label>
-                    <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control">
-                        <option value="">Todas</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("searchButton");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
+</script>
 
 <script>
     // Esperar a que el documento esté completamente cargado
@@ -77,12 +95,12 @@
 </script>
 
 <script>
-    // Esperar a que el documento esté completamente cargado
+    // Espera a que el documento esté completamente cargado
     document.addEventListener("DOMContentLoaded", function () {
-        var provinceDropdown = document.getElementById("ProvinceDropdown");
+        var provinceDropdown = document.getElementById("Province");
         var cantonDropdown = document.getElementById("Canton");
 
-        // Obtener las opciones de cantones para cada provincia
+        // Obtiene las opciones de cantones para cada provincia
         var cantonsByProvince = {
             "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
             "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],

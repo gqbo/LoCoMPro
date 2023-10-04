@@ -36,9 +36,9 @@ namespace LoCoMPro_LV.Pages.Records
                 return NotFound();
             }
             Record = record;
-            ViewData["NameGenerator"] = new SelectList(_context.GeneratorUsers, "UserName", "UserName");
-            ViewData["NameProduct"] = new SelectList(_context.Products, "NameProduct", "NameProduct");
-            ViewData["NameStore"] = new SelectList(_context.Stores, "NameStore", "NameStore");
+           ViewData["NameGenerator"] = new SelectList(_context.GeneratorUsers, "UserName", "UserName");
+           ViewData["NameProduct"] = new SelectList(_context.Products, "NameProduct", "NameProduct");
+           ViewData["NameStore"] = new SelectList(_context.Stores, "NameStore", "NameStore");
             return Page();
         }
 

@@ -20,7 +20,7 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         [BindProperty]
-        public Record Record { get; set; }
+      public Record Record { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string NameGenerator, DateTime RecordDate)
         {
@@ -35,7 +35,7 @@ namespace LoCoMPro_LV.Pages.Records
             {
                 return NotFound();
             }
-            else
+            else 
             {
                 Record = record;
             }

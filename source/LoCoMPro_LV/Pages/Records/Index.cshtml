@@ -11,53 +11,50 @@
     };
 </script>
 
-<form method="get" asp-page="/Records/Index">
+<div class="container container-search index align-items-center">
     <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="SearchString">Buscar producto</label>
-                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <div style="margin-bottom: 10px;"></div>
-                <div>
-                    <input type="submit" value="Buscar" class="btn btn-primary" formmethod="get" />
-                    <input type="button" value="Búsqueda avanzada" class="btn btn-primary" id="ShowAdvancedSearch" />
+        <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+            <div class="col buscar-form">
+                <div class="form-group">
+                    <label class="searchString" for="SearchString">Nombre del producto</label>
+                    <div class="input-group mb-3">
+                        <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                        <input class="loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar" disabled>
+                        <input type="button" value="Búsqueda avanzada" class="btn btn-primary" id="ShowAdvancedSearch"/>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div id="advancedSearch" style="display: none;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Province">Provincia</label>
+                            <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Canton">Cantón</label>
+                            <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Category">Categoría</label>
+                            <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-    <div id="advancedSearch" style="display: none;">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="Province">Provincia</label>
-                    <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control">
-                        <option value="">Todas</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="Canton">Cantón</label>
-                    <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control">
-                        <option value="">Todos</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="Category">Categoría</label>
-                    <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control">
-                        <option value="">Todas</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+</div>
 
 <script>
     // A la hora de presionar el botón de búsqueda avanzada, muestra las nuevas opciones
@@ -71,6 +68,25 @@
             }
         });
     });
+</script>
+
+<script>
+    // Asegura que la función "toggleSearchButton()" se ejecute al cargar la página.
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    // Habilita o deshabilita el botón de búsqueda según si el campo de texto está vacío o no.
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("button-addon2");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
 </script>
 
 <script>
@@ -117,14 +133,15 @@
     });
 </script>
 
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Product)
+                @Html.DisplayNameFor(model => model.Record[0].NameProduct)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Store)
+                @Html.DisplayNameFor(model => model.Record[0].NameStore)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].RecordDate)
@@ -142,30 +159,31 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Record)
+        @foreach (var firstItem in Model.Record)
         {
+
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Product.NameProduct)
-
+                    @Html.DisplayFor(modelItem => firstItem.NameProduct)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.NameStore)
+                    @Html.DisplayFor(modelItem => firstItem.NameStore)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RecordDate)
+                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.Canton.Province.NameProvince)
+                    @Html.DisplayFor(modelItem => firstItem.NameProvince)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.Canton.NameCanton)
+                    @Html.DisplayFor(modelItem => firstItem.NameCanton)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Html.DisplayFor(modelItem => firstItem.Price)
                 </td>
             </tr>
         }
-    </tbody>
-</table>
 
+    </tbody>
+
+</table>

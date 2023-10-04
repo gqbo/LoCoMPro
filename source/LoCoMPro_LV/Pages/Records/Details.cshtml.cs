@@ -19,23 +19,24 @@ namespace LoCoMPro_LV.Pages.Records
             _context = context;
         }
 
-        public Record Record { get; set; }
+      public Record Record { get; set; }
 
-        public async Task<IActionResult> OnGetDetails(string NameGenerator)
+        public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (NameGenerator == null || _context.Records == null)
+            if (id == null || _context.Records == null)
             {
                 return NotFound();
             }
 
-            var record = await _context.Records.FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator);
-
+            var record = await _context.Records.FirstOrDefaultAsync(m => m.NameGenerator == id);
             if (record == null)
             {
                 return NotFound();
             }
-
+            else 
+            {
             Record = record;
+            }
             return Page();
         }
     }

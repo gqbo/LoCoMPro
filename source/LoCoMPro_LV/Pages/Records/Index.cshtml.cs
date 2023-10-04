@@ -61,7 +61,6 @@ namespace LoCoMPro_LV.Pages.Records
             {
                 recordsQuery = recordsQuery.Where(s => s.NameProduct.Contains(SearchString));
             }
-
             if (!string.IsNullOrEmpty(SearchProvince))
             {
                 recordsQuery = recordsQuery.Where(s => s.NameProvince == SearchProvince);
@@ -77,13 +76,17 @@ namespace LoCoMPro_LV.Pages.Records
                 recordsQuery = recordsQuery.Where(s => s.Product.Associated.Any(c => c.NameCategory == SearchCategory));
             }
 
-            Record = await recordsQuery
-                .Include(r => r.GeneratorUser)
-                .Include(r => r.Product)
-                .Include(r => r.Store)
-                .Include(r => r.Store.Canton.Province)
-                .Include(r => r.Product.Associated)
+            var groupedRecordsQuery = from record in recordsQuery
+                                      group record by new
+                                      { record.NameProduct, record.NameStore, record.NameCanton, record.NameProvince } into recordGroup
+                                      orderby recordGroup.Key.NameProduct descending
+                                      select recordGroup;
+
+            Record = await groupedRecordsQuery
+                .Select(group => group.OrderByDescending(r => r.RecordDate).FirstOrDefault())
                 .ToListAsync();
+
         }
     }
 }
+
