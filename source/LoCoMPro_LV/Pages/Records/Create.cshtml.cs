@@ -38,11 +38,8 @@ namespace LoCoMPro_LV.Pages.Records
                 NameProvince = Record.NameProvince,
                 NameCanton = Record.NameCanton
             };
-
             _context.Stores.Add(newStore);
             await _context.SaveChangesAsync();
-
-
             Record.NameStore = newStore.NameStore;
 
             // Permite guardar productos en la tabla de productos y en los registros nuevos.
@@ -54,11 +51,15 @@ namespace LoCoMPro_LV.Pages.Records
             await _context.SaveChangesAsync();
             Record.NameProduct = newProduct.NameProduct;
 
+            // Captura la hora automaticamente
+            Record.RecordDate = DateTime.Now;
 
+            // Solicitar info del usuario registrado
+
+            // Record.GeneratorUser = XXXXXXXXXX
 
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();
-
             return RedirectToPage("./Index");
         }
     }

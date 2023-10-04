@@ -28,7 +28,10 @@ namespace LoCoMPro_LV.Pages.Records
                 Record = await _context.Records
                 .Include(r => r.GeneratorUser)
                 .Include(r => r.Product)
-                .Include(r => r.Store).ToListAsync();
+                .Include(r => r.Store)
+                .Include(r => r.Store.Canton.Province)
+                .Include(r => r.Product.Associated)
+                .ToListAsync();
             }
         }
     }

@@ -9,42 +9,50 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].GeneratorUser)
+                @Html.DisplayNameFor(model => model.Record[0].Product)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].Store)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Product)
+                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].Price)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Record) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GeneratorUser.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Store.NameStore)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.NameProduct)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Record)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.NameProduct)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Store.NameStore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecordDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Store.Canton.Province.NameProvince)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Store.Canton.NameCanton)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
