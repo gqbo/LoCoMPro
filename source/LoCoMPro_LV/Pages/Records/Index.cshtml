@@ -60,7 +60,7 @@
 </form>
 
 <script>
-    // A la hora de presionar el botón de búsqueda avanzada
+    // A la hora de presionar el botón de búsqueda avanzada, muestra las nuevas opciones
     document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("ShowAdvancedSearch").addEventListener("click", function () {
             var advancedSearch = document.getElementById("advancedSearch");
@@ -74,12 +74,12 @@
 </script>
 
 <script>
-    // Esperar a que el documento esté completamente cargado
+    // Espera a que el documento esté completamente cargado
     document.addEventListener("DOMContentLoaded", function () {
         var provinceDropdown = document.getElementById("Province");
         var cantonDropdown = document.getElementById("Canton");
 
-        // Obtener las opciones de cantones para cada provincia
+        // Obtiene las opciones de cantones para cada provincia
         var cantonsByProvince = {
             "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
             "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],

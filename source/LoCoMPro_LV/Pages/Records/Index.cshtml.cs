@@ -47,9 +47,9 @@ namespace LoCoMPro_LV.Pages.Records
                                     .Distinct()
                                     .ToListAsync();
 
-            // Crear SelectList para provincias y cantones
+            // Se crea un SelectList para provincias y categorías
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-            Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
+            /*Cantons = new SelectList(cantons, "NameCanton", "NameCanton");*/
             Categories = new SelectList(categories);
 
             // Resto de la lógica de búsqueda

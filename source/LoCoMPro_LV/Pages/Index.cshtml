@@ -4,7 +4,118 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<script>
+    // Limpiar los valores de búsqueda cuando se carga la página.
+    window.onload = function () {
+        document.getElementsByName("SearchString")[0].value = '';
+        document.getElementsByName("SearchProvince")[0].value = '';
+        document.getElementsByName("SearchCanton")[0].value = '';
+        document.getElementsByName("SearchCategory")[0].value = '';
+    };
+</script>
+
+<form method="get" asp-page="/Records/Index">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="SearchString">Buscar producto</label>
+                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <div>
+                    <input type="submit" value="Buscar" class="btn btn-primary" formmethod="get" />
+                    <input type="button" value="Búsqueda avanzada" class="btn btn-primary" id="ShowAdvancedSearch" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="advancedSearch" style="display: none;">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="Province">Provincia</label>
+                    <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control">
+                        <option value="">Todas</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="Canton">Cantón</label>
+                    <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="Category">Categoría</label>
+                    <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control">
+                        <option value="">Todas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    // Esperar a que el documento esté completamente cargado
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("ShowAdvancedSearch").addEventListener("click", function () {
+            var advancedSearch = document.getElementById("advancedSearch");
+            if (advancedSearch.style.display === "none" || advancedSearch.style.display === "") {
+                advancedSearch.style.display = "block";
+            } else {
+                advancedSearch.style.display = "none";
+            }
+        });
+    });
+</script>
+
+<script>
+    // Esperar a que el documento esté completamente cargado
+    document.addEventListener("DOMContentLoaded", function () {
+        var provinceDropdown = document.getElementById("ProvinceDropdown");
+        var cantonDropdown = document.getElementById("Canton");
+
+        // Obtener las opciones de cantones para cada provincia
+        var cantonsByProvince = {
+            "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
+            "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],
+            "Heredia": ["Heredia", "Barva", "Santo Domingo", "Santa Bárbara", "San Rafael", "San Isidro", "Belén", "Flores", "San Pablo", "Sarapiquí"],
+            "Cartago": ["Cartago", "Paraíso", "La Unión", "Jiménez", "Turrialba", "Alvarado", "Oreamuno", "El Guarco"],
+            "Puntarenas": ["Puntarenas", "Esparza", "Buenos Aires", "Montes de Oro", "Osa", "Quepos", "Golfito", "Coto Brus", "Parrita", "Corredores", "Garabito", "Puerto Jiménez", "Monte Verde"],
+            "Guanacaste": ["Liberia", "Nicoya", "Santa Cruz", "Bagaces", "Carrillo", "Cañas", "Abangares", "Tilarán", "Nandayure", "La Cruz", "Hojancha"],
+            "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"]
+        };
+
+        // Función para actualizar las opciones del dropdown de cantones
+        function actualizarDropdownCantones() {
+            var selectedProvince = provinceDropdown.value;
+            cantonDropdown.innerHTML = ''; // Limpiar opciones anteriores
+
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Todos";
+            cantonDropdown.appendChild(defaultOption);
+
+            // Agregar las opciones de cantones basadas en la provincia seleccionada
+            cantonsByProvince[selectedProvince].forEach(function (canton) {
+                var option = document.createElement("option");
+                option.value = canton;
+                option.text = canton;
+                cantonDropdown.appendChild(option);
+            });
+        }
+
+        // Agregar un manejador de eventos de cambio al dropdown de provincias
+        provinceDropdown.addEventListener("change", actualizarDropdownCantones);
+
+        // Llamar a la función para inicializar el dropdown de cantones con la selección inicial
+        actualizarDropdownCantones();
+    });
+</script>
