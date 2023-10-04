@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoCoMPro_LV.Migrations
 {
     [DbContext(typeof(LoComproContext))]
-    [Migration("20230927180846_Create_Associated")]
-    partial class Create_Associated
+    [Migration("20230929035034_Create_Models")]
+    partial class Create_Models
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,7 +121,7 @@ namespace LoCoMPro_LV.Migrations
 
                     b.HasKey("NameProvince", "NameCanton");
 
-                    b.ToTable("Canton");
+                    b.ToTable("Cantons", (string)null);
                 });
 
             modelBuilder.Entity("LoCoMPro_LV.Models.Category", b =>
@@ -187,9 +187,17 @@ namespace LoCoMPro_LV.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("NameCanton")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("NameProduct")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameProvince")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameStore")
                         .HasMaxLength(100)
@@ -202,7 +210,7 @@ namespace LoCoMPro_LV.Migrations
 
                     b.HasIndex("NameProduct");
 
-                    b.HasIndex("NameStore");
+                    b.HasIndex("NameStore", "NameProvince", "NameCanton");
 
                     b.ToTable("Record", (string)null);
                 });
@@ -213,13 +221,15 @@ namespace LoCoMPro_LV.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("NameCanton")
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("NameProvince")
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("NameStore");
+                    b.Property<string>("NameCanton")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("NameStore", "NameProvince", "NameCanton");
 
                     b.HasIndex("NameProvince", "NameCanton");
 
@@ -432,7 +442,7 @@ namespace LoCoMPro_LV.Migrations
 
                     b.HasOne("LoCoMPro_LV.Models.Store", "Store")
                         .WithMany("Record")
-                        .HasForeignKey("NameStore");
+                        .HasForeignKey("NameStore", "NameProvince", "NameCanton");
 
                     b.Navigation("GeneratorUser");
 
@@ -445,7 +455,9 @@ namespace LoCoMPro_LV.Migrations
                 {
                     b.HasOne("LoCoMPro_LV.Models.Canton", "Canton")
                         .WithMany("Store")
-                        .HasForeignKey("NameProvince", "NameCanton");
+                        .HasForeignKey("NameProvince", "NameCanton")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Canton");
                 });

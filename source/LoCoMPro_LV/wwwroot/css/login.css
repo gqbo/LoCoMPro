@@ -41,22 +41,22 @@ h1 {
     margin: 20px;
 }
 
-    .register_submit::before {
-        content: "";
-        background-color: #338CB7;
-        width: 0;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        transition: width 700ms ease-in-out;
-        display: inline-block;
-    }
+.register_submit::before {
+    content: "";
+    background-color: #338CB7;
+    width: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: width 700ms ease-in-out;
+    display: inline-block;
+}
 
-    .register_submit:hover::before {
-        width: 100%;
-    }
+.register_submit:hover::before {
+    width: 100%;
+}
 
 .register_form {
     max-width: 342px;
@@ -73,6 +73,6 @@ h1 {
     font-size: 50px;
 }
 
-    .out_button:focus, .out_button:hover {
-        color: #d0d0d0;
-    }
+.out_button:focus, .out_button:hover {
+    color: #d0d0d0;
+}
