@@ -3,12 +3,27 @@
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
+using System.Text.Encodings.Web;
+using System.Text;
+using LoCoMPro_LV.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+#nullable disable
+
+using System.ComponentModel.DataAnnotations;
+using System.Text.Encodings.Web;
+using System.Text;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace LoCoMPro_LV.Areas.Identity.Pages.Account
 {
@@ -95,6 +110,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
                 user.UserName = Input.UserName;
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+
 
                 await _userStore.SetUserNameAsync(user, user.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);

@@ -1,0 +1,74 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "LoCoMPro";
+}
+<div class="row">
+    <div class="col d-flex justify-content-center align-items-center">
+        <section>
+            <form id="account" method="post">
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <div class="col-12 d-flex justify-content-center">
+                            <h1>@ViewData["Title"]</h1>
+                        </div>
+                    </div>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <div class="mb-3 login_form">
+                            <label asp-for="Input.UserName" class="form-label">Usuario</label>
+                            <input asp-for="Input.UserName" class="form-control form-control-lg" autocomplete="username" aria-required="true" placeholder="Usuario" />
+                            <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <div class="mb-3 login_form">
+                            <label asp-for="Input.Password" class="form-label">Contraseña</label>
+                            <input asp-for="Input.Password" class="form-control form-control-lg" autocomplete="current-password" aria-required="true" placeholder="Contraseña" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <a id="forgot-password" asp-page="./ForgotPassword" class= "forgot_password">Olvidé mi contraseña</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <div class="checkbox mb-3">
+                            <label asp-for="Input.RememberMe" class="form-label">
+                                <input class="form-check-input" asp-for="Input.RememberMe" />
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <button class="register_submit btn btn-primary" type="submit">Iniciar sesión</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        ¿No tienes cuenta?
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Regístrate</a>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

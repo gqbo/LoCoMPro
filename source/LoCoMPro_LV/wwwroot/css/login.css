@@ -2,6 +2,15 @@
     background-color: #0A3143;
 }
 
+h1 {
+    padding: 50px;
+    color: #FFF;
+    font-family: Belleza;
+    font-size: 134px;
+    font-style: normal;
+    text-decoration-line: underline;
+}
+
 .register {
     background-color: #0A3143;
     display: flex;
@@ -51,6 +60,11 @@
 
 .register_form {
     max-width: 342px;
+}
+
+.login_form {
+    max-width: 350px;
+    width: 350px;
 }
 
 .out_button {
