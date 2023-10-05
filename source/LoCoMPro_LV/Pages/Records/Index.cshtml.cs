@@ -49,7 +49,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             // Se crea un SelectList para provincias y categorías
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-            /*Cantons = new SelectList(cantons, "NameCanton", "NameCanton");*/
+            Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
             Categories = new SelectList(categories);
 
             // Resto de la lógica de búsqueda
@@ -76,6 +76,7 @@ namespace LoCoMPro_LV.Pages.Records
                 recordsQuery = recordsQuery.Where(s => s.Product.Associated.Any(c => c.NameCategory == SearchCategory));
             }
 
+            // Se agrupan los registros por nombre del producto, nombre de la tienda, cantón y provincia.
             var groupedRecordsQuery = from record in recordsQuery
                                       group record by new
                                       { record.NameProduct, record.NameStore, record.NameCanton, record.NameProvince } into recordGroup
@@ -85,7 +86,9 @@ namespace LoCoMPro_LV.Pages.Records
             Record = await groupedRecordsQuery
                 .Select(group => group.OrderByDescending(r => r.RecordDate).FirstOrDefault())
                 .ToListAsync();
-
+            
+            // Se configura el valor de SearchCanton para mantener la selección actual a la hora de buscar.
+            SearchCanton = Request.Query["SearchCanton"];
         }
     }
 }

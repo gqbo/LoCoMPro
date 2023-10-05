@@ -170,3 +170,7 @@ body {
 .form-group_advanced {
     margin: 0px 20px 20px 20px;
 }
+
+.loupe-text{
+    margin: 16px 0px 0px 0px !important;
+}

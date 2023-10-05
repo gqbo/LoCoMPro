@@ -1,26 +1,19 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Records.IndexModel
 
-<!-- <script>
-    // Función encargada de limbiar los valores que se encuentren en la búsqueda a la hora de cargar la página.
-    window.onload = function () {
-        document.getElementsByName("SearchString")[0].value = '';
-        document.getElementsByName("SearchProvince")[0].value = '';
-        document.getElementsByName("SearchCanton")[0].value = '';
-        document.getElementsByName("SearchCategory")[0].value = '';
-    };
-</script> -->
-
 <div class="container container-search index align-items-center">
     <div class="row">
-        <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+        <form method="get" asp-page="/Records/Index" onsubmit="beforeFormSubmit()">
            <div class=" buscar-form">
                 <div class="col">
                     <div class="form-group">
                         <label class="searchString" for="SearchString">Nombre del producto</label>
                         <div class="row d-flex justify-content-center align-items-center">
                             <div class="col-10">
-                                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                <div class="input-group mb-3 loupe-text">
+                                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                    <input class=" loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar">
+                                </div>
                             </div>
                             <div class="col-2">
                                 <input type="button" value="Búsqueda avanzada" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,6 +133,44 @@
     });
 </script>
 
+<script>
+    // Almacena el valor seleccionado en una variable antes de enviar el formulario
+    document.addEventListener("DOMContentLoaded", function () {
+        var cantonDropdown = document.getElementById("Canton");
+        var selectedCanton = cantonDropdown.value;
+
+        document.querySelector("form").addEventListener("submit", function () {
+            // Agrega el valor seleccionado como un parámetro en la URL
+            var formAction = this.getAttribute("action");
+            var updatedAction = formAction + "?SearchCanton=" + encodeURIComponent(selectedCanton);
+            this.setAttribute("action", updatedAction);
+        });
+    });
+
+    // Restaurar el valor seleccionado después de que la página se haya vuelto a cargar
+    window.addEventListener('load', function () {
+        var cantonDropdown = document.getElementById("Canton");
+        var selectedCanton = getParameterByName("SearchCanton"); // Obtener el valor del parámetro de la URL
+
+        // Restaurar el valor seleccionado
+        if (selectedCanton) {
+            cantonDropdown.value = selectedCanton;
+        }
+    });
+
+    // Función para obtener un parámetro de la URL, en ese caso se utiliza para los cantones.
+    function getParameterByName(name, url) {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+</script>
 
 <table class="table">
     <thead>
