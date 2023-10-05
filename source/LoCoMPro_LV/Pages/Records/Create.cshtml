@@ -23,9 +23,8 @@
         <span asp-validation-for="Record.Price"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Record.NameStore"></label>
-        <input asp-for="Record.NameStore" class="form-control" />
-        <span asp-validation-for="Record.NameStore"></span>
+        <label for="Record.NameStore">Nombre de la Tienda</label>
+        <input id="NameStore" asp-for="Record.NameStore" class="form-control" />
     </div>
     <div class="form-group">
         <label for="Province">Provincia</label>
@@ -35,7 +34,7 @@
     </div>
     <div class="form-group">
         <label for="Canton">Cantón</label>
-        <select id="Canton" name="Record.NameCanton" asp-items="Model.Cantons" class="form-control">
+        <select id="Canton" name="Record.NameCanton" class="form-control">
             <option value="">Todos</option>
         </select>
     </div>
@@ -52,47 +51,40 @@
 <a asp-page="./Index">Volver a la lista</a>
 
 
+@section scripts{
+    <script>
+        // Espera a que el documento esté completamente cargado
+        document.addEventListener("DOMContentLoaded", function () {
+            var provinceDropdown = document.getElementById("Province");
+            var cantonDropdown = document.getElementById("Canton");
 
-<script>
-    // Espera a que el documento esté completamente cargado
-    document.addEventListener("DOMContentLoaded", function () {
-        var provinceDropdown = document.getElementById("Province");
-        var cantonDropdown = document.getElementById("Canton");
+            // Crear un objeto para almacenar cantones por provincia
+            var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
 
-        // Obtiene las opciones de cantones para cada provincia
-        var cantonsByProvince = {
-            "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
-            "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],
-            "Heredia": ["Heredia", "Barva", "Santo Domingo", "Santa Bárbara", "San Rafael", "San Isidro", "Belén", "Flores", "San Pablo", "Sarapiquí"],
-            "Cartago": ["Cartago", "Paraíso", "La Unión", "Jiménez", "Turrialba", "Alvarado", "Oreamuno", "El Guarco"],
-            "Puntarenas": ["Puntarenas", "Esparza", "Buenos Aires", "Montes de Oro", "Osa", "Quepos", "Golfito", "Coto Brus", "Parrita", "Corredores", "Garabito", "Puerto Jiménez", "Monte Verde"],
-            "Guanacaste": ["Liberia", "Nicoya", "Santa Cruz", "Bagaces", "Carrillo", "Cañas", "Abangares", "Tilarán", "Nandayure", "La Cruz", "Hojancha"],
-            "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"]
-        };
+            // Función para actualizar las opciones del dropdown de cantones
+            function actualizarDropdownCantones() {
+                var selectedProvince = provinceDropdown.value;
+                cantonDropdown.innerHTML = ''; // Limpiar opciones anteriores
 
-        // Función para actualizar las opciones del dropdown de cantones
-        function actualizarDropdownCantones() {
-            var selectedProvince = provinceDropdown.value;
-            cantonDropdown.innerHTML = ''; // Limpiar opciones anteriores
+                var defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.text = "Todos";
+                cantonDropdown.appendChild(defaultOption);
 
-            var defaultOption = document.createElement("option");
-            defaultOption.value = "";
-            defaultOption.text = "Todos";
-            cantonDropdown.appendChild(defaultOption);
+                // Agregar las opciones de cantones basadas en la provincia seleccionada
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
 
-            // Agregar las opciones de cantones basadas en la provincia seleccionada
-            cantonsByProvince[selectedProvince].forEach(function (canton) {
-                var option = document.createElement("option");
-                option.value = canton;
-                option.text = canton;
-                cantonDropdown.appendChild(option);
-            });
-        }
+            // Agregar un manejador de eventos de cambio al dropdown de provincias
+            provinceDropdown.addEventListener("change", actualizarDropdownCantones);
 
-        // Agregar un manejador de eventos de cambio al dropdown de provincias
-        provinceDropdown.addEventListener("change", actualizarDropdownCantones);
-
-        // Llamar a la función para inicializar el dropdown de cantones con la selección inicial
-        actualizarDropdownCantones();
-    });
-</script>
+            // Llamar a la función para inicializar el dropdown de cantones con la selección inicial
+            actualizarDropdownCantones();
+        });
+    </script>
+}

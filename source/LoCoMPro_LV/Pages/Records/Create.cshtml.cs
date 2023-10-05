@@ -24,22 +24,35 @@ namespace LoCoMPro_LV.Pages.Records
         //  public IList<Record> Record { get; set; } = default!;
         public SelectList Provinces { get; set; }
 
-        public SelectList Cantons { get; set; }
-        
-     
+
+        //public List<string> Cantons { get; set; }
+        public Dictionary<string, List<string>> Cantons { get; set; }
+        //public SelectList Cantons { get; set; }
+
 
         public async Task OnGetAsync()
         {
 
             // Se cargan las listas de provincias, cantones y las diferentes categorías
             var provinces = await _context.Provinces.ToListAsync();
-            var cantons = await _context.Cantons.ToListAsync();
-            
-            // Se crea un SelectList para provincias y categorías
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-            Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
-            
+        
+            var cantons = await _context.Cantons.ToListAsync();
+            Cantons = new Dictionary<string, List<string>>();
+
+            foreach (var canton in cantons)
+            {
+                if (!Cantons.ContainsKey(canton.NameProvince))
+                {
+                    Cantons[canton.NameProvince] = new List<string>();
+                }
+
+                Cantons[canton.NameProvince].Add(canton.NameCanton);
+            }
+
+
         }
+
 
         [BindProperty]
         public Record Record { get; set; }
