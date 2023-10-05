@@ -14,43 +14,45 @@
 <div class="container container-search index align-items-center">
     <div class="row">
         <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
-            <div class="col buscar-form form">
-                <div class="form-group">
-                    <label class="searchString" for="SearchString">Nombre del producto</label>
-                    <div class="row d-flex justify-content-center align-items-center">
-                        <div class="col-10">
-                            <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
-                        </div>
-                        <div class="col-2">
-                            <input type="button" value="Búsqueda avanzada" class="advanced_search btn btn-primary" id="ShowAdvancedSearch" />
+           <div class=" buscar-form">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="searchString" for="SearchString">Nombre del producto</label>
+                        <div class="row d-flex justify-content-center align-items-center">
+                            <div class="col-10">
+                                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                            </div>
+                            <div class="col-2">
+                                <input type="button" value="Búsqueda avanzada" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="advancedSearch" style="display: none;">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="Province">Provincia</label>
-                            <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control_advanced form-control">
-                                <option value="">Todas</option>
-                            </select>
+                <div id="advancedSearch" class="collapse">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Province">Provincia</label>
+                                <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control_advanced form-control">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="Canton">Cantón</label>
-                            <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control_advanced form-control">
-                                <option value="">Todos</option>
-                            </select>
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Canton">Cantón</label>
+                                <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control_advanced form-control">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="Category">Categoría</label>
-                            <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control_advanced form-control">
-                                <option value="">Todas</option>
-                            </select>
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Category">Categoría</label>
+                                <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control_advanced form-control">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
