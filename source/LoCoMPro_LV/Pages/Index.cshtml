@@ -20,16 +20,22 @@
             <div class="col buscar-form">
                 <div class="form-group">
                     <label class="searchString" for="SearchString">Nombre del producto</label>
-                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
-                    <input type="button" value="Búsqueda avanzada" class="btn btn-primary" id="ShowAdvancedSearch" />
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <div class="col-10">
+                            <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                        </div>
+                        <div class="col-2">
+                            <input type="button" value="Búsqueda avanzada" class="advanced_search btn btn-primary" id="ShowAdvancedSearch" />
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="advancedSearch" style="display: none;">
+                <div id="advancedSearch" style="display: none;">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="Province">Provincia</label>
-                            <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control">
+                            <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control_adavanced form-control">
                                 <option value="">Todas</option>
                             </select>
                         </div>
@@ -37,7 +43,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="Canton">Cantón</label>
-                            <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control">
+                            <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control_adavanced form-control">
                                 <option value="">Todos</option>
                             </select>
                         </div>
@@ -45,7 +51,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="Category">Categoría</label>
-                            <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control">
+                            <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control_adavanced form-control">
                                 <option value="">Todas</option>
                             </select>
                         </div>

@@ -1,7 +1,7 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Records.IndexModel
 
-<script>
+<!-- <script>
     // Función encargada de limbiar los valores que se encuentren en la búsqueda a la hora de cargar la página.
     window.onload = function () {
         document.getElementsByName("SearchString")[0].value = '';
@@ -9,18 +9,21 @@
         document.getElementsByName("SearchCanton")[0].value = '';
         document.getElementsByName("SearchCategory")[0].value = '';
     };
-</script>
+</script> -->
 
 <div class="container container-search index align-items-center">
     <div class="row">
         <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
-            <div class="col buscar-form">
+            <div class="col buscar-form form">
                 <div class="form-group">
                     <label class="searchString" for="SearchString">Nombre del producto</label>
-                    <div class="input-group mb-3">
-                        <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
-                        <input class="loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar" disabled>
-                        <input type="button" value="Búsqueda avanzada" class="btn btn-primary" id="ShowAdvancedSearch"/>
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <div class="col-10">
+                            <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                        </div>
+                        <div class="col-2">
+                            <input type="button" value="Búsqueda avanzada" class="advanced_search btn btn-primary" id="ShowAdvancedSearch" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,7 +32,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="Province">Provincia</label>
-                            <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control">
+                            <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control_advanced form-control">
                                 <option value="">Todas</option>
                             </select>
                         </div>
@@ -37,7 +40,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="Canton">Cantón</label>
-                            <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control">
+                            <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control_advanced form-control">
                                 <option value="">Todos</option>
                             </select>
                         </div>
@@ -45,7 +48,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="Category">Categoría</label>
-                            <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control">
+                            <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control_advanced form-control">
                                 <option value="">Todas</option>
                             </select>
                         </div>
