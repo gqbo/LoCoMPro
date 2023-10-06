@@ -22,16 +22,11 @@
         <input asp-for="Record.Price" class="form-control" />
         <span asp-validation-for="Record.Price"></span>
     </div>
-
-
     <div id="form-group">
         <label for="Store">Store</label>
 
-        <input name="Record.NameStore" id="Store" type="text" />
+        <input name="Record.NameStore" id="Store" type="text" class="form-control  />
     </div>
-   
-
-
     <div class="form-group">
         <label for="Province">Provincia</label>
         <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control">
@@ -44,12 +39,10 @@
             <option value="">Todos</option>
         </select>
     </div>
-
-
     <div id="form-group">
         <label for="Products">Products</label>
 
-        <input name="Record.NameProduct" id="Products" type="text" />
+        <input name="Record.NameProduct" id="Products" type="text" class="form-control  />
     </div>
     <!-- Agrega campos adicionales del formulario aquí -->
 
