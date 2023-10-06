@@ -15,42 +15,42 @@ namespace LoCoMPro_LV.Pages.Records
     public class CreateModel : PageModel
     {
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
-
         public CreateModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
         }
 
-        //  public IList<Record> Record { get; set; } = default!;
+
+        // Listas para almacenar los datos de las tablas y validar las funciones nuevas
         public SelectList Provinces { get; set; }
-
-
-        //public List<string> Cantons { get; set; }
         public Dictionary<string, List<string>> Cantons { get; set; }
-        //public SelectList Cantons { get; set; }
-
-
+        public List<string> Stores { get; set; }
+        public List<string> Product { get; set; }
         public async Task OnGetAsync()
         {
-
-            // Se cargan las listas de provincias, cantones y las diferentes categorías
+            // Se cargan las listas de Provincias
             var provinces = await _context.Provinces.ToListAsync();
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-        
+
+            // Se cargan las listas de Cantones
             var cantons = await _context.Cantons.ToListAsync();
             Cantons = new Dictionary<string, List<string>>();
-
             foreach (var canton in cantons)
             {
                 if (!Cantons.ContainsKey(canton.NameProvince))
                 {
                     Cantons[canton.NameProvince] = new List<string>();
                 }
-
                 Cantons[canton.NameProvince].Add(canton.NameCanton);
             }
 
-
+            // Se cargan las listas de Store
+            var stores = await _context.Stores.ToListAsync();
+            Stores = new List<string>();
+            foreach (var store in stores)
+            {
+                Stores.Add(store.NameStore);
+            }
         }
 
 
@@ -76,13 +76,24 @@ namespace LoCoMPro_LV.Pages.Records
             Record.NameStore = newStore.NameStore;
 
             // Permite guardar productos en la tabla de productos y en los registros nuevos.
-            var newProduct = new Product
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.NameProduct == Record.NameProduct);
+
+            if (existingProduct != null)
             {
-                NameProduct = Record.NameProduct
-            };
-            _context.Products.Add(newProduct);
-            await _context.SaveChangesAsync();
-            Record.NameProduct = newProduct.NameProduct;
+                // Si el producto ya existe, usa el producto existente en lugar de crear uno nuevo
+                Record.Product = existingProduct;
+            }
+            else
+            {
+                // Si el producto no existe, crea uno nuevo y agrégalo al registro
+                var newProduct = new Product
+                {
+                    NameProduct = Record.NameProduct
+                };
+                _context.Products.Add(newProduct);
+                await _context.SaveChangesAsync();
+                Record.Product = newProduct;
+            }
 
             // Captura la hora automaticamente
             Record.RecordDate = DateTime.Now;
