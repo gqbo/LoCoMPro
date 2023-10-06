@@ -28,8 +28,6 @@
         <label for="Store">Store</label>
 
         <input name="Record.NameStore" id="Store" type="text" />
-
-        <input type="submit" />
     </div>
    
 
@@ -40,17 +38,18 @@
             <option value="">Todas</option>
         </select>
     </div>
-
     <div class="form-group">
         <label for="Canton">Cantón</label>
         <select id="Canton" name="Record.NameCanton" class="form-control">
             <option value="">Todos</option>
         </select>
     </div>
-    <div class="form-group">
-        <label asp-for="Record.NameProduct"></label>
-        <input asp-for="Record.NameProduct" class="form-control" />
-        <span asp-validation-for="Record.NameProduct"></span>
+
+
+    <div id="form-group">
+        <label for="Products">Products</label>
+
+        <input name="Record.NameProduct" id="Products" type="text" />
     </div>
     <!-- Agrega campos adicionales del formulario aquí -->
 
@@ -106,6 +105,16 @@
             $("#Store").autocomplete({
 
                 source: data ,
+                minLength: 3 // Establece la longitud mínima de caracteres para activar el autocompletado
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var data = @Html.Raw(Json.Serialize(Model.Product)); //["White Oak", "White Pine", "Whine Sunflower", "White Rose"]
+            $("#Products").autocomplete({
+
+                source: data,
                 minLength: 3 // Establece la longitud mínima de caracteres para activar el autocompletado
             });
         });

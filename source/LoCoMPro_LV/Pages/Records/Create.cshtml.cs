@@ -51,6 +51,14 @@ namespace LoCoMPro_LV.Pages.Records
             {
                 Stores.Add(store.NameStore);
             }
+
+            // Se cargan las listas de Product
+            var products = await _context.Products.ToListAsync();
+            Product = new List<string>();
+            foreach (var prod in products)
+            {
+                Product.Add(prod.NameProduct);
+            }
         }
 
 
