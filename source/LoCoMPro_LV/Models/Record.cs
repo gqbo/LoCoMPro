@@ -8,6 +8,7 @@ namespace LoCoMPro_LV.Models
         [Required]
         
         [StringLength(256, MinimumLength = 2)]
+        [Display(Name = "Nombre de usuario")]
         public string NameGenerator { get; set; }
 
         [Display(Name = "Fecha de Registro")]
@@ -15,6 +16,7 @@ namespace LoCoMPro_LV.Models
         public DateTime RecordDate { get; set; }
 
         [StringLength(256, MinimumLength = 2)]
+        [Display(Name = "Descripción")]
         public string Description { get; set; }
 
         [Display(Name = "Precio")]

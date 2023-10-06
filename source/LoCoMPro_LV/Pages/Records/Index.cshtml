@@ -40,6 +40,8 @@
             searchButton.disabled = true;
         }
     }
+
+
 </script>
 
 
@@ -73,7 +75,7 @@
 
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => firstItem.NameProduct)
+                    <a asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator", asp-route-RecordDate="@firstItem.RecordDate">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => firstItem.NameStore)
