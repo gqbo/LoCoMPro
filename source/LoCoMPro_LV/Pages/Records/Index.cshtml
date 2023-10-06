@@ -1,10 +1,13 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Records.IndexModel
+@{
+    ViewData["Title"] = "Consulta";
+}
 
 <div class="container container-search index align-items-center">
     <div class="row">
         <form method="get" asp-page="/Records/Index" onsubmit="beforeFormSubmit()">
-           <div class=" buscar-form">
+            <div class=" buscar-form">
                 <div class="col">
                     <div class="form-group">
                         <label class="searchString" for="SearchString">Nombre del producto</label>
@@ -55,26 +58,37 @@
 </div>
 
 <script>
-    // A la hora de presionar el botón de búsqueda avanzada, muestra las nuevas opciones
     document.addEventListener("DOMContentLoaded", function () {
+        var advancedSearch = document.getElementById("advancedSearch");
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var categoryDropdown = document.getElementById("Category");
+
+        var isProvinceSelected = provinceDropdown.value !== "";
+        var isCantonSelected = cantonDropdown.value !== "";
+        var isCategorySelected = categoryDropdown.value !== "";
+
+        if (isProvinceSelected || isCantonSelected || isCategorySelected) {
+            advancedSearch.classList.add("show");
+        } else {
+            advancedSearch.classList.remove("show");
+        }
+
         document.getElementById("ShowAdvancedSearch").addEventListener("click", function () {
-            var advancedSearch = document.getElementById("advancedSearch");
-            if (advancedSearch.style.display === "none" || advancedSearch.style.display === "") {
-                advancedSearch.style.display = "block";
+            if (advancedSearch.classList.contains("show")) {
+                advancedSearch.classList.remove("show");
             } else {
-                advancedSearch.style.display = "none";
+                advancedSearch.classList.add("show");
             }
         });
     });
 </script>
 
 <script>
-    // Asegura que la función "toggleSearchButton()" se ejecute al cargar la página.
     window.addEventListener('DOMContentLoaded', (event) => {
         toggleSearchButton();
     });
 
-    // Habilita o deshabilita el botón de búsqueda según si el campo de texto está vacío o no.
     function toggleSearchButton() {
         const searchStringInput = document.getElementById("SearchString");
         const searchButton = document.getElementById("button-addon2");
@@ -88,12 +102,10 @@
 </script>
 
 <script>
-    // Espera a que el documento esté completamente cargado
     document.addEventListener("DOMContentLoaded", function () {
         var provinceDropdown = document.getElementById("Province");
         var cantonDropdown = document.getElementById("Canton");
 
-        // Opciones de cantones para cada provincia
         var cantonsByProvince = {
             "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
             "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],
@@ -104,19 +116,16 @@
             "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"]
         };
 
-        // Función para actualizar las opciones del dropdown de cantones
         function actualizarDropdownCantones() {
             var selectedProvince = provinceDropdown.value;
-            cantonDropdown.innerHTML = ''; // Limpia todas las opciones anteriores
+            cantonDropdown.innerHTML = '';
 
             var defaultOption = document.createElement("option");
             defaultOption.value = "";
             defaultOption.text = "Todos";
             cantonDropdown.appendChild(defaultOption);
 
-            // Verificar si selectedProvince está definido y existe en cantonsByProvince
             if (selectedProvince && cantonsByProvince[selectedProvince]) {
-                // Agregar las opciones de cantones basadas en la provincia seleccionada
                 cantonsByProvince[selectedProvince].forEach(function (canton) {
                     var option = document.createElement("option");
                     option.value = canton;
@@ -126,7 +135,6 @@
             }
         }
 
-        // Maneja eventos de cambio al dropdown de provincias
         provinceDropdown.addEventListener("change", actualizarDropdownCantones);
 
         actualizarDropdownCantones();
@@ -134,7 +142,6 @@
 </script>
 
 <script>
-    // Almacena el valor seleccionado en una variable antes de enviar el formulario
     document.addEventListener("DOMContentLoaded", function () {
         var cantonDropdown = document.getElementById("Canton");
         var selectedCanton = cantonDropdown.value;
@@ -147,10 +154,9 @@
         });
     });
 
-    // Restaurar el valor seleccionado después de que la página se haya vuelto a cargar
     window.addEventListener('load', function () {
         var cantonDropdown = document.getElementById("Canton");
-        var selectedCanton = getParameterByName("SearchCanton"); // Obtener el valor del parámetro de la URL
+        var selectedCanton = getParameterByName("SearchCanton");
 
         // Restaurar el valor seleccionado
         if (selectedCanton) {
@@ -158,7 +164,6 @@
         }
     });
 
-    // Función para obtener un parámetro de la URL, en ese caso se utiliza para los cantones.
     function getParameterByName(name, url) {
         if (!url) {
             url = window.location.href;

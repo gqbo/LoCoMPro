@@ -1,11 +1,10 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Inicio - LoCoMPro";
+    ViewData["Title"] = "Inicio";
 }
 
 <script>
-    // Limpiar los valores de búsqueda cuando se carga la página.
     window.onload = function () {
         document.getElementsByName("SearchString")[0].value = '';
         document.getElementsByName("SearchProvince")[0].value = '';
@@ -89,7 +88,6 @@
 </script>
 
 <script>
-    // Esperar a que el documento esté completamente cargado
     document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("ShowAdvancedSearch").addEventListener("click", function () {
             var advancedSearch = document.getElementById("advancedSearch");
@@ -103,12 +101,10 @@
 </script>
 
 <script>
-    // Espera a que el documento esté completamente cargado
     document.addEventListener("DOMContentLoaded", function () {
         var provinceDropdown = document.getElementById("Province");
         var cantonDropdown = document.getElementById("Canton");
 
-        // Obtiene las opciones de cantones para cada provincia
         var cantonsByProvince = {
             "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
             "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],
@@ -119,19 +115,16 @@
             "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"]
         };
 
-        // Función para actualizar las opciones del dropdown de cantones
         function actualizarDropdownCantones() {
             var selectedProvince = provinceDropdown.value;
-            cantonDropdown.innerHTML = ''; // Limpiar todas las opciones anteriores
+            cantonDropdown.innerHTML = '';
 
             var defaultOption = document.createElement("option");
             defaultOption.value = "";
             defaultOption.text = "Todos";
             cantonDropdown.appendChild(defaultOption);
 
-            // Verificar si selectedProvince está definido y existe en cantonsByProvince
             if (selectedProvince && cantonsByProvince[selectedProvince]) {
-                // Agregar las opciones de cantones basadas en la provincia seleccionada
                 cantonsByProvince[selectedProvince].forEach(function (canton) {
                     var option = document.createElement("option");
                     option.value = canton;
@@ -141,10 +134,8 @@
             }
         }
 
-        // Agregar un manejador de eventos de cambio al dropdown de provincias
         provinceDropdown.addEventListener("change", actualizarDropdownCantones);
 
-        // Llamar a la función para inicializar el dropdown de cantones con la selección inicial
         actualizarDropdownCantones();
     });
 </script>

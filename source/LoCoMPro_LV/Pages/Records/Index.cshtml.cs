@@ -39,7 +39,6 @@ namespace LoCoMPro_LV.Pages.Records
 
         public async Task OnGetAsync()
         {
-            // Se cargan las listas de provincias, cantones y las diferentes categorías
             var provinces = await _context.Provinces.ToListAsync();
             var cantons = await _context.Cantons.ToListAsync();
             var categories = await _context.Associated
@@ -47,16 +46,13 @@ namespace LoCoMPro_LV.Pages.Records
                                     .Distinct()
                                     .ToListAsync();
 
-            // Se crea un SelectList para provincias y categorías
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
             Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
             Categories = new SelectList(categories);
 
-            // Resto de la lógica de búsqueda
             var recordsQuery = from m in _context.Records
                                select m;
 
-            // Se solicitan los distintos datos a la base de datos, dependiendo de lo buscado.
             if (!string.IsNullOrEmpty(SearchString))
             {
                 recordsQuery = recordsQuery.Where(s => s.NameProduct.Contains(SearchString));
@@ -76,7 +72,6 @@ namespace LoCoMPro_LV.Pages.Records
                 recordsQuery = recordsQuery.Where(s => s.Product.Associated.Any(c => c.NameCategory == SearchCategory));
             }
 
-            // Se agrupan los registros por nombre del producto, nombre de la tienda, cantón y provincia.
             var groupedRecordsQuery = from record in recordsQuery
                                       group record by new
                                       { record.NameProduct, record.NameStore, record.NameCanton, record.NameProvince } into recordGroup

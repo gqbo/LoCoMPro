@@ -37,7 +37,6 @@ namespace LoCoMPro_LV.Pages
 
         public async Task OnGetAsync()
         {
-            // Se cargan las listas de provincias, cantones y las diferentes categorías
             var provinces = await _context.Provinces.ToListAsync();
             /*var cantons = await _context.Cantons.ToListAsync();*/
             var categories = await _context.Associated
@@ -45,12 +44,10 @@ namespace LoCoMPro_LV.Pages
                                     .Distinct()
                                     .ToListAsync();
 
-            // Se crea un SelectList para provincias y categorías
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
             /*Cantons = new SelectList(cantons, "NameCanton", "NameCanton");*/
             Categories = new SelectList(categories);
 
-            // Se solicitan los distintos datos a la base de datos, dependiendo de lo buscado.
             var recordsQuery = from m in _context.Records
                                select m;
 
