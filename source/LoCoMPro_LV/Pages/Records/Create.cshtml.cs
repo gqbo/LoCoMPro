@@ -24,7 +24,7 @@ namespace LoCoMPro_LV.Pages.Records
         // Listas para almacenar los datos de las tablas y validar las funciones nuevas
         public SelectList Provinces { get; set; }
         public Dictionary<string, List<string>> Cantons { get; set; }
-        public List<string> Stores { get; set; }
+        public HashSet<string> Stores { get; set; }
         public List<string> Product { get; set; }
         public async Task OnGetAsync()
         {
@@ -46,11 +46,12 @@ namespace LoCoMPro_LV.Pages.Records
 
             // Se cargan las listas de Store
             var stores = await _context.Stores.ToListAsync();
-            Stores = new List<string>();
+            Stores = new HashSet<string>();
             foreach (var store in stores)
             {
                 Stores.Add(store.NameStore);
             }
+            stores = stores.ToList();
 
             // Se cargan las listas de Product
             var products = await _context.Products.ToListAsync();
