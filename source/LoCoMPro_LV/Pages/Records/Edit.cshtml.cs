@@ -23,14 +23,14 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty]
         public Record Record { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string NameGenerator, DateTime RecordDate)
         {
-            if (id == null || _context.Records == null)
+            if (NameGenerator == null || RecordDate == null || _context.Records == null)
             {
                 return NotFound();
             }
 
-            var record =  await _context.Records.FirstOrDefaultAsync(m => m.NameGenerator == id);
+            var record = await _context.Records.FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator && m.RecordDate == RecordDate);
             if (record == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace LoCoMPro_LV.Pages.Records
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RecordExists(Record.NameGenerator))
+                if (!RecordExists(Record.NameGenerator, Record.RecordDate))
                 {
                     return NotFound();
                 }
@@ -72,9 +72,9 @@ namespace LoCoMPro_LV.Pages.Records
             return RedirectToPage("./Index");
         }
 
-        private bool RecordExists(string id)
+        private bool RecordExists(string NameGenerator, DateTime RecordDate)
         {
-          return _context.Records.Any(e => e.NameGenerator == id);
+            return _context.Records.Any(e => e.NameGenerator == NameGenerator && e.RecordDate == RecordDate);
         }
     }
 }
