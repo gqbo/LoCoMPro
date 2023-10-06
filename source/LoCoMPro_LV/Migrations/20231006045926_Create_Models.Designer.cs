@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoCoMPro_LV.Migrations
 {
     [DbContext(typeof(LoComproContext))]
-    [Migration("20230929035034_Create_Models")]
+    [Migration("20231006045926_Create_Models")]
     partial class Create_Models
     {
         /// <inheritdoc />
@@ -46,10 +46,14 @@ namespace LoCoMPro_LV.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(100)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(100)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -58,9 +62,11 @@ namespace LoCoMPro_LV.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NameCanton")
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameProvince")
+                        .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NormalizedEmail")
@@ -95,12 +101,12 @@ namespace LoCoMPro_LV.Migrations
             modelBuilder.Entity("LoCoMPro_LV.Models.Associated", b =>
                 {
                     b.Property<string>("NameProduct")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameCategory")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("NameProduct", "NameCategory");
 
@@ -127,12 +133,12 @@ namespace LoCoMPro_LV.Migrations
             modelBuilder.Entity("LoCoMPro_LV.Models.Category", b =>
                 {
                     b.Property<string>("NameCategory")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameTopCategory")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("NameCategory");
 
@@ -155,8 +161,8 @@ namespace LoCoMPro_LV.Migrations
             modelBuilder.Entity("LoCoMPro_LV.Models.Product", b =>
                 {
                     b.Property<string>("NameProduct")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("NameProduct");
 
@@ -184,16 +190,17 @@ namespace LoCoMPro_LV.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("NameCanton")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameProduct")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameProvince")
                         .HasMaxLength(50)
@@ -203,8 +210,8 @@ namespace LoCoMPro_LV.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.HasKey("NameGenerator", "RecordDate");
 
@@ -316,10 +323,12 @@ namespace LoCoMPro_LV.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -356,10 +365,12 @@ namespace LoCoMPro_LV.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -438,7 +449,9 @@ namespace LoCoMPro_LV.Migrations
 
                     b.HasOne("LoCoMPro_LV.Models.Product", "Product")
                         .WithMany("Record")
-                        .HasForeignKey("NameProduct");
+                        .HasForeignKey("NameProduct")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LoCoMPro_LV.Models.Store", "Store")
                         .WithMany("Record")

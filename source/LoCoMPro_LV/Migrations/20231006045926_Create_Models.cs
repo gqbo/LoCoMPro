@@ -29,8 +29,8 @@ namespace LoCoMPro_LV.Migrations
                 name: "Category",
                 columns: table => new
                 {
-                    NameCategory = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    NameTopCategory = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    NameCategory = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NameTopCategory = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,7 +46,7 @@ namespace LoCoMPro_LV.Migrations
                 name: "Product",
                 columns: table => new
                 {
-                    NameProduct = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    NameProduct = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,8 +89,8 @@ namespace LoCoMPro_LV.Migrations
                 name: "Associated",
                 columns: table => new
                 {
-                    NameProduct = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    NameCategory = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    NameProduct = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NameCategory = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,10 +132,10 @@ namespace LoCoMPro_LV.Migrations
                 columns: table => new
                 {
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(100)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(100)", nullable: true),
-                    NameProvince = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    NameCanton = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NameProvince = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NameCanton = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -201,8 +201,8 @@ namespace LoCoMPro_LV.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(256)", nullable: false)
                 },
@@ -246,8 +246,8 @@ namespace LoCoMPro_LV.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(256)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -284,12 +284,12 @@ namespace LoCoMPro_LV.Migrations
                 {
                     NameGenerator = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     RecordDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Price = table.Column<float>(type: "real", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
+                    Price = table.Column<double>(type: "float", nullable: false),
                     NameStore = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     NameProvince = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     NameCanton = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    NameProduct = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    NameProduct = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -304,7 +304,8 @@ namespace LoCoMPro_LV.Migrations
                         name: "FK_Record_Product_NameProduct",
                         column: x => x.NameProduct,
                         principalTable: "Product",
-                        principalColumn: "NameProduct");
+                        principalColumn: "NameProduct",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Record_Store_NameStore_NameProvince_NameCanton",
                         columns: x => new { x.NameStore, x.NameProvince, x.NameCanton },
