@@ -74,19 +74,30 @@ namespace LoCoMPro_LV.Pages.Records
             }
 
             // Permite guardar locales en la tabla de locales donde se incluye el local, provincia y canton.
-            var newStore = new Store
+            var existingStore = await _context.Stores.FirstOrDefaultAsync(s =>
+                s.NameStore == Record.NameStore &&
+                s.NameProvince == Record.NameProvince &&
+                s.NameCanton == Record.NameCanton);
+            if (existingStore != null)
             {
-                NameStore = Record.NameStore,
-                NameProvince = Record.NameProvince,
-                NameCanton = Record.NameCanton
-            };
-            _context.Stores.Add(newStore);
-            await _context.SaveChangesAsync();
-            Record.NameStore = newStore.NameStore;
+                Record.Store = existingStore;
+            }
+            else
+            {
+                var newStore = new Store
+                {
+                    NameStore = Record.NameStore,
+                    NameProvince = Record.NameProvince,
+                    NameCanton = Record.NameCanton
+                };
+                _context.Stores.Add(newStore);
+                await _context.SaveChangesAsync();
+                Record.NameStore = newStore.NameStore;
+            }
+            
 
             // Permite guardar productos en la tabla de productos y en los registros nuevos.
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.NameProduct == Record.NameProduct);
-
             if (existingProduct != null)
             {
                 // Si el producto ya existe, usa el producto existente en lugar de crear uno nuevo
