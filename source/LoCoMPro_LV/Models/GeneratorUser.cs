@@ -5,7 +5,7 @@ namespace LoCoMPro_LV.Models
     public class GeneratorUser
     {
         [Key]
-        [Required]
+        [Required(ErrorMessage = "La nombre de usuario es obligatoria.")]
         [StringLength(256, MinimumLength = 2)]
         public string UserName { get; set; }
 
