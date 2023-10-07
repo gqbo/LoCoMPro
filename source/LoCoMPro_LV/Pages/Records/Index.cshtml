@@ -180,6 +180,12 @@
                 @Html.DisplayNameFor(model => model.Record[0].NameStore)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
+            </th>
+            <th>
                 <a class="ordering-text" asp-page="./Index"
                    asp-route-SearchString="@Model.SearchString"
                    asp-route-SearchProvince="@Model.SearchProvince"
@@ -188,15 +194,6 @@
                    asp-route-sortOrder="@Model.DateTimeSort">
                     @Html.DisplayNameFor(model => model.Record[0].RecordDate)
                 </a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
             </th>
         </tr>
     </thead>
