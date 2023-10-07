@@ -25,7 +25,7 @@
                                 <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
                             </div>
                             <div class="col-2">
-                                <input type="button" value="Búsqueda avanzada" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                                <input type="button" value="Opciones avanzadas" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                             </div>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
             <div class="col d-flex justify-content-center align-items-center">
                 <div class="form-group">
                     <div>
-                        <input class="search_button btn btn-primary" type="submit" value="Buscar" disabled id="searchButton"/>
+                        <input class="search_button btn btn-primary" type="submit" value="Buscar" disabled id="searchButton" />
                     </div>
                 </div>
             </div>
@@ -85,19 +85,6 @@
             searchButton.disabled = true;
         }
     }
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("ShowAdvancedSearch").addEventListener("click", function () {
-            var advancedSearch = document.getElementById("advancedSearch");
-            if (advancedSearch.style.display === "none" || advancedSearch.style.display === "") {
-                advancedSearch.style.display = "block";
-            } else {
-                advancedSearch.style.display = "none";
-            }
-        });
-    });
 </script>
 
 <script>

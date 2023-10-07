@@ -174,3 +174,11 @@ body {
 .loupe-text{
     margin: 16px 0px 0px 0px !important;
 }
+
+.ordering-text {
+    color: black !important;
+}
+
+.ordering-text:hover {
+    color: #7d7d7d !important;
+}
