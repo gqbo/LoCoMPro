@@ -6,11 +6,11 @@ namespace LoCoMPro_LV.Models
     public class Canton
     {
         [Key]
-        [Required]
+        [Required(ErrorMessage = "El nombre del cantón es obligatorio.")]
         [StringLength(50, MinimumLength = 2)]
         public string NameCanton { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El nombre de la provincia es obligatorio.")]
         [StringLength(50, MinimumLength = 2)]
         public string NameProvince { get; set; }
         public Province Province { get; set; }
