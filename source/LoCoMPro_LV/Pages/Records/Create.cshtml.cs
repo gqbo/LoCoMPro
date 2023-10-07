@@ -125,6 +125,29 @@ namespace LoCoMPro_LV.Pages.Records
                 Record.Product = newProduct;
             }
 
+            // Captura las categorias y las almacena en associate y categories
+            var categoryName = Request.Form["NameCategory"].FirstOrDefault();
+
+            // Buscar o crear la categoría
+            var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.NameCategory == categoryName);
+            if (existingCategory == null)
+            {
+                existingCategory = new Category
+                {
+                    NameCategory = categoryName
+                };
+                _context.Categories.Add(existingCategory);
+            }
+
+            // Crear una nueva asociación en la tabla Associated
+            var newAssociated = new Associated
+            {
+                NameProduct = existingProduct.NameProduct,
+                NameCategory = existingCategory.NameCategory
+            };
+            _context.Associated.Add(newAssociated);
+
+
             // Captura la hora automaticamente
             Record.RecordDate = DateTime.Now;
 
