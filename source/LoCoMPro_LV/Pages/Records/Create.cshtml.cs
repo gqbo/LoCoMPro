@@ -130,25 +130,30 @@ namespace LoCoMPro_LV.Pages.Records
             // Captura las categorias y las almacena en associate y categories
             var categoryName = Request.Form["NameCategory"].FirstOrDefault();
 
-            // Buscar o crear la categoría
+            // Verificar si la categoría ya existe en la base de datos
             var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.NameCategory == categoryName);
+
+            // Crear una nueva categoría solo si no existe
             if (existingCategory == null)
             {
-                existingCategory = new Category
+                // La categoría no existe, crea una nueva categoría y guárdala en la base de datos
+                var newCategory = new Category
                 {
-                    NameCategory = categoryName
+                    NameCategory = categoryName, // Usar la categoría ingresada por el usuario
+                    NameTopCategory = null // Establecer NameTopCategory en null para la nueva categoría
                 };
-                _context.Categories.Add(existingCategory);
+                _context.Categories.Add(newCategory);
+                await _context.SaveChangesAsync(); // Guardar cambios en la base de datos
             }
 
             // Crear una nueva asociación en la tabla Associated
             var newAssociated = new Associated
             {
                 NameProduct = Record.NameProduct,
-                NameCategory = existingCategory.NameCategory
+                NameCategory = categoryName
             };
             _context.Associated.Add(newAssociated);
-
+            await _context.SaveChangesAsync();
 
             // Captura la hora automaticamente
             Record.RecordDate = DateTime.Now;
