@@ -174,3 +174,7 @@ body {
 .loupe-text{
     margin: 16px 0px 0px 0px !important;
 }
+
+.ordering-text {
+    color: black !important;
+}

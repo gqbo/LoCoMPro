@@ -19,7 +19,7 @@
                                 </div>
                             </div>
                             <div class="col-2">
-                                <input type="button" value="Búsqueda avanzada" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                                <input type="button" value="Opciones avanzadas" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                             </div>
                         </div>
                     </div>
@@ -73,14 +73,6 @@
         } else {
             advancedSearch.classList.remove("show");
         }
-
-        document.getElementById("ShowAdvancedSearch").addEventListener("click", function () {
-            if (advancedSearch.classList.contains("show")) {
-                advancedSearch.classList.remove("show");
-            } else {
-                advancedSearch.classList.add("show");
-            }
-        });
     });
 </script>
 
@@ -147,7 +139,6 @@
         var selectedCanton = cantonDropdown.value;
 
         document.querySelector("form").addEventListener("submit", function () {
-            // Agrega el valor seleccionado como un parámetro en la URL
             var formAction = this.getAttribute("action");
             var updatedAction = formAction + "?SearchCanton=" + encodeURIComponent(selectedCanton);
             this.setAttribute("action", updatedAction);
@@ -158,7 +149,6 @@
         var cantonDropdown = document.getElementById("Canton");
         var selectedCanton = getParameterByName("SearchCanton");
 
-        // Restaurar el valor seleccionado
         if (selectedCanton) {
             cantonDropdown.value = selectedCanton;
         }
@@ -187,7 +177,14 @@
                 @Html.DisplayNameFor(model => model.Record[0].NameStore)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                <a class="ordering-text" asp-page="./Index"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory"
+                   asp-route-sortOrder="@Model.DateTimeSort">
+                    @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].NameProvince)

@@ -25,20 +25,38 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
 
-        public SelectList Provinces { get; set; }
         [BindProperty(SupportsGet = true)]
         public string? SearchProvince { get; set; }
+        public SelectList Provinces { get; set; }
 
-        public SelectList Cantons { get; set; }
         [BindProperty(SupportsGet = true)]
         public string? SearchCanton { get; set; }
-
+        public SelectList Cantons { get; set; }
+        
         public SelectList Categories { get; set; }
         [BindProperty(SupportsGet = true)]
         public string? SearchCategory { get; set; }
 
-        public async Task OnGetAsync()
+        public string DateTimeSort { get; set; }
+        public string PriceSort { get; set; }
+        public string CurrentFilter { get; set; }
+
+        public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
+            DateTimeSort = sortOrder == "Date" ? "date_desc" : "Date";
+            PriceSort = sortOrder == "Price" ? "price_desc" : "Price";
+
+            if (searchString != null)
+            {
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            
+            CurrentFilter = searchString;
+
             var provinces = await _context.Provinces.ToListAsync();
             var cantons = await _context.Cantons.ToListAsync();
             var categories = await _context.Associated
@@ -50,38 +68,56 @@ namespace LoCoMPro_LV.Pages.Records
             Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
             Categories = new SelectList(categories);
 
-            var recordsQuery = from m in _context.Records
+            IQueryable<Record> orderedRecordsQuery = from m in _context.Records
                                select m;
 
             if (!string.IsNullOrEmpty(SearchString))
             {
-                recordsQuery = recordsQuery.Where(s => s.NameProduct.Contains(SearchString));
+                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.NameProduct.Contains(SearchString));
             }
+
             if (!string.IsNullOrEmpty(SearchProvince))
             {
-                recordsQuery = recordsQuery.Where(s => s.NameProvince == SearchProvince);
+                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.NameProvince == SearchProvince);
             }
 
             if (!string.IsNullOrEmpty(SearchCanton))
             {
-                recordsQuery = recordsQuery.Where(s => s.NameCanton == SearchCanton);
+                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.NameCanton == SearchCanton);
             }
 
             if (!string.IsNullOrEmpty(SearchCategory))
             {
-                recordsQuery = recordsQuery.Where(s => s.Product.Associated.Any(c => c.NameCategory == SearchCategory));
+                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.Product.Associated.Any(c => c.NameCategory == SearchCategory));
             }
 
-            var groupedRecordsQuery = from record in recordsQuery
+            var groupedRecordsQuery = from record in orderedRecordsQuery
                                       group record by new
-                                      { record.NameProduct, record.NameStore, record.NameCanton, record.NameProvince } into recordGroup
+                                      {
+                                          record.NameProduct,
+                                          record.NameStore,
+                                          record.NameCanton,
+                                          record.NameProvince
+                                      } into recordGroup
                                       orderby recordGroup.Key.NameProduct descending
                                       select recordGroup;
 
-            Record = await groupedRecordsQuery
-                .Select(group => group.OrderByDescending(r => r.RecordDate).FirstOrDefault())
+            var orderedGroupsQuery = groupedRecordsQuery;
+
+            switch (sortOrder)
+            {
+                case "Date":
+                    orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.RecordDate));
+                    break;
+                default:
+                    orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.RecordDate));
+                    break;
+            }
+
+            Record = await orderedGroupsQuery
+                .Select(group => group.FirstOrDefault())
                 .ToListAsync();
-            
+
             // Se configura el valor de SearchCanton para mantener la selección actual a la hora de buscar.
             SearchCanton = Request.Query["SearchCanton"];
         }
