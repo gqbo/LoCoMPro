@@ -334,7 +334,7 @@ namespace LoCoMPro_LV.Data
             context.SaveChanges();
 
             var records = new Record[]{
-                new Record{NameGenerator="anne", GeneratorUser = generator_user[0], RecordDate = DateTime.Parse("2022-1-18"), Price = 250000,
+                new Record{NameGenerator="anne", GeneratorUser = generator_user[0], RecordDate = DateTime.Parse("2022-1-18"), Price = 250000.66,
                     NameStore = "Ishop", NameProvince = "San José", NameCanton = "Tibás", NameProduct = "Apple Iphone 11 64gb", Store = stores[0], Product = products[0]},
 
                 new Record{NameGenerator="brad", GeneratorUser = generator_user[1], RecordDate = DateTime.Parse("2023-8-27"), Price = 275000,
@@ -353,7 +353,7 @@ namespace LoCoMPro_LV.Data
                     NameStore = "Ishop", NameProvince = "Limón", NameCanton = "Guácimo", NameProduct = "Apple Iphone 13 128gb", Store = stores[6], Product = products[2]},
 
                 new Record{NameGenerator="keanu", GeneratorUser = generator_user[6], RecordDate = DateTime.Parse("2023-4-25"), Price = 50000,
-                    NameStore = "Toys", NameProvince = "Cartago", NameCanton = "Turrialba", NameProduct = "Terreneitor", Store = stores[5], Product = products[3]},
+                    NameStore = "Toys", NameProvince = "Cartago", NameCanton = "Turrialba", NameProduct = "Terreneitor", Store = stores[5], Product = products[3], Description="TERRENEITOR, el coche más poderoso que ha existido."},
 
                 new Record{NameGenerator="natalie",GeneratorUser = generator_user[7],  RecordDate = DateTime.Parse("2023-5-10"), Price = 70000,
                     NameStore = "Toys", NameProvince = "Cartago", NameCanton = "Turrialba", NameProduct = "Terreneitor", Store = stores[5], Product = products[3]},

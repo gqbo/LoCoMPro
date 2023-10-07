@@ -1,22 +1,30 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LoCoMPro_LV.Models
 {
     public class ApplicationUser : IdentityUser
     {
-
         [PersonalData]
-        [Column(TypeName = "nvarchar(100)")]
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre debe tener entre 2 y 50 caracteres.")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "El nombre debe contener solo letras (mayúsculas o minúsculas).")]
+        [Display(Name = "Nombre")]
         public string FirstName { get; set; }
 
         [PersonalData]
-        [Column(TypeName = "nvarchar(100)")]
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "El nombre debe tener entre 2 y 50 caracteres.")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "El apellido debe contener solo letras (mayúsculas o minúsculas).")]
+        [Display(Name = "Apellido")]
         public string LastName { get; set; }
 
-        public  string NameProvince { get; set; }
+        [StringLength(50, MinimumLength = 2)]
+        public string NameProvince { get; set; }
 
-        public  string NameCanton { get; set; }
+        [StringLength(50, MinimumLength = 2)]
+        public string NameCanton { get; set; }
 
         public Canton Canton { get; set; }
 

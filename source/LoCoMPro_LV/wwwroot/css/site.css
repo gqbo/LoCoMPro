@@ -178,3 +178,7 @@ body {
 .ordering-text {
     color: black !important;
 }
+
+.ordering-text:hover {
+    color: #7d7d7d !important;
+}
