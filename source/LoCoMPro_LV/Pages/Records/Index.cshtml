@@ -1,21 +1,190 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Records.IndexModel
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Consulta";
 }
+
+<div class="container container-search index align-items-center">
+    <div class="row">
+        <form method="get" asp-page="/Records/Index" onsubmit="beforeFormSubmit()">
+            <div class=" buscar-form">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="searchString" for="SearchString">Nombre del producto</label>
+                        <div class="row d-flex justify-content-center align-items-center">
+                            <div class="col-10">
+                                <div class="input-group mb-3 loupe-text">
+                                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                    <input class=" loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <input type="button" value="Opciones avanzadas" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="advancedSearch" class="collapse">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Province">Provincia</label>
+                                <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control_advanced form-control">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Canton">Cantón</label>
+                                <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control_advanced form-control">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Category">Categoría</label>
+                                <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control_advanced form-control">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var advancedSearch = document.getElementById("advancedSearch");
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var categoryDropdown = document.getElementById("Category");
+
+        var isProvinceSelected = provinceDropdown.value !== "";
+        var isCantonSelected = cantonDropdown.value !== "";
+        var isCategorySelected = categoryDropdown.value !== "";
+
+        if (isProvinceSelected || isCantonSelected || isCategorySelected) {
+            advancedSearch.classList.add("show");
+        } else {
+            advancedSearch.classList.remove("show");
+        }
+    });
+</script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("button-addon2");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+
+        var cantonsByProvince = {
+            "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
+            "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],
+            "Heredia": ["Heredia", "Barva", "Santo Domingo", "Santa Bárbara", "San Rafael", "San Isidro", "Belén", "Flores", "San Pablo", "Sarapiquí"],
+            "Cartago": ["Cartago", "Paraíso", "La Unión", "Jiménez", "Turrialba", "Alvarado", "Oreamuno", "El Guarco"],
+            "Puntarenas": ["Puntarenas", "Esparza", "Buenos Aires", "Montes de Oro", "Osa", "Quepos", "Golfito", "Coto Brus", "Parrita", "Corredores", "Garabito", "Puerto Jiménez", "Monte Verde"],
+            "Guanacaste": ["Liberia", "Nicoya", "Santa Cruz", "Bagaces", "Carrillo", "Cañas", "Abangares", "Tilarán", "Nandayure", "La Cruz", "Hojancha"],
+            "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"]
+        };
+
+        function actualizarDropdownCantones() {
+            var selectedProvince = provinceDropdown.value;
+            cantonDropdown.innerHTML = '';
+
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Todos";
+            cantonDropdown.appendChild(defaultOption);
+
+            if (selectedProvince && cantonsByProvince[selectedProvince]) {
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
+        }
+
+        provinceDropdown.addEventListener("change", actualizarDropdownCantones);
+
+        actualizarDropdownCantones();
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var cantonDropdown = document.getElementById("Canton");
+        var selectedCanton = cantonDropdown.value;
+
+        document.querySelector("form").addEventListener("submit", function () {
+            var formAction = this.getAttribute("action");
+            var updatedAction = formAction + "?SearchCanton=" + encodeURIComponent(selectedCanton);
+            this.setAttribute("action", updatedAction);
+        });
+    });
+
+    window.addEventListener('load', function () {
+        var cantonDropdown = document.getElementById("Canton");
+        var selectedCanton = getParameterByName("SearchCanton");
+
+        if (selectedCanton) {
+            cantonDropdown.value = selectedCanton;
+        }
+    });
+
+    function getParameterByName(name, url) {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+</script>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Product)
+                @Html.DisplayNameFor(model => model.Record[0].NameProduct)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Store)
+                @Html.DisplayNameFor(model => model.Record[0].NameStore)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                <a class="ordering-text" asp-page="./Index"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory"
+                   asp-route-sortOrder="@Model.DateTimeSort">
+                    @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].NameProvince)
@@ -30,29 +199,31 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Record)
+        @foreach (var firstItem in Model.Record)
         {
+
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Product.NameProduct)
-
+                    @Html.DisplayFor(modelItem => firstItem.NameProduct)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.NameStore)
+                    @Html.DisplayFor(modelItem => firstItem.NameStore)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RecordDate)
+                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.Canton.Province.NameProvince)
+                    @Html.DisplayFor(modelItem => firstItem.NameProvince)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Store.Canton.NameCanton)
+                    @Html.DisplayFor(modelItem => firstItem.NameCanton)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Html.DisplayFor(modelItem => firstItem.Price)
                 </td>
             </tr>
         }
+
     </tbody>
+
 </table>

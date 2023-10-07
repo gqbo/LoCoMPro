@@ -17,7 +17,7 @@
             </div>
             <div id="form-group">
                 <label for="Store">Establecimiento</label>
-                <input name="Record.NameStore" id="Store" type="text" class="form-control  />
+                <input name="Record.NameStore" id="Store" type="text" class="form-control   />
             </div>
             <div class="form-group">
                 <label for="Province">Provincia</label>
@@ -33,7 +33,7 @@
             </div>
             <div id="form-group" class="mb-3">
                 <label for="Products">Producto</label>
-                <input name="Record.NameProduct" id="Products" type="text" class="form-control   />
+                <input name="Record.NameProduct" id="Products" type="text" class="form-control    />
             </div>
             <div class="form-group">
                 <label asp-for="Record.Price"></label>
@@ -43,9 +43,9 @@
 
             <div id="form-group">
                 <label for="Category">Categoría</label>
-                <input name="NameCategory" id="Category" type="text" class="form-control     />
+                <input name="NameCategory" id="Category" type="text" class="form-control      />
             </div>
-           
+
             <div class="form-group">
                 <input type="submit" value="Confirmar&#10;Producto" class="btn btn-primary btn-sm" />
                 <a asp-page="Index" class="btn btn-danger">Cancelar</a>
@@ -113,7 +113,7 @@
             var data = @Html.Raw(Json.Serialize(Model.Stores)); //["White Oak", "White Pine", "Whine Sunflower", "White Rose"]
             $("#Store").autocomplete({
 
-                source: data ,
+                source: data,
                 minLength: 1 // Establece la longitud mínima de caracteres para activar el autocompletado
             });
         });

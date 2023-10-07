@@ -15,6 +15,7 @@ namespace LoCoMPro_LV.Pages.Records
     public class CreateModel : PageModel
     {
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
+
         public CreateModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
@@ -65,8 +66,9 @@ namespace LoCoMPro_LV.Pages.Records
             // Se cargan las lista de Category
             var category = await _context.Categories.ToListAsync();
             Categories = new List<string>();
+
             foreach (var cat in category)
-            {
+        {
                 Categories.Add(cat.NameCategory);
             }
 
@@ -75,10 +77,10 @@ namespace LoCoMPro_LV.Pages.Records
 
         [BindProperty]
         public Record Record { get; set; }
-
+        
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+          if (!ModelState.IsValid)
             {
                 return Page();
             }
@@ -142,7 +144,7 @@ namespace LoCoMPro_LV.Pages.Records
             // Crear una nueva asociación en la tabla Associated
             var newAssociated = new Associated
             {
-                NameProduct = existingProduct.NameProduct,
+                NameProduct = Record.NameProduct,
                 NameCategory = existingCategory.NameCategory
             };
             _context.Associated.Add(newAssociated);
@@ -157,6 +159,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();
+
             return RedirectToPage("./Index");
         }
     }

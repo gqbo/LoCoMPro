@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using LoCoMPro_LV.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item ml-auto">
+            <a class="nav-link" asp-area="" asp-page="/Records/Create">
+                <button class="btn btn-primary">+ Agregar Producto</button>
+            </a>
+        </li>
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">      
+                <button class="navbar_button" id="logout" type="submit">
+                    <a class="nav-link">Cerrar sesión </a>
+                </button>
+            </form>
+        </li>
+
+    }
+    else
+    {
+        <li class="nav-item">
+            <button class="navbar_button">
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Iniciar Sesión</a>
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="navbar_button">
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Registrarse</a>
+            </button>
+        </li>
+    }
+</ul>
+

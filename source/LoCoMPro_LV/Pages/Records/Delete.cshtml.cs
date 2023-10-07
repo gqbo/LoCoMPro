@@ -22,14 +22,14 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty]
       public Record Record { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string NameGenerator, DateTime RecordDate)
         {
-            if (id == null || _context.Records == null)
+            if (NameGenerator == null || RecordDate == null || _context.Records == null)
             {
                 return NotFound();
             }
 
-            var record = await _context.Records.FirstOrDefaultAsync(m => m.NameGenerator == id);
+            var record = await _context.Records.FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator && m.RecordDate == RecordDate);
 
             if (record == null)
             {
@@ -42,13 +42,13 @@ namespace LoCoMPro_LV.Pages.Records
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(string NameGenerator, DateTime RecordDate)
         {
-            if (id == null || _context.Records == null)
+            if (NameGenerator == null || RecordDate == null || _context.Records == null)
             {
                 return NotFound();
             }
-            var record = await _context.Records.FindAsync(id);
+            var record = await _context.Records.FindAsync(NameGenerator, RecordDate);
 
             if (record != null)
             {

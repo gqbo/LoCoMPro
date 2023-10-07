@@ -5,28 +5,39 @@ namespace LoCoMPro_LV.Models
     public class Record
     {
         [Key]
-        [Required]
-        [StringLength(256, MinimumLength = 2)]
+        [Required(ErrorMessage = "El nombre del generador es obligatorio.")]
+        [StringLength(256, MinimumLength = 2, ErrorMessage = "El nombre del generador tener entre 2 y 256 caracteres.")]
         public string NameGenerator { get; set; }
 
-        [Required]
+        [Display(Name = "Fecha de Registro")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [Required(ErrorMessage = "La fecha es obligatorio.")]
         public DateTime RecordDate { get; set; }
 
-        [StringLength(256, MinimumLength = 2)]
+        [StringLength(512, MinimumLength = 2, ErrorMessage = "La descripción tener entre 2 y 512 caracteres.")]
         public string Description { get; set; }
 
-        public float Price { get; set; }
+        [Display(Name = "Precio")]
+        [Required(ErrorMessage = "El precio es obligatorio.")]
+        [RegularExpression(@"^[0-9.]+$", ErrorMessage = "Solo se permiten números y puntos.")]
+        public double Price { get; set; }
 
+        [Display(Name = "Establecimiento")]
         [StringLength(100, MinimumLength = 2)]
         public string NameStore { get; set; }
 
+        [Display(Name = "Provincia")]
         [StringLength(50, MinimumLength = 2)]
         public  string NameProvince { get; set; }
 
+        [Display(Name = "Cantón")]
         [StringLength(50, MinimumLength = 2)]
         public  string NameCanton { get; set; }
 
-        [StringLength(100, MinimumLength = 2)]
+        [Display(Name = "Producto")]
+        [Required(ErrorMessage = "El nombre del producto es obligatorio.")]
+        [StringLength(50, MinimumLength = 2)]
+        [RegularExpression(@"^[a-zA-Z\s,./\-()%:#]+$", ErrorMessage = "El nombre del producto debe contener solo letras (mayúsculas o minúsculas), espacios y caracteres especiales básicos.")]
         public string NameProduct { get; set; }
 
         public GeneratorUser GeneratorUser { get; set; }
