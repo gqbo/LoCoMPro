@@ -40,15 +40,10 @@
                 <input asp-for="Record.Price" class="form-control" />
                 <span asp-validation-for="Record.Price"></span>
             </div>
-            <div class="form-group">
+
+            <div id="form-group">
                 <label for="Category">Categoría</label>
-                <select id="Category" name="Record.NameCategory" class="form-control">
-                    <option value="">Seleccione una categoría</option>
-                    @foreach (var categoryName in Model.CategoryNames)
-                    {
-                        <option value="@categoryName">@categoryName</option>
-                    }
-                </select>
+                <input name="Record.NameCategory" id="Category" type="text" class="form-control     />
             </div>
            
             <div class="form-group">
@@ -119,7 +114,7 @@
             $("#Store").autocomplete({
 
                 source: data ,
-                minLength: 3 // Establece la longitud mínima de caracteres para activar el autocompletado
+                minLength: 1 // Establece la longitud mínima de caracteres para activar el autocompletado
             });
         });
     </script>
@@ -129,7 +124,16 @@
             $("#Products").autocomplete({
 
                 source: data,
-                minLength: 3 // Establece la longitud mínima de caracteres para activar el autocompletado
+                minLength: 1 // Establece la longitud mínima de caracteres para activar el autocompletado
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var data = @Html.Raw(Json.Serialize(Model.Categories)); //["White Oak", "White Pine", "Whine Sunflower", "White Rose"]
+            $("#Category").autocomplete({
+                source: data,
+                minLength: 1 // Establece la longitud mínima de caracteres para activar el autocompletado
             });
         });
     </script>

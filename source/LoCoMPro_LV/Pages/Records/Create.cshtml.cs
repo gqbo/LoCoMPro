@@ -26,7 +26,7 @@ namespace LoCoMPro_LV.Pages.Records
         public Dictionary<string, List<string>> Cantons { get; set; }
         public HashSet<string> Stores { get; set; }
         public List<string> Product { get; set; }
-        public List<string> CategoryNames { get; set; } = new List<string>();
+        public List<string> Categories { get; set; }
         public async Task OnGetAsync()
         {
             // Se cargan las listas de Provincias
@@ -63,10 +63,13 @@ namespace LoCoMPro_LV.Pages.Records
             }
 
             // Se cargan las lista de Category
-            var categories = await _context.Categories.ToListAsync();
-            CategoryNames = categories.Select(c => c.NameCategory).ToList();
+            var category = await _context.Categories.ToListAsync();
+            Categories = new List<string>();
+            foreach (var cat in category)
+            {
+                Categories.Add(cat.NameCategory);
+            }
 
-       
         }
 
 
