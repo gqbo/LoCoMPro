@@ -51,11 +51,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].NameProduct)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameStore)
+            <th class="precio">
+                @Html.DisplayNameFor(model => model.Record[0].Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                @Html.DisplayNameFor(model => model.Record[0].NameStore)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].NameProvince)
@@ -64,9 +64,8 @@
                 @Html.DisplayNameFor(model => model.Record[0].NameCanton)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Price)
+                @Html.DisplayNameFor(model => model.Record[0].RecordDate)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -75,13 +74,13 @@
 
             <tr>
                 <td>
-                    <a asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator", asp-route-RecordDate="@firstItem.RecordDate">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
+                    <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" , asp-route-RecordDate="@firstItem.RecordDate">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
+                </td>
+                <td class="precio">
+                    ₡@Html.DisplayFor(modelItem => firstItem.Price)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => firstItem.NameStore)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => firstItem.NameProvince)
@@ -90,11 +89,9 @@
                     @Html.DisplayFor(modelItem => firstItem.NameCanton)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => firstItem.Price)
+                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
                 </td>
             </tr>
         }
-
     </tbody>
-
 </table>

@@ -217,3 +217,23 @@ body {
 .info_detail {
     margin: 5px;
 }
+
+th, td {
+    text-align: center !important;
+}
+
+.precio {
+    text-align: right !important;
+}
+
+table {
+    width: 100%;
+}
+
+.election {
+    color: #000 !important;
+}
+
+.election:hover {
+    color: #7d7d7d !important;
+}

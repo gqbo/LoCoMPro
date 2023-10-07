@@ -51,8 +51,8 @@
                 <tr>
                     <th>
                         @Html.DisplayNameFor(model => model.Record[0].RecordDate)
-                    </th>
-                    <th>
+                    </th >
+                    <th class="precio">
                         @Html.DisplayNameFor(model => model.Record[0].Price)
                     </th>
                     <th>
@@ -70,8 +70,8 @@
                         <td>
                             @Html.DisplayFor(modelItem => firstItem.RecordDate)
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => firstItem.Price)
+                        <td class="precio">
+                            ₡@Html.DisplayFor(modelItem => firstItem.Price)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => firstItem.NameGenerator)
