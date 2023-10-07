@@ -93,12 +93,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             var groupedRecordsQuery = from record in orderedRecordsQuery
                                       group record by new
-                                      {
-                                          record.NameProduct,
-                                          record.NameStore,
-                                          record.NameCanton,
-                                          record.NameProvince
-                                      } into recordGroup
+                                      { record.NameProduct, record.NameStore, record.NameCanton, record.NameProvince } into recordGroup
                                       orderby recordGroup.Key.NameProduct descending
                                       select recordGroup;
 
@@ -115,12 +110,10 @@ namespace LoCoMPro_LV.Pages.Records
             }
 
             Record = await orderedGroupsQuery
-                .Select(group => group.FirstOrDefault())
+                .Select(group => group.OrderByDescending(r => r.RecordDate).FirstOrDefault())
                 .ToListAsync();
 
-            // Se configura el valor de SearchCanton para mantener la selección actual a la hora de buscar.
             SearchCanton = Request.Query["SearchCanton"];
         }
     }
 }
-
