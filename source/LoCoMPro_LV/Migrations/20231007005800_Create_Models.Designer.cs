@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoCoMPro_LV.Migrations
 {
     [DbContext(typeof(LoComproContext))]
-    [Migration("20231006045926_Create_Models")]
+    [Migration("20231007005800_Create_Models")]
     partial class Create_Models
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace LoCoMPro_LV.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

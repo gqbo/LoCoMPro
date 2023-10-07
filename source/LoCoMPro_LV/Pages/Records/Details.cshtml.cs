@@ -35,7 +35,7 @@ namespace LoCoMPro_LV.Pages.Records
             }
             else 
             {
-                Record = record;
+            Record = record;
             }
             return Page();
         }
