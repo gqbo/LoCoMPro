@@ -91,7 +91,7 @@ namespace LoCoMPro_LV.Pages.Records
            
             if (!ModelState.IsValid)
             {
-                return Page();
+                return RedirectToPage("/Records/Create");
             }
 
             // Permite guardar locales en la tabla de locales donde se incluye el local, provincia y canton.
