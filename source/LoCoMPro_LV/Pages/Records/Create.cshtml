@@ -11,9 +11,8 @@
     <div class="col-md-4">
         <form method="post">
             <div class="form-group">
-                <label asp-for="Record.NameGenerator"></label>
-                <input asp-for="Record.NameGenerator" class="form-control" />
-                <span asp-validation-for="Record.NameGenerator"></span>
+                <input asp-for="Record.NameGenerator" class="form-control" value="@Model.AuthenticatedUserName" hidden />
+                <span asp-validation-for="Record.NameGenerator" class="text-danger"></span>
             </div>
             <div id="form-group">
                 <label for="Store">Establecimiento</label>

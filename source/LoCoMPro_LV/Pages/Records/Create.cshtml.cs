@@ -8,17 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace LoCoMPro_LV.Pages.Records
 {
     public class CreateModel : PageModel
     {
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
-
-        public CreateModel(LoCoMPro_LV.Data.LoComproContext context)
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public CreateModel(LoCoMPro_LV.Data.LoComproContext context, SignInManager<ApplicationUser> signInManager)
         {
-            _context = context;
+             _context = context;
+            _signInManager = signInManager;
         }
 
 
@@ -28,6 +29,7 @@ namespace LoCoMPro_LV.Pages.Records
         public HashSet<string> Stores { get; set; }
         public List<string> Product { get; set; }
         public List<string> Categories { get; set; }
+        public string AuthenticatedUserName { get; set; }
         public async Task OnGetAsync()
         {
             // Se cargan las listas de Provincias
@@ -68,8 +70,14 @@ namespace LoCoMPro_LV.Pages.Records
             Categories = new List<string>();
 
             foreach (var cat in category)
-        {
+            {
                 Categories.Add(cat.NameCategory);
+            }
+
+            //  -----------------------------------
+            if (User.Identity.IsAuthenticated)
+            {
+                AuthenticatedUserName = User.Identity.Name;
             }
 
         }
@@ -80,7 +88,8 @@ namespace LoCoMPro_LV.Pages.Records
         
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid)
+           
+            if (!ModelState.IsValid)
             {
                 return Page();
             }
@@ -147,24 +156,28 @@ namespace LoCoMPro_LV.Pages.Records
             }
 
             // Crear una nueva asociación en la tabla Associated
-            var newAssociated = new Associated
+           // arreglar los duplicados
+           var existingAssociated = await _context.Associated.FirstOrDefaultAsync(a =>
+                a.NameProduct == Record.NameProduct &&
+                a.NameCategory == categoryName);
+
+            // Crear un nuevo registro solo si no existe
+            if (existingAssociated == null)
             {
-                NameProduct = Record.NameProduct,
-                NameCategory = categoryName
-            };
-            _context.Associated.Add(newAssociated);
-            await _context.SaveChangesAsync();
+                var newAssociated = new Associated
+                {
+                    NameProduct = Record.NameProduct,
+                    NameCategory = categoryName
+                };
+                _context.Associated.Add(newAssociated);
+                await _context.SaveChangesAsync(); // Guardar cambios en la base de datos
+            }
 
             // Captura la hora automaticamente
             Record.RecordDate = DateTime.Now;
 
-            // Solicitar info del usuario registrado
-
-                     // Record.GeneratorUser = XXXXXXXXXX
-
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();
-
             return RedirectToPage("./Index");
         }
     }
