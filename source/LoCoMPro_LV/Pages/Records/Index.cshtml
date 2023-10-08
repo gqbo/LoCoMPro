@@ -183,7 +183,7 @@
                    asp-route-SearchCanton="@Model.SearchCanton"
                    asp-route-SearchCategory="@Model.SearchCategory"
                    asp-route-sortOrder="@Model.DateTimeSort">
-                    @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                   @Html.DisplayNameFor(model => model.Record[0].RecordDate)
                 </a>
             </th>
             <th>
@@ -193,7 +193,14 @@
                 @Html.DisplayNameFor(model => model.Record[0].NameCanton)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].Price)
+               <a class="ordering-text" asp-page="./Index"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory"
+                   asp-route-sortOrder="@Model.PriceSort">
+                   @Html.DisplayNameFor(model => model.Record[0].Price)
+                </a>
             </th>
             <th></th>
         </tr>

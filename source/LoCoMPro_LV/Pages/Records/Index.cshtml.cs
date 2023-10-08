@@ -104,6 +104,12 @@ namespace LoCoMPro_LV.Pages.Records
                 case "Date":
                     orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.RecordDate));
                     break;
+                case "Price":
+                    orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.Price));
+                    break;
+                case "price_desc":
+                    orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Min(record => record.Price));
+                    break;
                 default:
                     orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.RecordDate));
                     break;
