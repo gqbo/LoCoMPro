@@ -8,9 +8,11 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item ml-auto">
-            <a class="nav-link" asp-area="" asp-page="/Records/Create">
-                <button class="btn btn-primary">+ Agregar Producto</button>
-            </a>
+            <button class="navbar_button">
+                <a class="form-inline nav-link" asp-area="" asp-page="/Records/Create">
+                    + Agregar Producto
+                </a>
+            </button>
         </li>
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">      

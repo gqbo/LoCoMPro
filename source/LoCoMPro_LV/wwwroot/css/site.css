@@ -182,3 +182,43 @@ body {
 .ordering-text:hover {
     color: #7d7d7d !important;
 }
+
+.form-control-add {
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.40);
+    box-shadow: 0px 4px 4px 0px #000;
+    backdrop-filter: blur(2px);
+}
+
+.form-control-add:focus {
+    box-shadow: 2px 4px 4px 2px #000 !important;
+}
+
+.add_product {
+    padding: 40px !important;
+}
+
+.add_confirm {
+    border-radius: 25px !important;
+    border: 6px solid #276E90 !important;
+    background: #0A3143 !important;
+    width: 140px !important;
+    height: 70px !important;
+    margin: 20px;
+}
+
+.add_cancel {
+    border-radius: 25px !important;
+    border: 6px solid #d0d0d0 !important;
+    background: #dcdcdc !important;
+    width: 140px !important;
+    height: 70px !important;
+    color: #000 !important;
+    margin: 20px;
+}
+
+.title_add {
+    font-weight: 800;
+    font-family: Roboto;
+    line-height: 24px;
+}
