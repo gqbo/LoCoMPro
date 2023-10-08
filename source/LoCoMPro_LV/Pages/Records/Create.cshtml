@@ -58,14 +58,39 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        @*<div class="row">
             <div class="col d-flex justify-content-start align-items-center">
                 <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" />
             </div>
             <div class="col d-flex justify-content-end align-items-center">
                 <a asp-page="Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
             </div>
-        </div>
+        </div>*@
+        <form method="post" id="formRegistro">
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" onclick="mostrarDialogoYGuardar();" />
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <a asp-page="Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
+                </div>
+            </div>@* Permite hacer un comentario de confirmacion de que el refistro fue guardado con exito*@
+            <div class="modal fade" id="successDialog" tabindex="-1" aria-labelledby="successDialogLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="successDialogLabel">Éxito</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            El registro se ha guardado con éxito.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </form>
 </div>
 
@@ -136,5 +161,19 @@
                 minLength: 1 // Establece la longitud mínima de caracteres para activar el autocompletado
             });
         });
+    </script>
+    @*--------------------------------------------------------------------------*@
+    <script>
+        function mostrarDialogoYGuardar() {
+            $('#successDialog').modal('show');
+
+            setTimeout(function () {
+                // Envía el formulario automáticamente después de 3 segundos
+                document.getElementById('formRegistro').submit();
+
+                // Cierra el cuadro de diálogo
+                $('#successDialog').modal('hide');
+            }, 4000); // 3000 milisegundos = 3 segundos
+        }
     </script>
 }
