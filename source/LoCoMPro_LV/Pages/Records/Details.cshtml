@@ -5,45 +5,88 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="container details-container">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="card">
+            <div class="bg">
+                <div class="info_detail">
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col">
+                            <h2>
+                                @Html.DisplayFor(model => model.Record.First().NameProduct)
+                            </h2>
+                        </div>
+                        <div class="col d-flex justify-content-end">
+                            <h4>
+                                ₡@Html.DisplayFor(model => model.Record.First().Price)
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col">
+                            <h6>
+                                Tienda: @Html.DisplayFor(model => model.Record.First().NameStore)
+                                <br>
+                                Provincia: @Html.DisplayFor(model => model.Record.First().NameProvince)
+                                <br>
+                                Cantón: @Html.DisplayFor(model => model.Record.First().NameCanton)
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col d-flex justify-content-end">
+                            <h7>
+                                @Html.DisplayFor(model => model.Record.First().RecordDate)
+                            </h7>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="blob"></div>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                    </th >
+                    <th class="precio">
+                        @Html.DisplayNameFor(model => model.Record[0].Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Record[0].NameGenerator)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Record[0].Description)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var firstItem in Model.Record)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => firstItem.RecordDate)
+                        </td>
+                        <td class="precio">
+                            ₡@Html.DisplayFor(modelItem => firstItem.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => firstItem.NameGenerator)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => firstItem.Description)
+                        </td>
+                    </tr>
+                }
+            </tbody>
 
-<div>
-    <h4>Record</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Record.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Record.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Record.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Record.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Record.GeneratorUser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Record.GeneratorUser.UserName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Record.Store)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Record.Store.NameStore)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Record.Product)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Record.Product.NameProduct)
-        </dd>
-    </dl>
+        </table>
+    </div>
+    <div>
+        <a href="javascript:history.go(-1);">Back to List</a>
+    </div>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-page="./Index">Back to List</a>
-</div>
+
