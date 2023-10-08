@@ -3,8 +3,6 @@
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Text;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -14,16 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Text;
-using LoCoMPro_LV.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
+using LoCoMPro_LV.Data;
 
 namespace LoCoMPro_LV.Areas.Identity.Pages.Account
 {
@@ -35,13 +25,16 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly LoComproContext _context;
+
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            LoComproContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +42,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         [BindProperty]
@@ -61,18 +55,24 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         public class InputModel
         {
 
+            [PersonalData]
             [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
-            [EmailAddress(ErrorMessage = "El campo 'Correo electrónico' no es una dirección de correo electrónico válida.")]
+            [EmailAddress(ErrorMessage = "La dirección de correo electrónico es inválida.")]
             [Display(Name = "Correo electrónico")]
             public string Email { get; set; }
 
+            [PersonalData]
             [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre de usuario debe tener entre 2 y 50 caracteres.")]
             [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "El nombre de usuario no es válido. Únicamente se admiten letras minúsculas, mayúsculas y números.")]
             [Display(Name = "Usuario")]
             public string UserName { get; set; }
 
+            [PersonalData]
             [Required(ErrorMessage = "La contraseña es obligatoria.")]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "La contraseña debe tener entre 2 y 50 caracteres.")]
             [DataType(DataType.Password)]
+            [RegularExpression(@"^(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "La contraseña debe contener al menos una letra mayúscula y al menos un número.")]
             [Display(Name = "Contraseña")]
             public string Password { get; set; }
 
@@ -81,13 +81,17 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
             public string ConfirmPassword { get; set; }
 
+            [PersonalData]
             [Required(ErrorMessage = "El nombre es obligatorio.")]
-            [StringLength(100, ErrorMessage = "El nombre no debe exceder los 100 caracteres.")]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre debe tener entre 2 y 50 caracteres.")]
+            [RegularExpression(@"^[a-zA-ZáéíóúñÑÁÉÍÓÚ]+$", ErrorMessage = "El nombre debe contener solo letras (mayúsculas o minúsculas).")]
             [Display(Name = "Nombre")]
             public string FirstName { get; set; }
 
+            [PersonalData]
             [Required(ErrorMessage = "El apellido es obligatorio.")]
-            [StringLength(100, ErrorMessage = "El nombre no debe exceder los 100 caracteres.")]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "El apellido debe tener entre 2 y 50 caracteres.")]
+            [RegularExpression(@"^[a-zA-ZáéíóúñÑÁÉÍÓÚ]+$", ErrorMessage = "El apellido debe contener solo letras (mayúsculas o minúsculas).")]
             [Display(Name = "Apellido")]
             public string LastName { get; set; }
         }
@@ -120,6 +124,9 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
                     await _signInManager.SignInAsync(user, isPersistent: false);
+                    GeneratorUser generatorUser = new GeneratorUser { UserName = user.UserName, ApplicationUser = user };
+                    _context.GeneratorUsers.Add(generatorUser);
+                    await _context.SaveChangesAsync();
                     return LocalRedirect(returnUrl);
 
                 }
