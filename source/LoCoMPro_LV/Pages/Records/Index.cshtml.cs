@@ -19,9 +19,14 @@ namespace LoCoMPro_LV.Pages.Records
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
+        /// </summary>
         public IList<Record> Record { get; set; } = default!;
 
+        /// <summary>
+        /// Cadena de caracteres que se utiliza para filtrar la búsqueda por nombre del producto.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
 
@@ -40,7 +45,6 @@ namespace LoCoMPro_LV.Pages.Records
         public string DateTimeSort { get; set; }
         public string PriceSort { get; set; }
         public string CurrentFilter { get; set; }
-
         public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
             DateTimeSort = sortOrder == "Date" ? "date_desc" : "Date";

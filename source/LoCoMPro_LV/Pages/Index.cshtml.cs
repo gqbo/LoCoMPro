@@ -18,8 +18,14 @@ namespace LoCoMPro_LV.Pages
             _context = context;
         }
 
+        /// <summary>
+        /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
+        /// </summary>
         public IList<Record> Record { get; set; } = default!;
 
+        /// <summary>
+        /// Cadena de caracteres que se utiliza para filtrar la búsqueda por nombre del producto.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
 
