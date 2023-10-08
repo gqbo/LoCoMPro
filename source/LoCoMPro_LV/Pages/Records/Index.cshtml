@@ -173,8 +173,24 @@
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].NameProduct)
             </th>
+            <th class="precio">
+                <a class="ordering-text" asp-page="./Index"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory"
+                   asp-route-sortOrder="@Model.PriceSort">
+                   @Html.DisplayNameFor(model => model.Record[0].Price)
+                </a>
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].NameStore)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
             </th>
             <th>
                 <a class="ordering-text" asp-page="./Index"
@@ -186,23 +202,6 @@
                    @Html.DisplayNameFor(model => model.Record[0].RecordDate)
                 </a>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
-            </th>
-            <th>
-               <a class="ordering-text" asp-page="./Index"
-                   asp-route-SearchString="@Model.SearchString"
-                   asp-route-SearchProvince="@Model.SearchProvince"
-                   asp-route-SearchCanton="@Model.SearchCanton"
-                   asp-route-SearchCategory="@Model.SearchCategory"
-                   asp-route-sortOrder="@Model.PriceSort">
-                   @Html.DisplayNameFor(model => model.Record[0].Price)
-                </a>
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -211,13 +210,13 @@
 
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => firstItem.NameProduct)
+                    <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
+                </td>
+                <td class="precio">
+                    ₡@Html.DisplayFor(modelItem => firstItem.Price)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => firstItem.NameStore)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => firstItem.NameProvince)
@@ -226,11 +225,9 @@
                     @Html.DisplayFor(modelItem => firstItem.NameCanton)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => firstItem.Price)
+                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
                 </td>
             </tr>
         }
-
     </tbody>
-
 </table>
