@@ -29,18 +29,43 @@ namespace LoCoMPro_LV.Pages
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
 
-        public SelectList Provinces { get; set; }
+        /// <summary>
+        /// Provincia utilizada como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchProvince { get; set; }
 
-        public SelectList Cantons { get; set; }
+        /// <summary>
+        /// Lista de provincias para la selección.
+        /// </summary>
+        public SelectList Provinces { get; set; }
+
+        /// <summary>
+        /// Cantón utilizado como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchCanton { get; set; }
 
-        public SelectList Categories { get; set; }
+        /// <summary>
+        /// Lista de cantones para la selección.
+        /// </summary>
+        public SelectList Cantons { get; set; }
+
+        /// <summary>
+        /// Categoría utilizada como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchCategory { get; set; }
 
+        /// <summary>
+        /// Lista de categorías para la selección.
+        /// </summary>
+        public SelectList Categories { get; set; }
+
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud GET que redirige a la página de índice de registros. 
+        /// Realiza la carga de datos con los parámetros deseados relacionados en la base de datos.
+        /// </summary>
         public async Task OnGetAsync()
         {
             var provinces = await _context.Provinces.ToListAsync();

@@ -30,21 +30,64 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
 
+        /// <summary>
+        /// Provincia utilizada como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchProvince { get; set; }
+
+        /// <summary>
+        /// Lista de provincias para la selección.
+        /// </summary>
         public SelectList Provinces { get; set; }
 
+        /// <summary>
+        /// Cantón utilizado como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchCanton { get; set; }
+
+        /// <summary>
+        /// Lista de cantones para la selección.
+        /// </summary>
         public SelectList Cantons { get; set; }
-        
-        public SelectList Categories { get; set; }
+
+        /// <summary>
+        /// Categoría utilizada como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchCategory { get; set; }
 
+        /// <summary>
+        /// Lista de categorías para la selección.
+        /// </summary>
+        public SelectList Categories { get; set; }
+
+
+        /// <summary>
+        /// Indica el orden en el que se deben mostrar los registros por fecha.
+        /// </summary>
         public string DateTimeSort { get; set; }
+
+        /// <summary>
+        /// Indica el orden en el que se deben mostrar los registros por precio.
+        /// </summary>
         public string PriceSort { get; set; }
+
+        /// <summary>
+        /// El filtro actual aplicado para la búsqueda de registros.
+        /// </summary>
         public string CurrentFilter { get; set; }
+
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud GET para la página de índice de registros. 
+        /// Realiza una serie de tareas que incluyen el ordenamiento y agrupamiento de registros y
+        /// la carga de datos relacionados desde la base de datos para la representación en la página web.
+        /// </summary>
+        /// <param sortOrder="string">Indica el orden en el que se deben mostrar los registros (por fecha o precio).</param>
+        /// <param currentFilter="string">El filtro actual aplicado para la búsqueda de registros.</param>
+        /// <param searchString="string">Indica la búsqueda introducida por el usuario para filtrar los registros por nombre de producto.</param>
+        /// <param pageIndex="int?">El índice de la página actual en caso de paginación.</param>
         public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
             DateTimeSort = sortOrder == "Date" ? "date_desc" : "Date";
