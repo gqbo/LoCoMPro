@@ -202,9 +202,14 @@
         {
 
             <tr>
-                <td>
+@*                 <td>
                     <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" , asp-route-RecordDate="@firstItem.RecordDate">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
+                </td> *@
+                <td>
+                    <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
                 </td>
+
+
                 <td class="precio">
                     ₡@Html.DisplayFor(modelItem => firstItem.Price)
                 </td>

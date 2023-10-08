@@ -35,7 +35,7 @@ namespace LoCoMPro_LV.Pages.Records
                                            select m;*/
 
             var FirstRecord = await _context.Records
-                .FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator /*&& m.RecordDate == RecordDate*/);
+                .FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator && m.RecordDate == RecordDate);
 
             Console.WriteLine(NameGenerator);
 
@@ -47,7 +47,7 @@ namespace LoCoMPro_LV.Pages.Records
                                        m.NameStore.Contains(FirstRecord.NameStore) &&
                                        m.NameProvince.Contains(FirstRecord.NameProvince) &&
                                        m.NameCanton.Contains(FirstRecord.NameCanton)
-                                 orderby m.NameProduct descending
+                                 orderby m.RecordDate descending
                                  select m;
 
                 Record = await allRecords
