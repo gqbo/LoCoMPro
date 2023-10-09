@@ -11,28 +11,49 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace LoCoMPro_LV.Pages.Records
 {
+    /// <summary>
+    /// Página de detalles de producto, en donde se ven los registros relacionados a un mismo producto.
+    /// </summary>
     public class DetailsModel : PageModel
     {
+        /// <summary>
+        /// Contexto de la base de datos de LoCoMPro.
+        /// </summary>
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
+        /// <summary>
+        /// Constructor de la clase DetailsModel.
+        /// </summary>
+        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
         public DetailsModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Lista de tipo "Record", que almacena los registros correspondientes al producto que se selecciono para ver en detalle.
+        /// </summary>
         public IList<Record> Record { get; set; } = default!;
 
+        /// <summary>
+        /// Nombre del usuario generador del registro seleccionado en la pantalla index, que se utiliza para buscar todos los registros relacionados.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string NameGenerator { get; set; }
 
+        /// <summary>
+        /// Fecha en la que se realizó el registro seleccionado en la pantalla index, que se utiliza para buscar todos los registros relacionados.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public DateTime RecordDate { get; set; }
 
+        /// <summary>
+        /// Método utilizado cuando en la pantalla de resultados de la búsqueda se selecciona un producto para abrir el detalle. Este método
+        /// utiliza el nombre del generador y la fecha de realización del registro más reciente del producto para realizar la consulta por todos
+        /// de todos los registros con ese producto en esa tienda en específico.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
-            /*            var recordsQuery = from m in _context.Records
-                                           where m.NameGenerator.Contains(NameGenerator) && m.RecordDate == RecordDate
-                                           select m;*/
 
             var FirstRecord = await _context.Records
                 .FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator && m.RecordDate == RecordDate);
@@ -57,8 +78,6 @@ namespace LoCoMPro_LV.Pages.Records
             {
                 Record = new List<Record>();
             }
-
-
 
             return Page();
         }
