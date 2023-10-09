@@ -43,7 +43,7 @@ h1 {
 
 .register_submit::before {
     content: "";
-    background-color: #338CB7;
+    background-color: #1f5771;
     width: 0;
     height: 100%;
     position: absolute;
@@ -54,8 +54,13 @@ h1 {
     display: inline-block;
 }
 
+.register_submit:hover {
+    background-color: #25607d;
+}
+
 .register_submit:hover::before {
     width: 100%;
+    background-color: #2c81a9;
 }
 
 .register_form {
@@ -75,4 +80,18 @@ h1 {
 
 .out_button:focus, .out_button:hover {
     color: #d0d0d0;
+}
+
+.text-danger-newcolor {
+    color: #ffabab !important;
+    font-weight: bolder;
+}
+
+.Register_button {
+    color: #fff !important;
+    font-size: 18px;
+}
+
+.Register_button:focus, .Register_button:hover {
+    color: #dddddd !important;
 }
