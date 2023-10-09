@@ -6,11 +6,13 @@ namespace LoCoMPro_LV.Models
     {
         [Key]
         [Required(ErrorMessage = "La categoría es obligatoria.")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "La categoría debe contener solo letras (mayúsculas o minúsculas).")]
+        [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
+            ErrorMessage = "La categoría debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
         [StringLength(50, MinimumLength = 3)]
         public string NameCategory { get; set; }
 
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "La categoría debe contener solo letras (mayúsculas o minúsculas).")]
+        [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
+            ErrorMessage = "La categoría debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
         [StringLength(50, MinimumLength = 3)]
         public string NameTopCategory { get; set; }
 

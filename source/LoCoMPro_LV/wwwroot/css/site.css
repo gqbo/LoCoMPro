@@ -104,7 +104,7 @@ body {
     }
 
 .container-index {
-    padding: 200px;
+    padding: 13%;
     width: 500px;
 }
 
@@ -146,6 +146,98 @@ body {
     background-color: gainsboro;
 }
 
+.card {
+    position: relative !important;
+    width: 80% !important;
+    height: 170px !important;
+    border-radius: 14px !important;
+    z-index: 1111;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 5px;
+}
+
+.bg {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 99%;
+    height: 158px;
+    z-index: 2;
+    background: rgba(255, 255, 255, .95);
+    backdrop-filter: blur(24px);
+    border-radius: 10px;
+    overflow: hidden;
+    outline: 2px solid white;
+}
+
+.blob {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 610px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #276E90;
+    opacity: 1;
+    filter: blur(12px);
+    animation: blob-bounce 5s infinite ease;
+}
+
+@keyframes blob-bounce {
+    0% {
+        transform: translate(-100%, -100%) translate3d(0, 0, 0);
+    }
+
+    25% {
+        transform: translate(-100%, -100%) translate3d(100%, 0, 0);
+    }
+
+    50% {
+        transform: translate(-100%, -100%) translate3d(100%, 100%, 0);
+    }
+
+    75% {
+        transform: translate(-100%, -100%) translate3d(0, 100%, 0);
+    }
+
+    100% {
+        transform: translate(-100%, -100%) translate3d(0, 0, 0);
+    }
+}
+
+.details-container{
+    margin: 20px;
+}
+
+.info_detail {
+    margin: 5px;
+}
+
+th, td {
+    text-align: center !important;
+}
+
+.precio {
+    text-align: right !important;
+}
+
+table {
+    width: 100%;
+}
+
+.election {
+    color: #000 !important;
+}
+
+.election:hover {
+    color: #7d7d7d !important;
+}
+
 .advanced_search {
     padding: 11px !important;
     
@@ -173,4 +265,12 @@ body {
 
 .loupe-text{
     margin: 16px 0px 0px 0px !important;
+}
+
+.ordering-text {
+    color: black !important;
+}
+
+.ordering-text:hover {
+    color: #7d7d7d !important;
 }
