@@ -175,9 +175,9 @@ namespace LoCoMPro_LV.Pages.Records
             }
 
             // Captura la hora automaticamente
-            string fechaHoraActual = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            DateTime fechaHoraConvertida = DateTime.ParseExact(fechaHoraActual, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-            Record.RecordDate = fechaHoraConvertida;
+            string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            DateTime dateTimeConverted = DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            Record.RecordDate = dateTimeConverted;
 
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();
