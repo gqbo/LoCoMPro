@@ -3,10 +3,10 @@ using LoCoMPro_LV.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 
-namespace UnitTests_InputModel
+namespace UnitTests_Product
 {
     [TestClass]
-    public class UnitTests_InputModel
+    public class UnitTests_Product
     {
         // Test by Yordi Robles Siles - C06557
         [TestMethod]
