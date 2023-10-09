@@ -9,6 +9,7 @@ using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
+using System.Globalization;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -174,7 +175,9 @@ namespace LoCoMPro_LV.Pages.Records
             }
 
             // Captura la hora automaticamente
-            Record.RecordDate = DateTime.Now;
+            string fechaHoraActual = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            DateTime fechaHoraConvertida = DateTime.ParseExact(fechaHoraActual, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            Record.RecordDate = fechaHoraConvertida;
 
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();
