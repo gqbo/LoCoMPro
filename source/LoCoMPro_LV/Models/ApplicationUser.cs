@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LoCoMPro_LV.Models
 {
+    /// <summary>
+    /// Modelo relacionado con los usuarios de la aplicación web. Este modelo se relaciona con la tabla AspNetUsers de la base de datos.
+    /// </summary>
     public class ApplicationUser : IdentityUser
     {
         [PersonalData]
