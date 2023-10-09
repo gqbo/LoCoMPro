@@ -1,24 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LoCoMPro_LV.Pages.Records
 {
+    /// <summary>
+    /// Página de de índice de Records para la búsqueda y visualización de registros.
+    /// </summary>
     public class IndexModel : PageModel
     {
+        /// <summary>
+        /// Contexto de la base de datos de LoCoMPro.
+        /// </summary>
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
+        /// <summary>
+        /// Constructor de la clase IndexModel.
+        /// </summary>
+        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
         public IndexModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
         }
+        
         /// <summary>
         /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
         /// </summary>
@@ -84,10 +90,10 @@ namespace LoCoMPro_LV.Pages.Records
         /// Realiza una serie de tareas que incluyen el ordenamiento y agrupamiento de registros y
         /// la carga de datos relacionados desde la base de datos para la representación en la página web.
         /// </summary>
-        /// <param sortOrder="string">Indica el orden en el que se deben mostrar los registros (por fecha o precio).</param>
-        /// <param currentFilter="string">El filtro actual aplicado para la búsqueda de registros.</param>
-        /// <param searchString="string">Indica la búsqueda introducida por el usuario para filtrar los registros por nombre de producto.</param>
-        /// <param pageIndex="int?">El índice de la página actual en caso de paginación.</param>
+        /// <param name="sortOrder">Indica el orden en el que se deben mostrar los registros (por fecha o precio).</param>
+        /// <param name="currentFilter">El filtro actual aplicado para la búsqueda de registros.</param>
+        /// <param name="searchString">Indica la búsqueda introducida por el usuario para filtrar los registros por nombre de producto.</param>
+        /// <param name="pageIndex">El índice de la página actual en caso de paginación.</param>
         public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
             DateTimeSort = sortOrder == "Date" ? "date_desc" : "Date";

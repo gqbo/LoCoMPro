@@ -2,17 +2,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using LoCoMPro_LV.Models;
 
 namespace LoCoMPro_LV.Pages
 {
+    /// <summary>
+    /// Página de inicio de LoCoMPro.
+    /// </summary>
     public class IndexModel : PageModel
     {
+        /// <summary>
+        /// Contexto de la base de datos de LoCoMPro.
+        /// </summary>
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
+        /// <summary>
+        /// Constructor de la clase IndexModel.
+        /// </summary>
+        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
         public IndexModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
