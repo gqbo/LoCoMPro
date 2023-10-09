@@ -129,7 +129,8 @@ namespace LoCoMPro_LV.Data
                 new Product{NameProduct = "Apple Iphone 13 128gb"},
                 new Product{NameProduct = "Terreneitor"},
                 new Product{NameProduct = "Pantalón bershka gris"},
-                new Product{NameProduct = "Hamburguesa con queso"}
+                new Product{NameProduct = "Hamburguesa con queso"},
+                new Product{NameProduct = "Colgate Pasta Total 12 Clean Mint 75ml"}
             };
 
             context.Products.AddRange(products);
@@ -147,8 +148,12 @@ namespace LoCoMPro_LV.Data
                 new Store{NameStore = "Bershka", Canton = cantons[3], NameProvince = "San José", NameCanton = "Desamparados"},
                 new Store{NameStore = "Toys", Canton = cantons[69], NameProvince = "Guanacaste", NameCanton = "Santa Cruz"},
                 new Store{NameStore = "Ishop", Canton = cantons[38], NameProvince = "Heredia", NameCanton = "Santo Domingo"},
-                new Store{NameStore = "MacDonalds", Canton = cantons[82], NameProvince = "Limón", NameCanton = "Matina"},
-                new Store{NameStore = "MacDonalds", Canton = cantons[56], NameProvince = "Puntarenas", NameCanton = "Buenos Aires"}
+                new Store{NameStore = "McDonald's", Canton = cantons[82], NameProvince = "Limón", NameCanton = "Matina"},
+                new Store{NameStore = "McDonald's", Canton = cantons[56], NameProvince = "Puntarenas", NameCanton = "Buenos Aires"},
+                new Store{NameStore = "Fischel", Canton = cantons[1], NameProvince = "San José", NameCanton = "Escazú"},
+                new Store{NameStore = "Fischel", Canton = cantons[13], NameProvince = "San José", NameCanton = "Moravia"},
+
+
             };
 
             context.Stores.AddRange(stores);
@@ -377,13 +382,23 @@ namespace LoCoMPro_LV.Data
                     NameStore = "Bershka", NameProvince = "San José", NameCanton = "Desamparados", NameProduct = "Pantalón bershka gris", Store = stores[7], Product = products[4]},
                 
                 new Record{NameGenerator="gabriel",GeneratorUser = generator_user[2], RecordDate = DateTime.Parse("2023-5-22"), Price = 2500,
-                    NameStore = "MacDonalds", NameProvince = "Limón", NameCanton = "Matina", NameProduct = "Hamburguesa con queso", Store = stores[10], Product = products[5], Description="La recordaba más barata pero igual de rica"},
+                    NameStore = "McDonald's", NameProvince = "Limón", NameCanton = "Matina", NameProduct = "Hamburguesa con queso", Store = stores[10], Product = products[5], Description="La recordaba más barata pero igual de rica"},
                 
                 new Record{NameGenerator="yordi",GeneratorUser = generator_user[7], RecordDate = DateTime.Parse("2023-1-18"), Price = 1500,
-                    NameStore = "MacDonalds", NameProvince = "Limón", NameCanton = "Matina", NameProduct = "Hamburguesa con queso", Store = stores[10], Product = products[5], Description="Muy deliciosa y barata."},
+                    NameStore = "McDonald's", NameProvince = "Limón", NameCanton = "Matina", NameProduct = "Hamburguesa con queso", Store = stores[10], Product = products[5], Description="Muy deliciosa y barata."},
 
                 new Record{NameGenerator="sebastian",GeneratorUser = generator_user[6], RecordDate = DateTime.Parse("2022-11-1"), Price = 1000.200,
-                    NameStore = "MacDonalds", NameProvince = "Puntarenas", NameCanton = "Buenos Aires", NameProduct = "Hamburguesa con queso", Store = stores[11], Product = products[5], Description="Demasiado barato aunque un poco dura."}
+                    NameStore = "McDonald's", NameProvince = "Puntarenas", NameCanton = "Buenos Aires", NameProduct = "Hamburguesa con queso", Store = stores[11], Product = products[5], Description="Demasiado barato aunque un poco dura."},
+               
+                new Record{NameGenerator="gabriel",GeneratorUser = generator_user[2], RecordDate = DateTime.Parse("2023-8-10"), Price = 2039.95,
+                    NameStore = "Fischel", NameProvince = "San José", NameCanton = "Escazú", NameProduct = "Colgate Pasta Total 12 Clean Mint 75ml", Store = stores[12], Product = products[6], Description="Más cara que en otros lugares."},
+
+                new Record{NameGenerator="keanu",GeneratorUser = generator_user[4], RecordDate = DateTime.Parse("2023-8-6"), Price = 2039.95,
+                    NameStore = "Fischel", NameProvince = "San José", NameCanton = "Escazú", NameProduct = "Colgate Pasta Total 12 Clean Mint 75ml", Store = stores[12], Product = products[6], Description="Es bastante buena, pero está muy cara en diferencia a otros establecimientos."},
+
+                new Record{NameGenerator="cristopher",GeneratorUser = generator_user[1], RecordDate = DateTime.Parse("2023-8-6"), Price = 1890.50,
+                    NameStore = "Fischel", NameProvince = "San José", NameCanton = "Moravia", NameProduct = "Colgate Pasta Total 12 Clean Mint 75ml", Store = stores[13], Product = products[6], Description="La recomiendo, la he utilizado durante 1 año y siempre ha sido mi favorita."}
+
             };
             context.Records.AddRange(records);
             context.SaveChanges();
@@ -395,10 +410,12 @@ namespace LoCoMPro_LV.Data
                 new Category{NameCategory = "Pantalon", NameTopCategory = "Ropa"},
                 new Category{NameCategory = "Celulares", NameTopCategory = "Tecnologia"},
                 new Category{NameCategory = "Comida rápida", NameTopCategory = "Consumibles"},
+                new Category{NameCategory = "Salud Bucal", NameTopCategory = "Farmacia"},
                 new Category{NameCategory = "Juguetes"},
                 new Category{NameCategory = "Moda"},
                 new Category{NameCategory = "Tecnologia"},
-                new Category{NameCategory = "Consumibles"}
+                new Category{NameCategory = "Consumibles"},
+                new Category{NameCategory = "Farmacia"},
             };
             context.Categories.AddRange(categories);
             context.SaveChanges();
@@ -410,7 +427,8 @@ namespace LoCoMPro_LV.Data
                 new Associated{NameProduct = "Apple Iphone 13 128gb" , NameCategory = "Celulares", Product = products[2], Category = categories[3]},
                 new Associated{NameProduct = "Terreneitor" , NameCategory = "Carros", Product = products[3], Category = categories[0]},
                 new Associated{NameProduct = "Pantalón bershka gris" , NameCategory = "Pantalon", Product = products[4], Category = categories[1]},
-                new Associated{NameProduct = "Hamburguesa con queso" , NameCategory = "Comida rápida", Product = products[5], Category = categories[4]}
+                new Associated{NameProduct = "Hamburguesa con queso" , NameCategory = "Comida rápida", Product = products[5], Category = categories[4]},
+                new Associated{NameProduct = "Colgate Pasta Total 12 Clean Mint 75ml" , NameCategory = "Salud Bucal", Product = products[6], Category = categories[5]}
             };
             context.Associated.AddRange(associated);
             context.SaveChanges();
