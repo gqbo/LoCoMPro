@@ -54,7 +54,7 @@ namespace UnitTests_Product
         [TestMethod]
         public void Product_NameProduct_InvalidRegex()
         {
-            var productModel = new Product { NameProduct = "Arroz12" };
+            var productModel = new Product { NameProduct = "@rroz12" };
             var context = new ValidationContext(productModel);
             var results = new List<ValidationResult>();
 
