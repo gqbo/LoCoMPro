@@ -23,19 +23,19 @@ namespace LoCoMPro_LV.Pages.Records
         public IList<Record> Record { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)]
-        public string? SearchString { get; set; }
+        public string SearchString { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string? SearchProvince { get; set; }
+        public string SearchProvince { get; set; }
         public SelectList Provinces { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string? SearchCanton { get; set; }
+        public string SearchCanton { get; set; }
         public SelectList Cantons { get; set; }
         
         public SelectList Categories { get; set; }
         [BindProperty(SupportsGet = true)]
-        public string? SearchCategory { get; set; }
+        public string SearchCategory { get; set; }
 
         public string DateTimeSort { get; set; }
         public string PriceSort { get; set; }

@@ -4,7 +4,6 @@
     ViewData["Title"] = "Crear Registro";
 }
 
-
 <div class="add_product">
     <h1 class="title_add">Agregar Producto</h1>
     <form method="post">
@@ -38,7 +37,6 @@
                     <input asp-for="Record.Price" class="form-control form-control-add" placeholder="Precio" />
                     <span asp-validation-for="Record.NameGenerator" class="text-danger"></span>
                 </div>
-
                 <div class="form-group">
                     <label for="Category">Categoría</label>
                     <input name="NameCategory" id="Category" type="text" class="form-control form-control-add" placeholder="Categoría" />
@@ -65,7 +63,7 @@
                 <div class="col d-flex justify-content-end align-items-center">
                     <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
                 </div>
-            </div>@* Permite hacer un comentario de confirmacion de que el refistro fue guardado con exito*@
+            </div>
             <div class="modal fade" id="successDialog" tabindex="-1" aria-labelledby="successDialogLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -90,25 +88,17 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
-        // Espera a que el documento esté completamente cargado
         document.addEventListener("DOMContentLoaded", function () {
             var provinceDropdown = document.getElementById("Province");
             var cantonDropdown = document.getElementById("Canton");
-
-            // Crear un objeto para almacenar cantones por provincia
             var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
-
-            // Función para actualizar las opciones del dropdown de cantones
             function actualizarDropdownCantones() {
                 var selectedProvince = provinceDropdown.value;
-                cantonDropdown.innerHTML = ''; // Limpiar opciones anteriores
-
+                cantonDropdown.innerHTML = ''; 
                 var defaultOption = document.createElement("option");
                 defaultOption.value = "";
                 defaultOption.text = " Cantón";
                 cantonDropdown.appendChild(defaultOption);
-
-                // Agregar las opciones de cantones basadas en la provincia seleccionada
                 cantonsByProvince[selectedProvince].forEach(function (canton) {
                     var option = document.createElement("option");
                     option.value = canton;
@@ -116,55 +106,44 @@
                     cantonDropdown.appendChild(option);
                 });
             }
-
-            // Agregar un manejador de eventos de cambio al dropdown de provincias
             provinceDropdown.addEventListener("change", actualizarDropdownCantones);
-
-            // Llamar a la función para inicializar el dropdown de cantones con la selección inicial
             actualizarDropdownCantones();
         });
     </script>
     <script type="text/javascript">
         $(function () {
-            var data = @Html.Raw(Json.Serialize(Model.Stores)); //["White Oak", "White Pine", "Whine Sunflower", "White Rose"]
+            var data = @Html.Raw(Json.Serialize(Model.Stores));
             $("#Store").autocomplete({
-
                 source: data,
-                minLength: 1 // Establece la longitud mínima de caracteres para activar el autocompletado
+                minLength: 1 
             });
         });
     </script>
     <script type="text/javascript">
         $(function () {
-            var data = @Html.Raw(Json.Serialize(Model.Product)); //["White Oak", "White Pine", "Whine Sunflower", "White Rose"]
+            var data = @Html.Raw(Json.Serialize(Model.Product));
             $("#Products").autocomplete({
-
                 source: data,
-                minLength: 1 // Establece la longitud mínima de caracteres para activar el autocompletado
+                minLength: 1 
             });
         });
     </script>
     <script type="text/javascript">
         $(function () {
-            var data = @Html.Raw(Json.Serialize(Model.Categories)); //["White Oak", "White Pine", "Whine Sunflower", "White Rose"]
+            var data = @Html.Raw(Json.Serialize(Model.Categories));
             $("#Category").autocomplete({
                 source: data,
-                minLength: 1 // Establece la longitud mínima de caracteres para activar el autocompletado
+                minLength: 1 
             });
         });
     </script>
-    @*--------------------------------------------------------------------------*@
     <script>
         function mostrarDialogoYGuardar() {
             $('#successDialog').modal('show');
-
             setTimeout(function () {
-                // Envía el formulario automáticamente después de 3 segundos
                 document.getElementById('formRegistro').submit();
-
-                // Cierra el cuadro de diálogo
                 $('#successDialog').modal('hide');
-            }, 4000); // 3000 milisegundos = 3 segundos
+            }, 4000); 
         }
     </script>
 }

@@ -23,8 +23,6 @@ namespace LoCoMPro_LV.Pages.Records
             _signInManager = signInManager;
         }
 
-
-        // Listas para almacenar los datos de las tablas y validar las funciones nuevas
         public SelectList Provinces { get; set; }
         public Dictionary<string, List<string>> Cantons { get; set; }
         public HashSet<string> Stores { get; set; }
@@ -33,11 +31,9 @@ namespace LoCoMPro_LV.Pages.Records
         public string AuthenticatedUserName { get; set; }
         public async Task OnGetAsync()
         {
-            // Se cargan las listas de Provincias
             var provinces = await _context.Provinces.ToListAsync();
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
 
-            // Se cargan las listas de Cantones
             var cantons = await _context.Cantons.ToListAsync();
             Cantons = new Dictionary<string, List<string>>();
             foreach (var canton in cantons)
@@ -49,7 +45,6 @@ namespace LoCoMPro_LV.Pages.Records
                 Cantons[canton.NameProvince].Add(canton.NameCanton);
             }
 
-            // Se cargan las listas de Store
             var stores = await _context.Stores.ToListAsync();
             Stores = new HashSet<string>();
             foreach (var store in stores)
@@ -58,7 +53,6 @@ namespace LoCoMPro_LV.Pages.Records
             }
             stores = stores.ToList();
 
-            // Se cargan las listas de Product
             var products = await _context.Products.ToListAsync();
             Product = new List<string>();
             foreach (var prod in products)
@@ -66,7 +60,6 @@ namespace LoCoMPro_LV.Pages.Records
                 Product.Add(prod.NameProduct);
             }
 
-            // Se cargan las lista de Category
             var category = await _context.Categories.ToListAsync();
             Categories = new List<string>();
 
@@ -75,27 +68,22 @@ namespace LoCoMPro_LV.Pages.Records
                 Categories.Add(cat.NameCategory);
             }
 
-            //  -----------------------------------
             if (User.Identity.IsAuthenticated)
             {
                 AuthenticatedUserName = User.Identity.Name;
             }
-
         }
 
 
         [BindProperty]
         public Record Record { get; set; }
-        
         public async Task<IActionResult> OnPostAsync()
-        {
-           
+        {      
             if (!ModelState.IsValid)
             {
                 return RedirectToPage("/Records/Create");
             }
 
-            // Permite guardar locales en la tabla de locales donde se incluye el local, provincia y canton.
             var existingStore = await _context.Stores.FirstOrDefaultAsync(s =>
                 s.NameStore == Record.NameStore &&
                 s.NameProvince == Record.NameProvince &&
@@ -118,16 +106,13 @@ namespace LoCoMPro_LV.Pages.Records
             }
             
 
-            // Permite guardar productos en la tabla de productos y en los registros nuevos.
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.NameProduct == Record.NameProduct);
             if (existingProduct != null)
             {
-                // Si el producto ya existe, usa el producto existente en lugar de crear uno nuevo
                 Record.Product = existingProduct;
             }
             else
             {
-                // Si el producto no existe, crea uno nuevo y agrégalo al registro
                 var newProduct = new Product
                 {
                     NameProduct = Record.NameProduct
@@ -137,44 +122,34 @@ namespace LoCoMPro_LV.Pages.Records
                 Record.Product = newProduct;
             }
 
-            // Captura las categorias y las almacena en associate y categories
             var categoryName = Request.Form["NameCategory"].FirstOrDefault();
 
-            // Verificar si la categoría ya existe en la base de datos
             var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.NameCategory == categoryName);
 
-            // Crear una nueva categoría solo si no existe
             if (existingCategory == null)
             {
-                // La categoría no existe, crea una nueva categoría y guárdala en la base de datos
                 var newCategory = new Category
                 {
-                    NameCategory = categoryName, // Usar la categoría ingresada por el usuario
-                    NameTopCategory = null // Establecer NameTopCategory en null para la nueva categoría
+                    NameCategory = categoryName, NameTopCategory = null
                 };
                 _context.Categories.Add(newCategory);
-                await _context.SaveChangesAsync(); // Guardar cambios en la base de datos
+                await _context.SaveChangesAsync();
             }
 
-            // Crear una nueva asociación en la tabla Associated
-           // arreglar los duplicados
            var existingAssociated = await _context.Associated.FirstOrDefaultAsync(a =>
                 a.NameProduct == Record.NameProduct &&
                 a.NameCategory == categoryName);
 
-            // Crear un nuevo registro solo si no existe
             if (existingAssociated == null)
             {
                 var newAssociated = new Associated
                 {
-                    NameProduct = Record.NameProduct,
-                    NameCategory = categoryName
+                    NameProduct = Record.NameProduct, NameCategory = categoryName
                 };
                 _context.Associated.Add(newAssociated);
-                await _context.SaveChangesAsync(); // Guardar cambios en la base de datos
+                await _context.SaveChangesAsync();
             }
 
-            // Captura la hora automaticamente
             string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             DateTime dateTimeConverted = DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             Record.RecordDate = dateTimeConverted;

@@ -15,14 +15,17 @@
 
 <div class="container container-index index align-items-center">
     <div class="row">
-        <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+        <form method="get" asp-page="/Records/Index" onsubmit="beforeFormSubmit()">
             <div class=" buscar-form">
                 <div class="col">
                     <div class="form-group">
                         <label class="searchString" for="SearchString">Nombre del producto</label>
                         <div class="row d-flex justify-content-center align-items-center">
                             <div class="col-10">
-                                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                <div class="input-group mb-3 loupe-text">
+                                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                    <input class=" loupe-button btn btn-light" id="searchButton" type="submit" value="Buscar">
+                                </div>
                             </div>
                             <div class="col-2">
                                 <input type="button" value="Opciones avanzadas" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,13 +59,6 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <div class="form-group">
-                    <div>
-                        <input class="search_button btn btn-primary" type="submit" value="Buscar" disabled id="searchButton" />
                     </div>
                 </div>
             </div>
