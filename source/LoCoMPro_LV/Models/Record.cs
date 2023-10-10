@@ -26,8 +26,6 @@ namespace LoCoMPro_LV.Models
 
         [Display(Name = "Establecimiento")]
         [StringLength(100, MinimumLength = 2)]
-        [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
-            ErrorMessage = "El nombre del establecimiento debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
         public string NameStore { get; set; }
 
         [Display(Name = "Provincia")]
@@ -41,8 +39,7 @@ namespace LoCoMPro_LV.Models
         [Display(Name = "Producto")]
         [Required(ErrorMessage = "El nombre del producto es obligatorio.")]
         [StringLength(50, MinimumLength = 2)]
-        [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
-            ErrorMessage = "El nombre del producto debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
+        [RegularExpression(@"^[a-zA-Z\s,./\-()%:#]+$", ErrorMessage = "El nombre del producto debe contener solo letras (mayúsculas o minúsculas), espacios y caracteres especiales básicos.")]
         public string NameProduct { get; set; }
 
         public GeneratorUser GeneratorUser { get; set; }

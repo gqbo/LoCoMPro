@@ -6,7 +6,7 @@
 
 <div class="container container-search index align-items-center">
     <div class="row">
-        <form method="get" asp-page="/Records/Index" onsubmit="beforeFormSubmit()">
+        <form method="get" asp-page="/Records/Index">
             <div class=" buscar-form">
                 <div class="col">
                     <div class="form-group">
@@ -174,7 +174,14 @@
                 @Html.DisplayNameFor(model => model.Record[0].NameProduct)
             </th>
             <th class="precio">
-                @Html.DisplayNameFor(model => model.Record[0].Price)
+                <a class="ordering-text" asp-page="./Index"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory"
+                   asp-route-sortOrder="@Model.PriceSort">
+                   @Html.DisplayNameFor(model => model.Record[0].Price)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].NameStore)
@@ -192,7 +199,7 @@
                    asp-route-SearchCanton="@Model.SearchCanton"
                    asp-route-SearchCategory="@Model.SearchCategory"
                    asp-route-sortOrder="@Model.DateTimeSort">
-                    @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                   @Html.DisplayNameFor(model => model.Record[0].RecordDate)
                 </a>
             </th>
         </tr>
@@ -202,14 +209,9 @@
         {
 
             <tr>
-@*                 <td>
-                    <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" , asp-route-RecordDate="@firstItem.RecordDate">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
-                </td> *@
                 <td>
                     <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
                 </td>
-
-
                 <td class="precio">
                     ₡@Html.DisplayFor(modelItem => firstItem.Price)
                 </td>
