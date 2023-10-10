@@ -157,29 +157,27 @@ namespace LoCoMPro_LV.Data
                 new Store{NameStore = "McDonald's", Canton = cantons[56], NameProvince = "Puntarenas", NameCanton = "Buenos Aires"},
                 new Store{NameStore = "Fischel", Canton = cantons[1], NameProvince = "San José", NameCanton = "Escazú"},
                 new Store{NameStore = "Fischel", Canton = cantons[13], NameProvince = "San José", NameCanton = "Moravia"},
-                new Store{ NameStore = "Match On", Canton = cantons[0], NameProvince = "San José", NameCanton = "San José" },
-                new Store{ NameStore = "Supercamisas", Canton = cantons[1], NameProvince = "San José", NameCanton = "Escazú" },
-                new Store{ NameStore = "Mas X Menos", Canton = cantons[2], NameProvince = "San José", NameCanton = "Desamparados" },
-                new Store{ NameStore = "Pali", Canton = cantons[20], NameProvince = "Alajuela", NameCanton = "San Carlos" },
-                new Store{ NameStore = "AM/PM", Canton = cantons[21], NameProvince = "Alajuela", NameCanton = "Upala" },
-                new Store{ NameStore = "Farmacia La Bomba", Canton = cantons[22], NameProvince = "Alajuela", NameCanton = "Los Chiles" },
-                new Store{ NameStore = "Extremetech", Canton = cantons[36], NameProvince = "Heredia", NameCanton = "Heredia" },
-                new Store{ NameStore = "Monge", Canton = cantons[37], NameProvince = "Heredia", NameCanton = "Barva" },
-                new Store{ NameStore = "Match On", Canton = cantons[38], NameProvince = "Heredia", NameCanton = "Santo Domingo" },
-                new Store{ NameStore = "Supercamisas", Canton = cantons[46], NameProvince = "Cartago", NameCanton = "Cartago" },
-                new Store{ NameStore = "Mas X Menos", Canton = cantons[47], NameProvince = "Cartago", NameCanton = "Paraíso" },
-                new Store{ NameStore = "Pali", Canton = cantons[48], NameProvince = "Cartago", NameCanton = "La Unión" },
-                new Store{ NameStore = "AM/PM", Canton = cantons[54], NameProvince = "Puntarenas", NameCanton = "Puntarenas" },
-                new Store{ NameStore = "Farmacia La Bomba", Canton = cantons[55], NameProvince = "Puntarenas", NameCanton = "Esparza" },
-                new Store{ NameStore = "Extremetech", Canton = cantons[56], NameProvince = "Puntarenas", NameCanton = "Buenos Aires" },
-                new Store{ NameStore = "Monge", Canton = cantons[67], NameProvince = "Guanacaste", NameCanton = "Liberia" },
-                new Store{ NameStore = "Match On", Canton = cantons[68], NameProvince = "Guanacaste", NameCanton = "Nicoya" },
-                new Store{ NameStore = "Supercamisas", Canton = cantons[69], NameProvince = "Guanacaste", NameCanton = "Santa Cruz" },
-                new Store{ NameStore = "Mas X Menos", Canton = cantons[78], NameProvince = "Limón", NameCanton = "Limón" },
-                new Store{ NameStore = "Pali", Canton = cantons[79], NameProvince = "Limón", NameCanton = "Pococí" },
-                new Store{ NameStore = "AM/PM", Canton = cantons[80], NameProvince = "Limón", NameCanton = "Siquirres" }
-
-
+                new Store{NameStore = "Match On", Canton = cantons[0], NameProvince = "San José", NameCanton = "San José" },
+                new Store{NameStore = "Supercamisas", Canton = cantons[1], NameProvince = "San José", NameCanton = "Escazú" },
+                new Store{NameStore = "Mas X Menos", Canton = cantons[2], NameProvince = "San José", NameCanton = "Desamparados" },
+                new Store{NameStore = "Pali", Canton = cantons[20], NameProvince = "Alajuela", NameCanton = "San Carlos" },
+                new Store{NameStore = "AM/PM", Canton = cantons[21], NameProvince = "Alajuela", NameCanton = "Upala" },
+                new Store{NameStore = "Farmacia La Bomba", Canton = cantons[22], NameProvince = "Alajuela", NameCanton = "Los Chiles" },
+                new Store{NameStore = "Extremetech", Canton = cantons[36], NameProvince = "Heredia", NameCanton = "Heredia" },
+                new Store{NameStore = "Monge", Canton = cantons[37], NameProvince = "Heredia", NameCanton = "Barva" },
+                new Store{NameStore = "Match On", Canton = cantons[38], NameProvince = "Heredia", NameCanton = "Santo Domingo" },
+                new Store{NameStore = "Supercamisas", Canton = cantons[46], NameProvince = "Cartago", NameCanton = "Cartago" },
+                new Store{NameStore = "Mas X Menos", Canton = cantons[47], NameProvince = "Cartago", NameCanton = "Paraíso" },
+                new Store{NameStore = "Pali", Canton = cantons[48], NameProvince = "Cartago", NameCanton = "La Unión" },
+                new Store{NameStore = "AM/PM", Canton = cantons[54], NameProvince = "Puntarenas", NameCanton = "Puntarenas" },
+                new Store{NameStore = "Farmacia La Bomba", Canton = cantons[55], NameProvince = "Puntarenas", NameCanton = "Esparza" },
+                new Store{NameStore = "Extremetech", Canton = cantons[56], NameProvince = "Puntarenas", NameCanton = "Buenos Aires" },
+                new Store{NameStore = "Monge", Canton = cantons[67], NameProvince = "Guanacaste", NameCanton = "Liberia" },
+                new Store{NameStore = "Match On", Canton = cantons[68], NameProvince = "Guanacaste", NameCanton = "Nicoya" },
+                new Store{NameStore = "Supercamisas", Canton = cantons[69], NameProvince = "Guanacaste", NameCanton = "Santa Cruz" },
+                new Store{NameStore = "Mas X Menos", Canton = cantons[78], NameProvince = "Limón", NameCanton = "Limón" },
+                new Store{NameStore = "Pali", Canton = cantons[79], NameProvince = "Limón", NameCanton = "Pococí" },
+                new Store{NameStore = "AM/PM", Canton = cantons[80], NameProvince = "Limón", NameCanton = "Siquirres" }
             };
 
             context.Stores.AddRange(stores);
@@ -453,8 +451,24 @@ namespace LoCoMPro_LV.Data
                     NameStore = "Match On", NameProvince = "San José", NameCanton = "San José", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[14], Product = products[7]},
 
                 new Record{NameGenerator="keanu", GeneratorUser = generator_user[4], RecordDate = DateTime.Parse("2022-9-29"), Price = 19000,
-                    NameStore = "Match On", NameProvince = "Heredia", NameCanton = "Santo Domingo", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[4], Product = products[7]}
-                };
+                    NameStore = "Match On", NameProvince = "Heredia", NameCanton = "Santo Domingo", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[4], Product = products[7]},
+
+                new Record{NameGenerator="sebastian", GeneratorUser = generator_user[6], RecordDate = DateTime.Parse("2023-10-9"), Price = 450000,
+                    NameStore = "Monge", NameProvince = "Guanacaste", NameCanton = "Liberia", NameProduct = "Samsung Galaxy S23 ultra prime", Store = stores[29], Product = products[9], Description="El mejor celular calidad precio, después de xiaomi"},
+
+                new Record{NameGenerator="keanu", GeneratorUser = generator_user[4], RecordDate = DateTime.Parse("2023-1-18"), Price = 8000,
+                    NameStore = "Farmacia La Bomba", NameProvince = "Puntarenas", NameCanton = "Esparza", NameProduct = "ASEPXIA JABÓN BARRA AZUFRE 100 GR", Store = stores[27], Product = products[11], Description="Increíble."},
+
+                new Record{NameGenerator="gabriel", GeneratorUser = generator_user[2], RecordDate = DateTime.Parse("2022-2-7"), Price = 2900,
+                    NameStore = "Mas X Menos", NameProvince = "San José", NameCanton = "Desamparados", NameProduct = "Four loko Mango 500ml", Store = stores[16], Product = products[8], Description="La mejor four, y esta 2x1."},
+
+                new Record{NameGenerator="cristopher", GeneratorUser = generator_user[1], RecordDate = DateTime.Parse("2022-2-7"), Price = 2600,
+                    NameStore = "Mas X Menos", NameProvince = "San José", NameCanton = "Desamparados", NameProduct = "Four loko Mango 500ml", Store = stores[16], Product = products[8],  Description="Me gusta más la de sandía, pero esta no esta mal."},
+
+                new Record{NameGenerator="james", GeneratorUser = generator_user[3], RecordDate = DateTime.Parse("2021-11-12"), Price = 380000,
+                    NameStore = "Ishop", NameProvince = "San José", NameCanton = "Tibás", NameProduct = "Apple Iphone 12 64gb", Store = stores[0], Product = products[1],  Description="Me parece un muy buen celular."}
+            };
+            
             context.Records.AddRange(records);
             context.SaveChanges();
 
@@ -485,6 +499,9 @@ namespace LoCoMPro_LV.Data
                 new Associated{NameProduct = "Pantalón bershka gris" , NameCategory = "Pantalon", Product = products[4], Category = categories[1]},
                 new Associated{NameProduct = "Hamburguesa con queso" , NameCategory = "Comida rápida", Product = products[5], Category = categories[4]},
                 new Associated{NameProduct = "Colgate Pasta Total 12 Clean Mint 75ml" , NameCategory = "Salud Bucal", Product = products[6], Category = categories[5]},
+                new Associated{NameProduct = "Samsung Galaxy S23 ultra prime", NameCategory = "Celulares", Product = products[9], Category = categories[3]},
+                new Associated{NameProduct = "ASEPXIA JABÓN BARRA AZUFRE 100 GR", NameCategory = "Farmacia", Product = products[11], Category = categories[10]},
+                new Associated{NameProduct = "Four loko Mango 500ml", NameCategory = "Consumibles", Product = products[8], Category = categories[9]},
                 new Associated{NameProduct = "Camisa original Real Madrid #5 Bellingham" , NameCategory = "Ropa deportiva", Product = products[7], Category = categories[11]}
             };
             context.Associated.AddRange(associated);
