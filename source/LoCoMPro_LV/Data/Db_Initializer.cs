@@ -424,34 +424,34 @@ namespace LoCoMPro_LV.Data
                     NameStore = "Fischel", NameProvince = "San José", NameCanton = "Moravia", NameProduct = "Colgate Pasta Total 12 Clean Mint 75ml", Store = stores[13], Product = products[6], Description="La recomiendo, la he utilizado durante 1 año y siempre ha sido mi favorita."},
 
                 new Record{NameGenerator="brad", GeneratorUser = generator_user[0], RecordDate = DateTime.Parse("2023-3-15"), Price = 17000,
-                    NameStore = "Match On", NameProvince = "Guanacaste", NameCanton = "Nicoya", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[30], Product = products[7]},
+                    NameStore = "Match On", NameProvince = "Guanacaste", NameCanton = "Nicoya", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[30], Product = products[7], Description="Soy del Barca pero la camisa me gusta."},
 
                 new Record{NameGenerator="cristopher", GeneratorUser = generator_user[1], RecordDate = DateTime.Parse("2022-7-20"), Price = 17500,
-                    NameStore = "Supercamisas", NameProvince = "Guanacaste", NameCanton = "Santa Cruz", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[31], Product = products[7]},
+                    NameStore = "Supercamisas", NameProvince = "Guanacaste", NameCanton = "Santa Cruz", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[31], Product = products[7], Description="Muy buen precio y se ve bastante original"},
 
                 new Record{NameGenerator="sebastian", GeneratorUser = generator_user[6], RecordDate = DateTime.Parse("2022-3-10"), Price = 22000,
-                    NameStore = "Match On", NameProvince = "Guanacaste", NameCanton = "Nicoya", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[30], Product = products[7]},
+                    NameStore = "Match On", NameProvince = "Guanacaste", NameCanton = "Nicoya", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[30], Product = products[7], Description="No se ve original pero igual esta bonita"},
 
                 new Record{NameGenerator="emma", GeneratorUser = generator_user[8], RecordDate = DateTime.Parse("2022-4-12"), Price = 19000,
-                    NameStore = "Supercamisas", NameProvince = "San José", NameCanton = "Escazú", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[24], Product = products[7]},
+                    NameStore = "Supercamisas", NameProvince = "San José", NameCanton = "Escazú", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[24], Product = products[7], Description="Yo queria un terreneitor pero era lo que había"},
 
                 new Record{NameGenerator="yordi", GeneratorUser = generator_user[7], RecordDate = DateTime.Parse("2022-8-25"), Price = 16000,
-                    NameStore = "Supercamisas", NameProvince = "Guanacaste", NameCanton = "Santa Cruz", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[31], Product = products[7]},
+                    NameStore = "Supercamisas", NameProvince = "Guanacaste", NameCanton = "Santa Cruz", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[31], Product = products[7], Description="Me encanta el diseño pero queria la de el bicho"},
 
                 new Record{NameGenerator="sebastian", GeneratorUser = generator_user[6], RecordDate = DateTime.Parse("2022-3-11"), Price = 20000,
-                    NameStore = "Match On", NameProvince = "Guanacaste", NameCanton = "Nicoya", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[30], Product = products[7]},
+                    NameStore = "Match On", NameProvince = "Guanacaste", NameCanton = "Nicoya", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[30], Product = products[7], Description="Esta muy bonita"},
 
                 new Record{NameGenerator="cristopher", GeneratorUser = generator_user[1], RecordDate = DateTime.Parse("2022-7-28"), Price = 19000,
                     NameStore = "Supercamisas", NameProvince = "Guanacaste", NameCanton = "Santa Cruz", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[31], Product = products[7]},
 
                 new Record{NameGenerator="brad", GeneratorUser = generator_user[0], RecordDate = DateTime.Parse("2023-3-25"), Price = 20000,
-                    NameStore = "Match On", NameProvince = "Guanacaste", NameCanton = "Nicoya", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[30], Product = products[7]},
+                    NameStore = "Match On", NameProvince = "Guanacaste", NameCanton = "Nicoya", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[30], Product = products[7], Description="Solo se que me gusta el futbol, y me han quitado a Messi"},
 
                 new Record{NameGenerator="james", GeneratorUser = generator_user[3], RecordDate = DateTime.Parse("2022-12-19"), Price = 16000,
-                    NameStore = "Match On", NameProvince = "San José", NameCanton = "San José", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[14], Product = products[7]},
+                    NameStore = "Match On", NameProvince = "San José", NameCanton = "San José", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[14], Product = products[7], Description="Con esta voy a estar cheto en la mejenga"},
 
                 new Record{NameGenerator="keanu", GeneratorUser = generator_user[4], RecordDate = DateTime.Parse("2022-9-29"), Price = 19000,
-                    NameStore = "Match On", NameProvince = "Heredia", NameCanton = "Santo Domingo", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[4], Product = products[7]},
+                    NameStore = "Match On", NameProvince = "Heredia", NameCanton = "Santo Domingo", NameProduct = "Camisa original Real Madrid #5 Bellingham", Store = stores[4], Product = products[7], Description="Muy buena calidad"},
 
                 new Record{NameGenerator="sebastian", GeneratorUser = generator_user[6], RecordDate = DateTime.Parse("2023-10-9"), Price = 450000,
                     NameStore = "Monge", NameProvince = "Guanacaste", NameCanton = "Liberia", NameProduct = "Samsung Galaxy S23 ultra prime", Store = stores[29], Product = products[9], Description="El mejor celular calidad precio, después de xiaomi"},
