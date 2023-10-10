@@ -65,8 +65,10 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
             [DataType(DataType.Text)]
+            [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre de usuario debe tener entre 2 y 50 caracteres.")]
+            [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "El nombre de usuario no es válido. Únicamente se admiten letras minúsculas, mayúsculas y números.")]
             [Display(Name = "Usuario")]
             public string UserName { get; set; }
 
