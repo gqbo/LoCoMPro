@@ -204,5 +204,122 @@ namespace UnitTests_InputModel
             Assert.IsFalse(isValid);
             Assert.IsTrue(results.Any(r => r.MemberNames.Contains("Password")), "La contraseña debe ser inválida debido a que es obligatorio.");
         }
+
+        // Test by James Araya Rodríguez - B70528
+        [TestMethod]
+        public void RegisterModel_FirstName_Required()
+        {
+            var InputModel = new RegisterModel.InputModel
+            {
+                Email = "James@gmail.com",
+                UserName = "James",
+                LastName = "Araya"
+            };
+            var context = new ValidationContext(InputModel);
+            var results = new List<ValidationResult>();
+
+            bool isValid = Validator.TryValidateObject(InputModel, context, results, true);
+
+            Assert.IsFalse(isValid);
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FirstName")), "El nombre debe ser obligatorio.");
+        }
+        // Test by James Araya Rodríguez - B70528
+        [TestMethod]
+        public void RegisterModel_FirstName_InvalidMinimumLength()
+        {
+            var InputModel = new RegisterModel.InputModel
+            {
+                Email = "James@gmail.com",
+                UserName = "James",
+                FirstName = "J",
+                LastName = "Araya"
+            };
+            var context = new ValidationContext(InputModel);
+            var results = new List<ValidationResult>();
+
+            bool isValid = Validator.TryValidateObject(InputModel, context, results, true);
+
+            Assert.IsFalse(isValid);
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FirstName")), "El nombre de usuario debe ser inválido debido a que no contiene más de 2 caracteres .");
+        }
+
+        // Test by James Araya Rodríguez - B70528
+        [TestMethod]
+        public void RegisterModel_FirstName_InvalidMaximumLength()
+        {
+            var InputModel = new RegisterModel.InputModel
+            {
+                Email = "James@gmail.com",
+                UserName = "James",
+                FirstName = "Jameslkjhtssdkudbdtxistebkdydbtsneodysndkfydbdksbsysbeudi",
+                LastName = "Araya"
+            };
+            var context = new ValidationContext(InputModel);
+            var results = new List<ValidationResult>();
+
+            bool isValid = Validator.TryValidateObject(InputModel, context, results, true);
+
+            Assert.IsFalse(isValid);
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("FirstName")), "El nombre de usuario debe ser inválido debido a que contiene más de 50 caracteres.");
+        }
+
+        // Test by James Araya Rodríguez - B70528
+        [TestMethod]
+        public void RegisterModel_LastName_Required()
+        {
+            var InputModel = new RegisterModel.InputModel
+            {
+                Email = "James@gmail.com",
+                UserName = "James",
+                FirstName = "James"
+            };
+            var context = new ValidationContext(InputModel);
+            var results = new List<ValidationResult>();
+
+            bool isValid = Validator.TryValidateObject(InputModel, context, results, true);
+
+            Assert.IsFalse(isValid);
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("LastName")), "El apellido debe ser obligatorio.");
+        }
+
+        // Test by James Araya Rodríguez - B70528
+        [TestMethod]
+        public void RegisterModel_LastName_InvalidMinimumLength()
+        {
+            var InputModel = new RegisterModel.InputModel
+            {
+                Email = "James@gmail.com",
+                UserName = "James",
+                FirstName = "James",
+                LastName = "A"
+            };
+            var context = new ValidationContext(InputModel);
+            var results = new List<ValidationResult>();
+
+            bool isValid = Validator.TryValidateObject(InputModel, context, results, true);
+
+            Assert.IsFalse(isValid);
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("LastName")), "El apellido debe ser inválido debido a que no contiene más de 2 caracteres.");
+        }
+
+        // Test by James Araya Rodríguez - B70528
+        [TestMethod]
+        public void RegisterModel_LastName_InvalidMaximumLength()
+        {
+            var InputModel = new RegisterModel.InputModel
+            {
+                Email = "James@gmail.com",
+                UserName = "James",
+                FirstName = "James",
+                LastName = "Arayahdshfjdshhfdsjfjdshfgdhsfjdshfhdsjkfhjdshfdgsfhjkdhsjfhdshvjkkjss"
+            };
+            var context = new ValidationContext(InputModel);
+            var results = new List<ValidationResult>();
+
+            bool isValid = Validator.TryValidateObject(InputModel, context, results, true);
+
+            Assert.IsFalse(isValid);
+            Assert.IsTrue(results.Any(r => r.MemberNames.Contains("LastName")), "El apellido debe ser inválido debido a que contiene más de 50 caracteres.");
+        }
     }
 }
