@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group">
                     <label for="Province">Provincia</label>
-                    <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control form-control-add">
+                    <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control form-control-add" >
                         <option value=""> Provincia  </option>
                     </select>
                 </div>
@@ -34,9 +34,11 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Record.Price"></label>
-                    <input asp-for="Record.Price" class="form-control form-control-add" placeholder="Precio" />
-                    <span asp-validation-for="Record.NameGenerator" class="text-danger"></span>
+                    <input asp-for="Record.Price" id="precioInput" class="form-control form-control-add" placeholder="Precio" onblur="asignarPrecioARecord()" />
+                    <span asp-validation-for="Record.Price" class="text-danger"></span>
                 </div>
+
+
                 <div class="form-group">
                     <label for="Category">Categoría</label>
                     <input name="NameCategory" id="Category" type="text" class="form-control form-control-add" placeholder="Categoría" />
@@ -58,7 +60,7 @@
         <form method="post" id="formRegistro">
             <div class="row">
                 <div class="col d-flex justify-content-start align-items-center">
-                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" onclick="mostrarDialogoYGuardar();" />
+                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" onclick="saveRecord();" />
                 </div>
                 <div class="col d-flex justify-content-end align-items-center">
                     <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
@@ -76,7 +78,7 @@
                         <div class="modal-body">
                             El registro se ha guardado con éxito.
                         </div>
-                     </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -84,6 +86,23 @@
 </div>
 
 @section scripts{
+
+    <script>
+        function asignarPrecioARecord() {
+            var precioInput = document.getElementById("precioInput");
+
+            var precioTexto = precioInput.value;
+
+            var precioNumerico = parseFloat(precioTexto.replace(",", "."));
+
+            if (!isNaN(precioNumerico)) {
+                precioInput.value = precioNumerico;
+            }
+        }
+    </script>
+
+
+
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -94,7 +113,7 @@
             var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
             function actualizarDropdownCantones() {
                 var selectedProvince = provinceDropdown.value;
-                cantonDropdown.innerHTML = '';
+                cantonDropdown.innerHTML = ''; 
                 var defaultOption = document.createElement("option");
                 defaultOption.value = "";
                 defaultOption.text = " Cantón";
@@ -115,7 +134,7 @@
             var data = @Html.Raw(Json.Serialize(Model.Stores));
             $("#Store").autocomplete({
                 source: data,
-                minLength: 1
+                minLength: 1 
             });
         });
     </script>
@@ -124,7 +143,7 @@
             var data = @Html.Raw(Json.Serialize(Model.Product));
             $("#Products").autocomplete({
                 source: data,
-                minLength: 1
+                minLength: 1 
             });
         });
     </script>
@@ -133,17 +152,14 @@
             var data = @Html.Raw(Json.Serialize(Model.Categories));
             $("#Category").autocomplete({
                 source: data,
-                minLength: 1
+                minLength: 1 
             });
         });
     </script>
+
     <script>
-        function mostrarDialogoYGuardar() {
-            $('#successDialog').modal('show');
-            setTimeout(function () {
-                document.getElementById('formRegistro').submit();
-                $('#successDialog').modal('hide');
-            }, 4000);
+        function saveRecord() {
+        document.getElementById('formRegistro').submit();
         }
     </script>
 }

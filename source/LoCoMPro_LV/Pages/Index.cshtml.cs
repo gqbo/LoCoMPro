@@ -34,13 +34,13 @@ namespace LoCoMPro_LV.Pages
         /// Cadena de caracteres que se utiliza para filtrar la búsqueda por nombre del producto.
         /// </summary>
         [BindProperty(SupportsGet = true)]
-        public string? SearchString { get; set; }
+        public string SearchString { get; set; }
 
         /// <summary>
         /// Provincia utilizada como filtro de búsqueda.
         /// </summary>
         [BindProperty(SupportsGet = true)]
-        public string? SearchProvince { get; set; }
+        public string SearchProvince { get; set; }
 
         /// <summary>
         /// Lista de provincias para la selección.
@@ -51,7 +51,7 @@ namespace LoCoMPro_LV.Pages
         /// Cantón utilizado como filtro de búsqueda.
         /// </summary>
         [BindProperty(SupportsGet = true)]
-        public string? SearchCanton { get; set; }
+        public string SearchCanton { get; set; }
 
         /// <summary>
         /// Lista de cantones para la selección.
@@ -62,7 +62,7 @@ namespace LoCoMPro_LV.Pages
         /// Categoría utilizada como filtro de búsqueda.
         /// </summary>
         [BindProperty(SupportsGet = true)]
-        public string? SearchCategory { get; set; }
+        public string SearchCategory { get; set; }
 
         /// <summary>
         /// Lista de categorías para la selección.

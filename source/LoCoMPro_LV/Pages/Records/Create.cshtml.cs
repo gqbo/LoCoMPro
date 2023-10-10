@@ -22,63 +22,19 @@ namespace LoCoMPro_LV.Pages.Records
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
-        /// <summary>
-        /// Contexto de la base de datos de LoCoMPro sección de registros.
-        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager;
-
-        /// <summary>
-        /// Constructor de la clase CreateModel.
-        /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        /// <param name="signInManager">Contexto de la base de datos de LoCoMPro usado en el registro.</param>
         public CreateModel(LoCoMPro_LV.Data.LoComproContext context, SignInManager<ApplicationUser> signInManager)
         {
-            _context = context;
+             _context = context;
             _signInManager = signInManager;
         }
 
-        /// <summary>
-        /// Lista de provincias para la selección.
-        /// </summary>
         public SelectList Provinces { get; set; }
-
-        /// <summary>
-        /// Diccionario de cantones.
-        /// </summary>
         public Dictionary<string, List<string>> Cantons { get; set; }
-
-        /// <summary>
-        /// Lista Has de Store para almacenar los locales..
-        /// </summary>
         public HashSet<string> Stores { get; set; }
-
-        /// <summary>
-        /// Lista para almacenar productos.
-        /// </summary>
         public List<string> Product { get; set; }
-
-        /// <summary>
-        /// Lista para almacenar las categorías.
-        /// </summary>
         public List<string> Categories { get; set; }
-
-        /// <summary>
-        /// String para almacenar el nombre de usuario autentificado.
-        /// </summary>
         public string AuthenticatedUserName { get; set; }
-
-        /// <summary>
-        /// Método invocado cuando se realiza una solicitud GET para la página Create de registros. 
-        /// Realiza una serie de tareas que incluyen el agrupamiento en listas y diccionarios de registros y
-        /// la carga de datos relacionados desde la base de datos para la representación en la página web.
-        /// </summary>
-        /// <param name="Provinces">Recibe las provincias y almacena.</param>
-        /// <param name="Cantons">Recibe y almacena los cantones.</param>
-        /// <param name="Stores">Recibe y almacena los establecimientos.</param>
-        /// <param name="Product">Recibe y almacena los productos.</param>
-        /// <param name="Categories">Recibe y almacena las categorías.</param>
-        /// <param name="AuthenticatedUserName">Recibe y almacena el nombre de usuario.</param>
         public async Task OnGetAsync()
         {
             var provinces = await _context.Provinces.ToListAsync();
@@ -102,6 +58,10 @@ namespace LoCoMPro_LV.Pages.Records
                 Stores.Add(store.NameStore);
             }
             stores = stores.ToList();
+        /// <summary>
+        /// Contexto de la base de datos de LoCoMPro sección de registros.
+        /// </summary>
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
             var products = await _context.Products.ToListAsync();
             Product = new List<string>();
@@ -129,14 +89,8 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         [BindProperty]
         public Record Record { get; set; }
-
-        /// <summary>
-        /// Método que carga los datos ingresados por el usuario en la página Create de registros. 
-        /// Realiza una serie de tareas que incluye, validar datos, asignación de datos a sus respectivas tablas.
-        /// en la base de datos
-        /// </summary>
         public async Task<IActionResult> OnPostAsync()
-        {
+        {      
             if (!ModelState.IsValid)
             {
                 return RedirectToPage("/Records/Create");
@@ -162,7 +116,7 @@ namespace LoCoMPro_LV.Pages.Records
                 await _context.SaveChangesAsync();
                 Record.NameStore = newStore.NameStore;
             }
-
+            
 
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.NameProduct == Record.NameProduct);
             if (existingProduct != null)
@@ -186,25 +140,29 @@ namespace LoCoMPro_LV.Pages.Records
 
             if (existingCategory == null)
             {
-                var newCategory = new Category
+                if (categoryName == "")
                 {
-                    NameCategory = categoryName,
-                    NameTopCategory = null
-                };
-                _context.Categories.Add(newCategory);
-                await _context.SaveChangesAsync();
+                    return RedirectToPage("/Records/Create");
+                } else
+                {
+                    var newCategory = new Category
+                    {
+                        NameCategory = categoryName, NameTopCategory = null
+                    };
+                    _context.Categories.Add(newCategory);
+                    await _context.SaveChangesAsync();
+                }
             }
 
-            var existingAssociated = await _context.Associated.FirstOrDefaultAsync(a =>
-                 a.NameProduct == Record.NameProduct &&
-                 a.NameCategory == categoryName);
+           var existingAssociated = await _context.Associated.FirstOrDefaultAsync(a =>
+                a.NameProduct == Record.NameProduct &&
+                a.NameCategory == categoryName);
 
             if (existingAssociated == null)
             {
                 var newAssociated = new Associated
                 {
-                    NameProduct = Record.NameProduct,
-                    NameCategory = categoryName
+                    NameProduct = Record.NameProduct, NameCategory = categoryName
                 };
                 _context.Associated.Add(newAssociated);
                 await _context.SaveChangesAsync();
@@ -216,7 +174,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();
-            return RedirectToPage("./Index");
+            return RedirectToPage("../Index");
         }
     }
 }

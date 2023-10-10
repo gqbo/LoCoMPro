@@ -7,13 +7,21 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
+        <li class="nav-item ml-auto">
+            <button class="navbar_button">
+                <a class="form-inline nav-link" asp-area="" asp-page="/Records/Create">
+                    + Agregar Producto
+                </a>
+            </button>
+        </li>
         <li class="nav-item">
-            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">      
                 <button class="navbar_button" id="logout" type="submit">
                     <a class="nav-link">Cerrar sesión </a>
                 </button>
             </form>
         </li>
+
     }
     else
     {
