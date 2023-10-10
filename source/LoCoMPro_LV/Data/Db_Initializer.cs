@@ -466,7 +466,22 @@ namespace LoCoMPro_LV.Data
                     NameStore = "Mas X Menos", NameProvince = "San José", NameCanton = "Desamparados", NameProduct = "Four loko Mango 500ml", Store = stores[16], Product = products[8],  Description="Me gusta más la de sandía, pero esta no esta mal."},
 
                 new Record{NameGenerator="james", GeneratorUser = generator_user[3], RecordDate = DateTime.Parse("2021-11-12"), Price = 380000,
-                    NameStore = "Ishop", NameProvince = "San José", NameCanton = "Tibás", NameProduct = "Apple Iphone 12 64gb", Store = stores[0], Product = products[1],  Description="Me parece un muy buen celular."}
+                    NameStore = "Ishop", NameProvince = "San José", NameCanton = "Tibás", NameProduct = "Apple Iphone 12 64gb", Store = stores[0], Product = products[1],  Description="Me parece un muy buen celular."},
+
+                new Record{NameGenerator="keanu", GeneratorUser = generator_user[4], RecordDate = DateTime.Parse("2021-9-27"), Price = 1500,
+                    NameStore = "Pali", NameProvince = "Limón", NameCanton = "Pococí", NameProduct = "Colgate Pasta Total 12 Clean Mint 75ml", Store = stores[33], Product = products[6], Description=" Colgate grande."},
+
+                new Record{NameGenerator="james",GeneratorUser = generator_user[3], RecordDate = DateTime.Parse("2023-10-10"), Price = 21000,
+                    NameStore = "Bershka", NameProvince = "San José", NameCanton = "Heredia", NameProduct = "Pantalón bershka gris", Store = stores[1], Product = products[4], Description=" Descuento de temporada."},
+
+                new Record{NameGenerator="gabriel",GeneratorUser = generator_user[2], RecordDate = DateTime.Parse("2015-8-9"), Price = 1000,
+                    NameStore = "Mas X Menos", NameProvince = "Cartago", NameCanton = "Paraíso", NameProduct = "Four loko Mango 500ml", Store = stores[24], Product = products[8], Description=" Promoción por los próximos 3 días."},
+
+                new Record{NameGenerator="sebastian", GeneratorUser = generator_user[6], RecordDate = DateTime.Parse("2018-7-26"), Price = 817425,
+                    NameStore = "Monge", NameProvince = "Heredia", NameCanton = "Barva", NameProduct = "Samsung Galaxy S23 ultra prime", Store = stores[21], Product = products[9]},
+
+                new Record{NameGenerator="yordi", GeneratorUser = generator_user[7], RecordDate = DateTime.Parse("2023-1-1"), Price = 1235000,
+                    NameStore = "Extremetech", NameProvince = "Heredia", NameCanton = "Heredia", NameProduct = "Apple Iphone 12 64gb", Store = stores[20], Product = products[1]}
             };
             
             context.Records.AddRange(records);
