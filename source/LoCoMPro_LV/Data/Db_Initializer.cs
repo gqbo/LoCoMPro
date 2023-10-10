@@ -493,6 +493,8 @@ namespace LoCoMPro_LV.Data
                 new Category{NameCategory = "Ropa", NameTopCategory = "Moda"},
                 new Category{NameCategory = "Pantalon", NameTopCategory = "Ropa"},
                 new Category{NameCategory = "Celulares", NameTopCategory = "Tecnologia"},
+                new Category{NameCategory = "Comida rápida", NameTopCategory = "Consumibles"},
+                new Category{NameCategory = "Salud Bucal", NameTopCategory = "Farmacia"},
                 new Category{NameCategory = "Juguetes"},
                 new Category{NameCategory = "Moda"},
                 new Category{NameCategory = "Tecnologia"},
