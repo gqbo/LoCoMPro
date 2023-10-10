@@ -145,17 +145,24 @@ namespace LoCoMPro_LV.Pages.Records
             }
             else
             {
-                var newStore = new Store
+                if (Record.NameProvince == null || Record.NameCanton==null)
                 {
-                    NameStore = Record.NameStore,
-                    NameProvince = Record.NameProvince,
-                    NameCanton = Record.NameCanton
-                };
-                _context.Stores.Add(newStore);
-                await _context.SaveChangesAsync();
-                Record.NameStore = newStore.NameStore;
-            }
+                    return RedirectToPage("/Records/Create");
+                } else
+                {
+                    var newStore = new Store
+                    {
+                        NameStore = Record.NameStore,
+                        NameProvince = Record.NameProvince,
+                        NameCanton = Record.NameCanton
+                    };
+                    _context.Stores.Add(newStore);
+                    await _context.SaveChangesAsync();
+                    Record.NameStore = newStore.NameStore;
 
+                }
+                
+            }
 
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.NameProduct == Record.NameProduct);
             if (existingProduct != null)
