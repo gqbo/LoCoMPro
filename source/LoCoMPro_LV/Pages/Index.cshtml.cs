@@ -6,32 +6,73 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LoCoMPro_LV.Pages
 {
+    /// <summary>
+    /// Página de inicio de LoCoMPro.
+    /// </summary>
     public class IndexModel : PageModel
     {
+        /// <summary>
+        /// Contexto de la base de datos de LoCoMPro.
+        /// </summary>
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
+        /// <summary>
+        /// Constructor de la clase IndexModel.
+        /// </summary>
+        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
         public IndexModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
+        /// </summary>
         public IList<Record> Record { get; set; } = default!;
 
+        /// <summary>
+        /// Cadena de caracteres que se utiliza para filtrar la búsqueda por nombre del producto.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
 
-        public SelectList Provinces { get; set; }
+        /// <summary>
+        /// Provincia utilizada como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string SearchProvince { get; set; }
 
-        public SelectList Cantons { get; set; }
+        /// <summary>
+        /// Lista de provincias para la selección.
+        /// </summary>
+        public SelectList Provinces { get; set; }
+
+        /// <summary>
+        /// Cantón utilizado como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string SearchCanton { get; set; }
 
-        public SelectList Categories { get; set; }
+        /// <summary>
+        /// Lista de cantones para la selección.
+        /// </summary>
+        public SelectList Cantons { get; set; }
+
+        /// <summary>
+        /// Categoría utilizada como filtro de búsqueda.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string SearchCategory { get; set; }
 
+        /// <summary>
+        /// Lista de categorías para la selección.
+        /// </summary>
+        public SelectList Categories { get; set; }
+
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud GET que redirige a la página de índice de registros. 
+        /// Realiza la carga de datos con los parámetros deseados relacionados en la base de datos.
+        /// </summary>
         public async Task OnGetAsync()
         {
             var provinces = await _context.Provinces.ToListAsync();
