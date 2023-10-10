@@ -2,6 +2,9 @@
 
 namespace LoCoMPro_LV.Models
 {
+    /// <summary>
+    /// Modelo relacionado con los productos de la aplicación web. Este modelo se relaciona con la tabla Product de la base de datos.
+    /// </summary>
     public class Product
     {
         [Key]

@@ -31,6 +31,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// Constructor de la clase CreateModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
+        /// <param name="signInManager">Contexto de la base de datos de LoCoMPro usado en el registro.</param>
         public CreateModel(LoCoMPro_LV.Data.LoComproContext context, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
@@ -43,7 +44,7 @@ namespace LoCoMPro_LV.Pages.Records
         public SelectList Provinces { get; set; }
 
         /// <summary>
-        /// Diccionario de cantones..
+        /// Diccionario de cantones.
         /// </summary>
         public Dictionary<string, List<string>> Cantons { get; set; }
 
@@ -53,12 +54,12 @@ namespace LoCoMPro_LV.Pages.Records
         public HashSet<string> Stores { get; set; }
 
         /// <summary>
-        /// Lista para almecenar productos.
+        /// Lista para almacenar productos.
         /// </summary>
         public List<string> Product { get; set; }
 
         /// <summary>
-        /// Lista para almacenar las categorias.
+        /// Lista para almacenar las categorías.
         /// </summary>
         public List<string> Categories { get; set; }
 
@@ -74,9 +75,9 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         /// <param name="Provinces">Recibe las provincias y almacena.</param>
         /// <param name="Cantons">Recibe y almacena los cantones.</param>
-        /// <param name="Stores">Recibe y almacena los Stores.</param>
+        /// <param name="Stores">Recibe y almacena los establecimientos.</param>
         /// <param name="Product">Recibe y almacena los productos.</param>
-        /// <param name="Categories">Recibe y almacena las categorias.</param>
+        /// <param name="Categories">Recibe y almacena las categorías.</param>
         /// <param name="AuthenticatedUserName">Recibe y almacena el nombre de usuario.</param>
         public async Task OnGetAsync()
         {
@@ -124,14 +125,14 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Construye un metodo de llamado a record para pasar datos del HTML 
+        /// Construye un método de llamado a record para pasar datos del HTML 
         /// </summary>
         [BindProperty]
         public Record Record { get; set; }
 
         /// <summary>
-        /// Metodo que carga los datos ingresados por el usuario en la página Create de registros. 
-        /// Realiza una serie de tareas que incluyer, validar datos, asignacion de datos a sus respectibas tablas.
+        /// Método que carga los datos ingresados por el usuario en la página Create de registros. 
+        /// Realiza una serie de tareas que incluye, validar datos, asignación de datos a sus respectivas tablas.
         /// en la base de datos
         /// </summary>
         public async Task<IActionResult> OnPostAsync()

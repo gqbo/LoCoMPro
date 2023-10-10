@@ -2,6 +2,9 @@
 
 namespace LoCoMPro_LV.Models
 {
+    /// <summary>
+    /// Modelo relacionado con la asociación entre los productos y la categorías de la aplicación web. Este modelo se relaciona con la tabla Associated de la base de datos.
+    /// </summary>
     public class Associated
     {
         [Key]

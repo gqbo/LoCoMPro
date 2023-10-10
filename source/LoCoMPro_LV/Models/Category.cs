@@ -2,6 +2,9 @@
 
 namespace LoCoMPro_LV.Models
 {
+    /// <summary>
+    /// Modelo relacionado con las categorías de la aplicación web. Este modelo se relaciona con la tabla Category de la base de datos.
+    /// </summary>
     public class Category
     {
         [Key]

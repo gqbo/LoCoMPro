@@ -2,6 +2,9 @@
 
 namespace LoCoMPro_LV.Models
 {
+    /// <summary>
+    /// Modelo relacionado con las tiendas de la aplicación web. Representa un establecimiento o tienda. Este modelo se relaciona con la tabla Cantons de la base de datos
+    /// </summary>
     public class Store
     {
         [Key]
