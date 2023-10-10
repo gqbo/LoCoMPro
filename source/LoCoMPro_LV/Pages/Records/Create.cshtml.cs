@@ -128,12 +128,18 @@ namespace LoCoMPro_LV.Pages.Records
 
             if (existingCategory == null)
             {
-                var newCategory = new Category
+                if (categoryName == "")
                 {
-                    NameCategory = categoryName, NameTopCategory = null
-                };
-                _context.Categories.Add(newCategory);
-                await _context.SaveChangesAsync();
+                    return RedirectToPage("/Records/Create");
+                } else
+                {
+                    var newCategory = new Category
+                    {
+                        NameCategory = categoryName, NameTopCategory = null
+                    };
+                    _context.Categories.Add(newCategory);
+                    await _context.SaveChangesAsync();
+                }
             }
 
            var existingAssociated = await _context.Associated.FirstOrDefaultAsync(a =>
