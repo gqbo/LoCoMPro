@@ -1,64 +1,149 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Records.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Registro";
 }
 
-<h1>Create</h1>
-
-<h4>Record</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Record.NameGenerator" class="control-label"></label>
-                <select asp-for="Record.NameGenerator" class ="form-control" asp-items="ViewBag.NameGenerator"></select>
+<div class="add_product">
+    <h1 class="title_add">Agregar Producto</h1>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input asp-for="Record.NameGenerator" class="form-control form-control-add" value="@Model.AuthenticatedUserName" hidden />
+                    <span asp-validation-for="Record.NameGenerator" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Store">Establecimiento</label>
+                    <input name="Record.NameStore" id="Store" type="text" class="form-control form-control-add" placeholder="Establecimiento" />
+                </div>
+                <div class="form-group">
+                    <label for="Province">Provincia</label>
+                    <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control form-control-add">
+                        <option value=""> Provincia  </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Canton">Cantón</label>
+                    <select id="Canton" name="Record.NameCanton" class="form-control form-control-add">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Products">Producto</label>
+                    <input name="Record.NameProduct" id="Products" type="text" class="form-control form-control-add" placeholder="Producto" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Record.Price"></label>
+                    <input asp-for="Record.Price" class="form-control form-control-add" placeholder="Precio" />
+                    <span asp-validation-for="Record.NameGenerator" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Category">Categoría</label>
+                    <input name="NameCategory" id="Category" type="text" class="form-control form-control-add" placeholder="Categoría" />
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Record.RecordDate" class="control-label"></label>
-                <input asp-for="Record.RecordDate" class="form-control" />
-                <span asp-validation-for="Record.RecordDate" class="text-danger"></span>
+            <div class="col-md-2"></div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label asp-for="Record.Description" class="control-label"></label>
+                            <textarea asp-for="Record.Description" class="form-control form-control-add form-control form-control-add-lg" placeholder=" Añade una descripción" rows="8"></textarea>
+                            <span asp-validation-for="Record.Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Record.Description" class="control-label"></label>
-                <input asp-for="Record.Description" class="form-control" />
-                <span asp-validation-for="Record.Description" class="text-danger"></span>
+        </div>
+        <form method="post" id="formRegistro">
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" onclick="mostrarDialogoYGuardar();" />
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Record.Price" class="control-label"></label>
-                <input asp-for="Record.Price" class="form-control" />
-                <span asp-validation-for="Record.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameStore" class="control-label"></label>
-                <select asp-for="Record.NameStore" class ="form-control" asp-items="ViewBag.NameStore"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameProvince" class="control-label"></label>
-                <select asp-for="Record.NameProvince" class ="form-control" asp-items="ViewBag.NameProvince"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameCanton" class="control-label"></label>
-                <select asp-for="Record.NameCanton" class ="form-control" asp-items="ViewBag.NameCanton"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameProduct" class="control-label"></label>
-                <select asp-for="Record.NameProduct" class ="form-control" asp-items="ViewBag.NameProduct"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="modal fade" id="successDialog" tabindex="-1" aria-labelledby="successDialogLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="successDialogLabel">Éxito</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            El registro se ha guardado con éxito.
+                        </div>
+                     </div>
+                </div>
             </div>
         </form>
-    </div>
+    </form>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@section scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var provinceDropdown = document.getElementById("Province");
+            var cantonDropdown = document.getElementById("Canton");
+            var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
+            function actualizarDropdownCantones() {
+                var selectedProvince = provinceDropdown.value;
+                cantonDropdown.innerHTML = '';
+                var defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.text = " Cantón";
+                cantonDropdown.appendChild(defaultOption);
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
+            provinceDropdown.addEventListener("change", actualizarDropdownCantones);
+            actualizarDropdownCantones();
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var data = @Html.Raw(Json.Serialize(Model.Stores));
+            $("#Store").autocomplete({
+                source: data,
+                minLength: 1
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var data = @Html.Raw(Json.Serialize(Model.Product));
+            $("#Products").autocomplete({
+                source: data,
+                minLength: 1
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var data = @Html.Raw(Json.Serialize(Model.Categories));
+            $("#Category").autocomplete({
+                source: data,
+                minLength: 1
+            });
+        });
+    </script>
+    <script>
+        function mostrarDialogoYGuardar() {
+            $('#successDialog').modal('show');
+            setTimeout(function () {
+                document.getElementById('formRegistro').submit();
+                $('#successDialog').modal('hide');
+            }, 4000);
+        }
+    </script>
 }

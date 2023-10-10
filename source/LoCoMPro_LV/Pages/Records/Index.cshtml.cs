@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace LoCoMPro_LV.Pages.Records
 {
     /// <summary>
-    /// Página de de índice de Records para la búsqueda y visualización de registros.
+    /// Página de índice de Records para la búsqueda y visualización de registros.
     /// </summary>
     public class IndexModel : PageModel
     {
