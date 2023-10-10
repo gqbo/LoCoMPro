@@ -66,7 +66,8 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
-            [DataType(DataType.Text)]
+            [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre de usuario debe tener entre 2 y 50 caracteres.")]
+            [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "El nombre de usuario no es válido. Únicamente se admiten letras minúsculas, mayúsculas y números.")]
             [Display(Name = "Usuario")]
             public string UserName { get; set; }
 

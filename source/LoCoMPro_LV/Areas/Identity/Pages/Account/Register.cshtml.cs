@@ -114,6 +114,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
             [Required(ErrorMessage = "La contraseña es obligatoria.")]
             [StringLength(50, MinimumLength = 2, ErrorMessage = "La contraseña debe tener entre 2 y 50 caracteres.")]
             [DataType(DataType.Password)]
+            [RegularExpression(@"^(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "La contraseña debe contener al menos una letra mayúscula y al menos un número.")]
             [Display(Name = "Contraseña")]
             public string Password { get; set; }
 
