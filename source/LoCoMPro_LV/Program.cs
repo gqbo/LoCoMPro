@@ -3,15 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
 builder.Services.AddDbContext<LoComproContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("LoComproContext") ?? throw new InvalidOperationException("Connection string 'SchoolContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LoComproContext") ?? throw new InvalidOperationException("Connection string 'LoComproContext' not found.")));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
