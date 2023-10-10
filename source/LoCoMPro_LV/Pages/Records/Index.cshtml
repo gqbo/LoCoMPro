@@ -1,19 +1,10 @@
 ﻿@page
-@model IndexModel
+@model LoCoMPro_LV.Pages.Records.IndexModel
 @{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "Consulta";
 }
 
-<script>
-    window.onload = function () {
-        document.getElementsByName("SearchString")[0].value = '';
-        document.getElementsByName("SearchProvince")[0].value = '';
-        document.getElementsByName("SearchCanton")[0].value = '';
-        document.getElementsByName("SearchCategory")[0].value = '';
-    };
-</script>
-
-<div class="container container-index index align-items-center">
+<div class="container container-search index align-items-center">
     <div class="row">
         <form method="get" asp-page="/Records/Index">
             <div class=" buscar-form">
@@ -24,7 +15,7 @@
                             <div class="col-10">
                                 <div class="input-group mb-3 loupe-text">
                                     <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
-                                    <input class=" loupe-button btn btn-light" id="searchButton" type="submit" value="Buscar">
+                                    <input class=" loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar">
                                 </div>
                             </div>
                             <div class="col-2">
@@ -67,13 +58,32 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var advancedSearch = document.getElementById("advancedSearch");
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var categoryDropdown = document.getElementById("Category");
+
+        var isProvinceSelected = provinceDropdown.value !== "";
+        var isCantonSelected = cantonDropdown.value !== "";
+        var isCategorySelected = categoryDropdown.value !== "";
+
+        if (isProvinceSelected || isCantonSelected || isCategorySelected) {
+            advancedSearch.classList.add("show");
+        } else {
+            advancedSearch.classList.remove("show");
+        }
+    });
+</script>
+
+<script>
     window.addEventListener('DOMContentLoaded', (event) => {
         toggleSearchButton();
     });
 
     function toggleSearchButton() {
         const searchStringInput = document.getElementById("SearchString");
-        const searchButton = document.getElementById("searchButton");
+        const searchButton = document.getElementById("button-addon2");
 
         if (searchStringInput.value.trim() !== "") {
             searchButton.disabled = false;
@@ -122,3 +132,102 @@
         actualizarDropdownCantones();
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var cantonDropdown = document.getElementById("Canton");
+        var selectedCanton = cantonDropdown.value;
+
+        document.querySelector("form").addEventListener("submit", function () {
+            var formAction = this.getAttribute("action");
+            var updatedAction = formAction + "?SearchCanton=" + encodeURIComponent(selectedCanton);
+            this.setAttribute("action", updatedAction);
+        });
+    });
+
+    window.addEventListener('load', function () {
+        var cantonDropdown = document.getElementById("Canton");
+        var selectedCanton = getParameterByName("SearchCanton");
+
+        if (selectedCanton) {
+            cantonDropdown.value = selectedCanton;
+        }
+    });
+
+    function getParameterByName(name, url) {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+</script>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameProduct)
+            </th>
+            <th class="precio">
+                <a class="ordering-text" asp-page="./Index"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory"
+                   asp-route-sortOrder="@Model.PriceSort">
+                   @Html.DisplayNameFor(model => model.Record[0].Price)
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameStore)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
+            </th>
+            <th>
+                <a class="ordering-text" asp-page="./Index"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory"
+                   asp-route-sortOrder="@Model.DateTimeSort">
+                   @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var firstItem in Model.Record)
+        {
+
+            <tr>
+                <td>
+                    <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
+                </td>
+                <td class="precio">
+                    ₡@Html.DisplayFor(modelItem => firstItem.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => firstItem.NameStore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => firstItem.NameProvince)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => firstItem.NameCanton)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
