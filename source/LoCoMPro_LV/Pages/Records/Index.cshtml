@@ -173,7 +173,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].NameProduct)
             </th>
-            <th class="precio">
+            <th>
                 <a class="ordering-text" asp-page="./Index"
                    asp-route-SearchString="@Model.SearchString"
                    asp-route-SearchProvince="@Model.SearchProvince"
@@ -210,22 +210,34 @@
 
             <tr>
                 <td>
-                    <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
-                </td>
-                <td class="precio">
-                    ₡@Html.DisplayFor(modelItem => firstItem.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => firstItem.NameStore)
+                    <div class="table-item">
+                        <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
+                    </div>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => firstItem.NameProvince)
+                    <div class="table-item precio">
+                        ₡@Html.DisplayFor(modelItem => firstItem.Price)
+                    </div>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => firstItem.NameCanton)
+                    <div class="table-item">
+                        @Html.DisplayFor(modelItem => firstItem.NameStore)
+                    </div>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => firstItem.RecordDate)
+                    <div class="table-item">
+                        @Html.DisplayFor(modelItem => firstItem.NameProvince)
+                    </div>
+                </td>
+                <td>
+                    <div class="table-item">
+                        @Html.DisplayFor(modelItem => firstItem.NameCanton)
+                    </div>
+                </td>
+                <td>
+                    <div class="table-item fecha">
+                        @Html.DisplayFor(modelItem => firstItem.RecordDate)
+                    </div>
                 </td>
             </tr>
         }
