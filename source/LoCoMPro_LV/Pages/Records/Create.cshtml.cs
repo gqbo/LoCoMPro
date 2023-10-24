@@ -5,11 +5,12 @@ using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
+using System.ComponentModel.DataAnnotations;
 
 namespace LoCoMPro_LV.Pages.Records
 {
     /// <summary>
-    /// Página de Crear de Records para la creación de nuevos registros registros.
+    /// Página Create de Records para la creación de nuevos registros registros.
     /// </summary>
     public class CreateModel : PageModel
     {
@@ -33,51 +34,71 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Lista de provincias para la selección.
+        /// Método invocado cuando se realiza una solicitud GET para crear registros. 
+        /// Realiza una serie de llamados a los diferentes métodos encargados de obtener la información de la base de datos.
+        /// </summary>
+        public async Task OnGetAsync()
+        {
+            await LoadProvincesAsync();
+            await LoadCantonsAsync();
+            await LoadStoresAsync();
+            await LoadProductsAsync();
+            await LoadCategoriesAsync();
+            LoadAuthenticatedUserName();
+        }
+
+        /// <summary>
+        /// Construye un método de llamado a record para pasar datos del HTML 
+        /// </summary>
+        [BindProperty]
+        public Record Record { get; set; }
+
+        /// <summary>
+        /// Método que carga los datos ingresados por el usuario a los registros y a las diferentes tablas de la base de datos. 
+        /// Realiza una serie de llamados que validan la consistencia de los datos que se desean añadir en la base de datos.
+        /// </summary>
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                Record.NameGenerator = User.Identity.Name;
+                return Page();
+            }
+            await ProcessStore();
+            await ProcessProduct();
+            await ProcessCategory();
+            await ProcessAssociated();
+            Record.RecordDate = Record.RecordDate = GetCurrentDateTime();
+
+            _context.Records.Add(Record);
+            await _context.SaveChangesAsync();
+            return RedirectToPage("../Index");
+        }
+
+        /// <summary>
+        /// Listas, Diccionarios y strings que permiten almacenar los datos de la base de datos para ser utilizados en los registros.
         /// </summary>
         public SelectList Provinces { get; set; }
-
-        /// <summary>
-        /// Diccionario de cantones.
-        /// </summary>
         public Dictionary<string, List<string>> Cantons { get; set; }
-
-        /// <summary>
-        /// Lista Has de Store para almacenar los locales..
-        /// </summary>
         public HashSet<string> Stores { get; set; }
-
-        /// <summary>
-        /// Lista para almacenar productos.
-        /// </summary>
         public List<string> Product { get; set; }
-
-        /// <summary>
-        /// Lista para almacenar las categorías.
-        /// </summary>
         public List<string> Categories { get; set; }
-
-        /// <summary>
-        /// String para almacenar el nombre de usuario autentificado.
-        /// </summary>
         public string AuthenticatedUserName { get; set; }
 
         /// <summary>
-        /// Método invocado cuando se realiza una solicitud GET para la página Create de registros. 
-        /// Realiza una serie de tareas que incluyen el agrupamiento en listas y diccionarios de registros y
-        /// la carga de datos relacionados desde la base de datos para la representación en la página web.
+        /// Permite extraer las provincias y almaccenarlas en una lista.
         /// </summary>
-        /// <param name="Provinces">Recibe las provincias y almacena.</param>
-        /// <param name="Cantons">Recibe y almacena los cantones.</param>
-        /// <param name="Stores">Recibe y almacena los establecimientos.</param>
-        /// <param name="Product">Recibe y almacena los productos.</param>
-        /// <param name="Categories">Recibe y almacena las categorías.</param>
-        /// <param name="AuthenticatedUserName">Recibe y almacena el nombre de usuario.</param>
-        public async Task OnGetAsync()
+        private async Task LoadProvincesAsync()
         {
             var provinces = await _context.Provinces.ToListAsync();
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
+        }
 
+        /// <summary>
+        /// Permite extraer los cantones y almacenarlos en un diccionario de provincias con los respectivos cantones .
+        /// </summary>
+        private async Task LoadCantonsAsync()
+        {
             var cantons = await _context.Cantons.ToListAsync();
             Cantons = new Dictionary<string, List<string>>();
             foreach (var canton in cantons)
@@ -88,30 +109,40 @@ namespace LoCoMPro_LV.Pages.Records
                 }
                 Cantons[canton.NameProvince].Add(canton.NameCanton);
             }
+        }
 
+        /// <summary>
+        /// Permite almacenar los locales en una coleccion de datos.
+        /// </summary>
+        private async Task LoadStoresAsync()
+        {
             var stores = await _context.Stores.ToListAsync();
-            Stores = new HashSet<string>();
-            foreach (var store in stores)
-            {
-                Stores.Add(store.NameStore);
-            }
-            stores = stores.ToList();
+            Stores = new HashSet<string>(stores.Select(store => store.NameStore));
+        }
 
+        /// <summary>
+        /// Permite obtener y almacenarlos productos en una lista.
+        /// </summary>
+        private async Task LoadProductsAsync()
+        {
             var products = await _context.Products.ToListAsync();
-            Product = new List<string>();
-            foreach (var prod in products)
-            {
-                Product.Add(prod.NameProduct);
-            }
+            Product = products.Select(prod => prod.NameProduct).ToList();
+        }
 
-            var category = await _context.Categories.ToListAsync();
-            Categories = new List<string>();
+        /// <summary>
+        /// Permite obtener y almacenar las categorias en una lista.
+        /// </summary>
+        private async Task LoadCategoriesAsync()
+        {
+            var categories = await _context.Categories.ToListAsync();
+            Categories = categories.Select(cat => cat.NameCategory).ToList();
+        }
 
-            foreach (var cat in category)
-            {
-                Categories.Add(cat.NameCategory);
-            }
-
+        /// <summary>
+        /// Permite obtener en un string el nombre del usuario autentificado.
+        /// </summary>
+        private void LoadAuthenticatedUserName()
+        {
             if (User.Identity.IsAuthenticated)
             {
                 AuthenticatedUserName = User.Identity.Name;
@@ -119,52 +150,40 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Construye un método de llamado a record para pasar datos del HTML 
+        /// Valida que repita un local a la hora de almacenarlo en la BD.
         /// </summary>
-        [BindProperty]
-        public Record Record { get; set; }
-        /// <summary>
-        /// Método que carga los datos ingresados por el usuario en la página Create de registros. 
-        /// Realiza una serie de tareas que incluye, validar datos, asignación de datos a sus respectivas tablas.
-        /// en la base de datos
-        /// </summary>
-        public async Task<IActionResult> OnPostAsync()
+        private async Task ProcessStore()
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/Records/Create");
-            }
-
             var existingStore = await _context.Stores.FirstOrDefaultAsync(s =>
                 s.NameStore == Record.NameStore &&
                 s.NameProvince == Record.NameProvince &&
                 s.NameCanton == Record.NameCanton);
+
             if (existingStore != null)
             {
                 Record.Store = existingStore;
             }
             else
             {
-                if (Record.NameProvince == null || Record.NameCanton==null)
+                var newStore = new Store
                 {
-                    return RedirectToPage("/Records/Create");
-                } else
-                {
-                    var newStore = new Store
-                    {
-                        NameStore = Record.NameStore,
-                        NameProvince = Record.NameProvince,
-                        NameCanton = Record.NameCanton
-                    };
-                    _context.Stores.Add(newStore);
-                    await _context.SaveChangesAsync();
-                    Record.NameStore = newStore.NameStore;
-
-                }
-                
+                    NameStore = Record.NameStore,
+                    NameProvince = Record.NameProvince,
+                    NameCanton = Record.NameCanton
+                };
+                _context.Stores.Add(newStore);
+                await _context.SaveChangesAsync();
+                Record.NameStore = newStore.NameStore;
             }
+        }
 
+        /// <summary>
+        /// Valida que no se repita el producto a almacenar en la BD.
+        /// </summary>
+        private async Task ProcessProduct()
+        {
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.NameProduct == Record.NameProduct);
+
             if (existingProduct != null)
             {
                 Record.Product = existingProduct;
@@ -179,16 +198,21 @@ namespace LoCoMPro_LV.Pages.Records
                 await _context.SaveChangesAsync();
                 Record.Product = newProduct;
             }
+        }
 
+        /// <summary>
+        /// Valida que no se repita una categoría a la hora de almacenarlo en la BD.
+        /// </summary>
+        private async Task ProcessCategory()
+        {
             var categoryName = Request.Form["NameCategory"].FirstOrDefault();
-
             var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.NameCategory == categoryName);
 
             if (existingCategory == null)
             {
-                if (categoryName == "")
+                if (string.IsNullOrWhiteSpace(categoryName))
                 {
-                    return RedirectToPage("/Records/Create");
+                    return;
                 }
                 else
                 {
@@ -201,10 +225,17 @@ namespace LoCoMPro_LV.Pages.Records
                     await _context.SaveChangesAsync();
                 }
             }
+        }
 
+        /// <summary>
+        /// Valida que no repita un asociación entre categoría y producto a la hora de almacenarlo en la BD.
+        /// </summary>
+        private async Task ProcessAssociated()
+        {
+            var categoryName = Request.Form["NameCategory"].FirstOrDefault();
             var existingAssociated = await _context.Associated.FirstOrDefaultAsync(a =>
-                 a.NameProduct == Record.NameProduct &&
-                 a.NameCategory == categoryName);
+                a.NameProduct == Record.NameProduct &&
+                a.NameCategory == categoryName);
 
             if (existingAssociated == null)
             {
@@ -216,14 +247,15 @@ namespace LoCoMPro_LV.Pages.Records
                 _context.Associated.Add(newAssociated);
                 await _context.SaveChangesAsync();
             }
+        }
 
+        /// <summary>
+        /// Método que verifica la hora actual para almacenarla en la BD.
+        /// </summary>
+        private DateTime GetCurrentDateTime()
+        {
             string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            DateTime dateTimeConverted = DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-            Record.RecordDate = dateTimeConverted;
-
-            _context.Records.Add(Record);
-            await _context.SaveChangesAsync();
-            return RedirectToPage("../Index");
+            return DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         }
     }
 }
