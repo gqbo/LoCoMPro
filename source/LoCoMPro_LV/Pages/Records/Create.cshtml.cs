@@ -5,7 +5,6 @@ using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
-using System.ComponentModel.DataAnnotations;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -22,11 +21,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// Contexto de la base de datos de LoCoMPro sección de registros.
         /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager;
-        /// <summary>
-        /// Constructor de la clase CreateModel.
-        /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        /// <param name="signInManager">Contexto de la base de datos de LoCoMPro usado en el registro.</param>
+
         public CreateModel(LoCoMPro_LV.Data.LoComproContext context, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
@@ -48,7 +43,7 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Construye un método de llamado a record para pasar datos del HTML 
+        /// Enlazar los valores de las propiedades en un objeto con los datos provenientes de una solicitud HTTP.
         /// </summary>
         [BindProperty]
         public Record Record { get; set; }
@@ -76,17 +71,37 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Listas, Diccionarios y strings que permiten almacenar los datos de la base de datos para ser utilizados en los registros.
+        /// Lista que donde se almacena las provincias que se encuentran en la BD.
         /// </summary>
         public SelectList Provinces { get; set; }
+
+        /// <summary>
+        /// Diccionario donde se almacena los cantones  asociados a las provincias que se encuentran en la BD.
+        /// </summary>
         public Dictionary<string, List<string>> Cantons { get; set; }
+
+        /// <summary>
+        /// Colección de datos donde se almacena los locales que se encuentran en la BD.
+        /// </summary>
         public HashSet<string> Stores { get; set; }
+
+        /// <summary>
+        /// Lista donde se almacena los productos que se encuentran en la BD.
+        /// </summary>
         public List<string> Product { get; set; }
+
+        /// <summary>
+        /// Lista donde se almacena las categorías que se encuentran en la BD.
+        /// </summary>
         public List<string> Categories { get; set; }
+
+        /// <summary>
+        /// String donde se almacenar el usuario que se encuentran autenticado.
+        /// </summary>
         public string AuthenticatedUserName { get; set; }
 
         /// <summary>
-        /// Permite extraer las provincias y almaccenarlas en una lista.
+        /// Permite extraer las provincias y almacenarlas en una lista.
         /// </summary>
         private async Task LoadProvincesAsync()
         {
@@ -112,7 +127,7 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Permite almacenar los locales en una coleccion de datos.
+        /// Permite almacenar los locales en una colección de datos.
         /// </summary>
         private async Task LoadStoresAsync()
         {
@@ -130,7 +145,7 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Permite obtener y almacenar las categorias en una lista.
+        /// Permite obtener y almacenar las categorías en una lista.
         /// </summary>
         private async Task LoadCategoriesAsync()
         {
@@ -139,7 +154,7 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Permite obtener en un string el nombre del usuario autentificado.
+        /// Permite obtener en un String el nombre del usuario autentificado.
         /// </summary>
         private void LoadAuthenticatedUserName()
         {
