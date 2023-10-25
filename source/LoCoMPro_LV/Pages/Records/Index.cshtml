@@ -171,7 +171,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameProduct)
+                @Html.DisplayNameFor(model => model.Records[0].NameProduct)
             </th>
             <th class="precio">
                 <a class="ordering-text" asp-page="./Index"
@@ -180,17 +180,17 @@
                    asp-route-SearchCanton="@Model.SearchCanton"
                    asp-route-SearchCategory="@Model.SearchCategory"
                    asp-route-sortOrder="@Model.PriceSort">
-                   @Html.DisplayNameFor(model => model.Record[0].Price)
+                   @Html.DisplayNameFor(model => model.Records[0].Price)
                 </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameStore)
+                @Html.DisplayNameFor(model => model.Records[0].NameStore)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameProvince)
+                @Html.DisplayNameFor(model => model.Records[0].NameProvince)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Record[0].NameCanton)
+                @Html.DisplayNameFor(model => model.Records[0].NameCanton)
             </th>
             <th>
                 <a class="ordering-text" asp-page="./Index"
@@ -199,13 +199,13 @@
                    asp-route-SearchCanton="@Model.SearchCanton"
                    asp-route-SearchCategory="@Model.SearchCategory"
                    asp-route-sortOrder="@Model.DateTimeSort">
-                   @Html.DisplayNameFor(model => model.Record[0].RecordDate)
+                   @Html.DisplayNameFor(model => model.Records[0].RecordDate)
                 </a>
             </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var firstItem in Model.Record)
+        @foreach (var firstItem in Model.Records)
         {
 
             <tr>
@@ -231,3 +231,94 @@
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.Records.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Records.HasNextPage ? "disabled" : "";
+    var totalPages = Model.Records.TotalPages;
+    var currentPage = Model.Records.PageIndex;
+}
+
+<div class="pagination justify-content-center">
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item @prevDisabled">
+                <a class="page-link" asp-page="./Index"
+                   asp-route-sortOrder="@Model.CurrentSort"
+                   asp-route-pageIndex="@(Model.Records.PageIndex - 1)"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory">
+                    Anterior
+                </a>
+            </li>
+
+            @if (currentPage > 3)
+            {
+                <li class="page-item ">
+                    <a class="page-link" asp-page="./Index"
+                       asp-route-pageIndex="1"
+                       asp-route-sortOrder="@Model.CurrentSort"
+                       asp-route-SearchString="@Model.SearchString"
+                       asp-route-SearchProvince="@Model.SearchProvince"
+                       asp-route-SearchCanton="@Model.SearchCanton"
+                       asp-route-SearchCategory="@Model.SearchCategory">
+                        1
+                    </a>
+                </li>
+                <li class="page-item">
+                    <span class="page-link">...</span>
+                </li>
+            }
+
+            @for (int i = currentPage - 2; i <= currentPage + 2; i++)
+            {
+                if (i > 0 && i <= totalPages)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" asp-page="./Index"
+                           asp-route-pageIndex="@i"
+                           asp-route-sortOrder="@Model.CurrentSort"
+                           asp-route-SearchString="@Model.SearchString"
+                           asp-route-SearchProvince="@Model.SearchProvince"
+                           asp-route-SearchCanton="@Model.SearchCanton"
+                           asp-route-SearchCategory="@Model.SearchCategory">
+                            @i
+                        </a>
+                    </li>
+                }
+            }
+
+            @if (currentPage < totalPages - 2)
+            {
+                <li class="page-item">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" asp-page="./Index"
+                       asp-route-pageIndex="@totalPages"
+                       asp-route-sortOrder="@Model.CurrentSort"
+                       asp-route-SearchString="@Model.SearchString"
+                       asp-route-SearchProvince="@Model.SearchProvince"
+                       asp-route-SearchCanton="@Model.SearchCanton"
+                       asp-route-SearchCategory="@Model.SearchCategory">
+                        @totalPages
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @nextDisabled">
+                <a class="page-link" asp-page="./Index"
+                   asp-route-sortOrder="@Model.CurrentSort"
+                   asp-route-pageIndex="@(Model.Records.PageIndex + 1)"
+                   asp-route-SearchString="@Model.SearchString"
+                   asp-route-SearchProvince="@Model.SearchProvince"
+                   asp-route-SearchCanton="@Model.SearchCanton"
+                   asp-route-SearchCategory="@Model.SearchCategory">
+                    Siguiente
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

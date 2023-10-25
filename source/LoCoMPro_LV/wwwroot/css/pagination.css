@@ -1,0 +1,27 @@
+﻿.pagination {
+    --bs-pagination-hover-color: #0A3143 !important;
+    --bs-pagination-focus-color: #0A3143 !important;
+    --bs-pagination-active-bg: #0A3143 !important;
+    --bs-pagination-active-border-color: #0A3143 !important;
+}
+
+.page-item:not(:first-child) .page-link {
+    margin-left: calc(var(--bs-border-width) * 5) !important;
+    border-radius: 10px !important;
+}
+
+.page-item:first-child .page-link {
+    border-radius: 10px !important;
+}
+
+.page-item:first-child:focus .page-link {
+    color: #0A3143 !important;
+}
+
+.active > .page-link, .page-link.active {
+    color: var(--bs-pagination-active-color) !important;
+}
+
+.page-link {
+    color: #0A3143 !important;
+}
