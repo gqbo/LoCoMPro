@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LoCoMPro_LV.Migrations
 {
     /// <inheritdoc />
-    public partial class Create_Models : Migration
+    public partial class Modified_Stores : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -163,7 +163,9 @@ namespace LoCoMPro_LV.Migrations
                 {
                     NameStore = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     NameProvince = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    NameCanton = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    NameCanton = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {

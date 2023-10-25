@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoCoMPro_LV.Migrations
 {
     [DbContext(typeof(LoComproContext))]
-    [Migration("20231007005800_Create_Models")]
-    partial class Create_Models
+    [Migration("20231025193542_Modified_Stores")]
+    partial class Modified_Stores
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,6 +235,12 @@ namespace LoCoMPro_LV.Migrations
                     b.Property<string>("NameCanton")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.HasKey("NameStore", "NameProvince", "NameCanton");
 

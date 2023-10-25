@@ -14,6 +14,12 @@ namespace LoCoMPro_LV.Models
             ErrorMessage = "El nombre del establecimiento debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
         public string NameStore { get; set; }
 
+        [Required(ErrorMessage = "El grado de latitud es necesario")]
+        public double Latitude { get; set; }
+
+        [Required(ErrorMessage = "El grado de longitud es necesario")]
+        public double Longitude { get; set; }
+
         [Required(ErrorMessage = "El nombre de la provincia es obligatorio.")]
         [StringLength(50, MinimumLength = 2)]
         public string NameProvince { get; set; }

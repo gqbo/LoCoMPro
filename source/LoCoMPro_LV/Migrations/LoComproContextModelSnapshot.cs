@@ -233,6 +233,12 @@ namespace LoCoMPro_LV.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
                     b.HasKey("NameStore", "NameProvince", "NameCanton");
 
                     b.HasIndex("NameProvince", "NameCanton");
