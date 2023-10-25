@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LoCoMPro_LV.Models;
+using LoCoMPro_LV.Utils;
+using LoCoMPro_LV.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -14,21 +16,25 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
+
+        private readonly IConfiguration Configuration;
+
 
         /// <summary>
         /// Constructor de la clase IndexModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public IndexModel(LoCoMPro_LV.Data.LoComproContext context)
+        public IndexModel(LoComproContext context, IConfiguration configuration)
         {
             _context = context;
+            Configuration = configuration;
         }
-        
+
         /// <summary>
-        /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
+        /// Lista de tipo "Records", que almacena los registros correspondientes al producto buscado.
         /// </summary>
-        public IList<Record> Record { get; set; } = default!;
+        public PaginatedList<Record> Records { get; set; }
 
         /// <summary>
         /// Cadena de caracteres que se utiliza para filtrar la búsqueda por nombre del producto.
@@ -69,7 +75,6 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         public SelectList Categories { get; set; }
 
-
         /// <summary>
         /// Indica el orden en el que se deben mostrar los registros por fecha.
         /// </summary>
@@ -85,6 +90,8 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         public string CurrentFilter { get; set; }
 
+        public string CurrentSort { get; set; }
+
         /// <summary>
         /// Método invocado cuando se realiza una solicitud GET para la página de índice de registros. 
         /// Realiza una serie de tareas que incluyen el ordenamiento y agrupamiento de registros y
@@ -94,35 +101,27 @@ namespace LoCoMPro_LV.Pages.Records
         /// <param name="currentFilter">El filtro actual aplicado para la búsqueda de registros.</param>
         /// <param name="searchString">Indica la búsqueda introducida por el usuario para filtrar los registros por nombre de producto.</param>
         /// <param name="pageIndex">El índice de la página actual en caso de paginación.</param>
-        public async Task OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
+        public async Task OnGetAsync(string sortOrder, string searchString, int? pageIndex)
         {
+            CurrentSort = sortOrder;
             DateTimeSort = sortOrder == "Date" ? "date_desc" : "Date";
             PriceSort = sortOrder == "Price" ? "price_desc" : "Price";
 
-            if (searchString != null)
-            {
-                pageIndex = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-            
             CurrentFilter = searchString;
 
             var provinces = await _context.Provinces.ToListAsync();
             var cantons = await _context.Cantons.ToListAsync();
             var categories = await _context.Associated
-                                    .Select(a => a.NameCategory)
-                                    .Distinct()
-                                    .ToListAsync();
+                                            .Select(a => a.NameCategory)
+                                            .Distinct()
+                                            .ToListAsync();
 
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
             Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
             Categories = new SelectList(categories);
 
             IQueryable<Record> orderedRecordsQuery = from m in _context.Records
-                               select m;
+                                                     select m;
 
             if (!string.IsNullOrEmpty(SearchString))
             {
@@ -155,24 +154,23 @@ namespace LoCoMPro_LV.Pages.Records
             switch (sortOrder)
             {
                 case "Date":
-                    orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.RecordDate));
+                    orderedGroupsQuery = orderedGroupsQuery.OrderBy(group => group.Max(record => record.RecordDate));
                     break;
                 case "Price":
-                    orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.Price));
+                    orderedGroupsQuery = orderedGroupsQuery.OrderBy(group => group.Max(record => record.Price));
                     break;
                 case "price_desc":
-                    orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Price));
+                    orderedGroupsQuery = orderedGroupsQuery.OrderByDescending(group => group.Max(record => record.Price));
                     break;
                 default:
-                    orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.RecordDate));
+                    orderedGroupsQuery = orderedGroupsQuery.OrderByDescending(group => group.Max(record => record.RecordDate));
                     break;
             }
-
-            Record = await orderedGroupsQuery
-                .Select(group => group.OrderByDescending(r => r.RecordDate).FirstOrDefault())
-                .ToListAsync();
-
-            SearchCanton = Request.Query["SearchCanton"];
+            var totalCount = await orderedGroupsQuery.CountAsync(); // Contiene el número total de registros.
+            
+            var pageSize = Configuration.GetValue("PageSize", 10);
+            Records = await PaginatedList<Record>.CreateAsync(
+                orderedGroupsQuery.Select(group => group.OrderByDescending(r => r.RecordDate).FirstOrDefault()), pageIndex ?? 1, pageSize);
         }
     }
 }
