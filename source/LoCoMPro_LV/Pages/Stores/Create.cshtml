@@ -1,0 +1,34 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Stores.CreateModel
+@{
+    ViewData["Title"] = "Agregar Establecimiento";
+}
+<div class="add_store">
+    <h1 class="title_add">Agregar Establecimiento</h1>
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <div class="map" id="map"></div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var map = L.map('map', {
+            minZoom: 8,
+            maxZoom: 17,
+            dragging: true
+        }).setView([9.9281, -84.0907], 12); // Centro de la provincia de San José, con un zoom de 12
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+            maxZoom: 18
+        }).addTo(map);
+
+        var costaRicaBounds = L.latLngBounds(L.latLng(8.032, -85.950), L.latLng(11.217, -82.555));
+        map.setMaxBounds(costaRicaBounds);
+
+        map.on('drag', function () {
+            if (!costaRicaBounds.contains(map.getBounds())) {
+                map.panInsideBounds(costaRicaBounds, { animate: false });
+            }
+        });
+    });
+</script>
