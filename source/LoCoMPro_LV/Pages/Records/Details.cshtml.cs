@@ -24,6 +24,9 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         private readonly LoComproContext _context;
 
+        /// <summary>
+        /// Proporciona acceso a la configuración de la aplicación, como valores definidos en appsettings.json.
+        /// </summary>
         private readonly IConfiguration Configuration;
 
         /// <summary>
@@ -37,10 +40,9 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Lista de tipo "Record", que almacena los registros correspondientes al producto que se selecciono para ver en detalle.
+        /// Representa una lista paginada de registros para su visualización en la página.
         /// </summary>
         public PaginatedList<Record> Records { get; set; }
-        /*public IList<Record> Record { get; set; } = default!;*/
 
         /// <summary>
         /// Nombre del usuario generador del registro seleccionado en la pantalla index, que se utiliza para buscar todos los registros relacionados.
