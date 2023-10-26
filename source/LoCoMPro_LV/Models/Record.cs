@@ -31,7 +31,7 @@ namespace LoCoMPro_LV.Models
         [Required(ErrorMessage = "El nombre del establecimiento es obligatorio.")]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "El nombre del establecimiento debe tener entre 2 y 100 caracteres.")]
         [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
-            ErrorMessage = "El nombre del establecimiento debe contener al menos una letra (mayúscula o minúscula).")]
+            ErrorMessage = "El nombre del establecimiento no es un nombre valido.")]
         public string NameStore { get; set; }
 
         [Display(Name = "Provincia")]

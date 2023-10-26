@@ -114,7 +114,7 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty]
         [Display(Name = "Categoría")]
         [Required(ErrorMessage = "La categoría es obligatoria.")]
-        [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$", ErrorMessage = "Los datos ingresados no son validos")]
+        [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$", ErrorMessage = "El nombre de la categoría ingresado no es valido")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "El nombre de la categoría debe tener entre 2 y 50 caracteres.")]
         public String NameCategory { get; set; }
 
