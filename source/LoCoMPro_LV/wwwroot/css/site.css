@@ -219,11 +219,11 @@ body {
 }
 
 th{
-    text-align: center !important;
+    text-align: left !important;
 }
 
 th p, .fecha {
-    text-align: center !important;
+    text-align: left !important;
 }
 
 td {
@@ -254,12 +254,34 @@ td {
     padding: 10px;
 }
 
-.table-item {
-    margin: 0% 12% 0% 12%;
+.table th:nth-child(1), .table td:nth-child(1) {
+    width: 30%;
+    padding: 10px;
 }
 
-.table-details .table-item {
-    margin: 0% 15% 0% 15%;
+.table th:nth-child(2), .table td:nth-child(2) {
+    width: 10%;
+    padding: 10px;
+}
+
+.table th:nth-child(3), .table td:nth-child(3) {
+    width: 15%;
+    padding: 10px;
+}
+
+.table th:nth-child(4), .table td:nth-child(4) {
+    width: 15%;
+    padding: 10px;
+}
+
+.table th:nth-child(5), .table td:nth-child(5) {
+    width: 15%;
+    padding: 10px;
+}
+
+.table th:nth-child(5), .table td:nth-child(5) {
+    width: 15%;
+    padding: 10px;
 }
 
 table {
