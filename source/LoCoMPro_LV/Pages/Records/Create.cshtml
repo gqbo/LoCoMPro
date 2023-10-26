@@ -1,5 +1,6 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Records.CreateModel
+@using LoCoMPro_LV.Models
 @using Microsoft.AspNetCore.Authorization
 @{
     ViewData["Title"] = "Crear Registro";
@@ -15,26 +16,26 @@
                     <span asp-validation-for="Record.NameGenerator" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Store">Establecimiento</label>
-                    <input name="Record.NameStore" id="Store" type="text" class="form-control form-control-add" placeholder="Establecimiento" required />
+                    <label asp-for="Record.NameStore">Establecimiento</label>
+                    <input asp-for="Record.NameStore" id="Store" type="text" class="form-control form-control-add" aria-required="true" placeholder="Establecimiento" />
                     <span asp-validation-for="Record.NameStore" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Province">Provincia</label>
-                    <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control form-control-add" required>
+                    <label asp-for="Record.NameProvince">Provincia</label>
+                    <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control form-control-add" aria-required="true" placeholder="Provincia">
                         <option value=""> Provincia  </option>
                     </select>
                     <span asp-validation-for="Record.NameProvince" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Canton">Cantón</label>
-                    <select id="Canton" name="Record.NameCanton" class="form-control form-control-add" required>
+                    <label asp-for="Record.NameCanton">Cantón</label>
+                    <select id="Canton" asp-for="Record.NameCanton" class="form-control form-control-add" aria-required="true" placeholder="Cantón">
                     </select>
                     <span asp-validation-for="Record.NameCanton" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Products">Producto</label>
-                    <input name="Record.NameProduct" id="Products" type="text" class="form-control form-control-add" placeholder="Producto" required />
+                    <label asp-for="Record.NameProduct">Producto</label>
+                    <input asp-for="Record.NameProduct" id="Products" type="text" class="form-control form-control-add" aria-required="true" placeholder="Producto" />
                     <span asp-validation-for="Record.NameProduct" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -43,8 +44,9 @@
                     <span asp-validation-for="Record.Price" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Category">Categoría</label>
-                    <input name="NameCategory" id="Category" type="text" class="form-control form-control-add" placeholder="Categoría" required />
+                    <label asp-for="NameCategory">Categoría</label>
+                    <input asp-for="NameCategory" id="Category" type="text" class="form-control form-control-add" aria-required="true" placeholder="Categoría" />
+                    <span asp-validation-for="NameCategory" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-2"></div>
@@ -99,32 +101,31 @@
             provinceDropdown.addEventListener("change", actualizarDropdownCantones);
             actualizarDropdownCantones();
         });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            var data = @Html.Raw(Json.Serialize(Model.Stores));
-            $("#Store").autocomplete({
-                source: data,
-                minLength: 1
+
+        type = "text/javascript" >
+            $(function () {
+                var data = @Html.Raw(Json.Serialize(Model.Stores));
+                $("#Store").autocomplete({
+                    source: data,
+                    minLength: 1
+                });
             });
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            var data = @Html.Raw(Json.Serialize(Model.Product));
-            $("#Products").autocomplete({
-                source: data,
-                minLength: 1
+        type = "text/javascript" >
+            $(function () {
+                var data = @Html.Raw(Json.Serialize(Model.Product));
+                $("#Products").autocomplete({
+                    source: data,
+                    minLength: 1
+                });
             });
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            var data = @Html.Raw(Json.Serialize(Model.Categories));
-            $("#Category").autocomplete({
-                source: data,
-                minLength: 1
+
+        type = "text/javascript" >
+            $(function () {
+                var data = @Html.Raw(Json.Serialize(Model.Categories));
+                $("#Category").autocomplete({
+                    source: data,
+                    minLength: 1
+                });
             });
-        });
     </script>
 }

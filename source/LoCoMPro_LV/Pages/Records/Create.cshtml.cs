@@ -5,6 +5,8 @@ using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -57,8 +59,14 @@ namespace LoCoMPro_LV.Pages.Records
             if (!ModelState.IsValid)
             {
                 Record.NameGenerator = User.Identity.Name;
+                await LoadProvincesAsync();
+                await LoadCantonsAsync();
+                await LoadStoresAsync();
+                await LoadProductsAsync();
+                await LoadCategoriesAsync();
                 return Page();
             }
+
             await ProcessStore();
             await ProcessProduct();
             await ProcessCategory();
@@ -99,6 +107,16 @@ namespace LoCoMPro_LV.Pages.Records
         /// String donde se almacenar el usuario que se encuentran autenticado.
         /// </summary>
         public string AuthenticatedUserName { get; set; }
+
+        /// <summary>
+        /// String de validación de datos para Category.
+        /// </summary>
+        [BindProperty]
+        [Display(Name = "Categoría")]
+        [Required(ErrorMessage = "La categoría es obligatoria.")]
+        [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$", ErrorMessage = "Los datos ingresados no son validos")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "El nombre de la categoría debe tener entre 2 y 50 caracteres.")]
+        public String NameCategory { get; set; }
 
         /// <summary>
         /// Permite extraer las provincias y almacenarlas en una lista.
@@ -220,26 +238,21 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         private async Task ProcessCategory()
         {
-            var categoryName = Request.Form["NameCategory"].FirstOrDefault();
-            var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.NameCategory == categoryName);
+            //var categoryName = NameCategory;
+            var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.NameCategory == NameCategory);
 
             if (existingCategory == null)
             {
-                if (string.IsNullOrWhiteSpace(categoryName))
+
+                var newCategory = new Category
                 {
-                    return;
-                }
-                else
-                {
-                    var newCategory = new Category
-                    {
-                        NameCategory = categoryName,
-                        NameTopCategory = null
-                    };
-                    _context.Categories.Add(newCategory);
-                    await _context.SaveChangesAsync();
-                }
+                    NameCategory = NameCategory,
+                    NameTopCategory = null
+                };
+                _context.Categories.Add(newCategory);
+                await _context.SaveChangesAsync();
             }
+
         }
 
         /// <summary>
@@ -247,17 +260,17 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         private async Task ProcessAssociated()
         {
-            var categoryName = Request.Form["NameCategory"].FirstOrDefault();
+            //var categoryName = NameCategory;
             var existingAssociated = await _context.Associated.FirstOrDefaultAsync(a =>
                 a.NameProduct == Record.NameProduct &&
-                a.NameCategory == categoryName);
+                a.NameCategory == NameCategory);
 
             if (existingAssociated == null)
             {
                 var newAssociated = new Associated
                 {
                     NameProduct = Record.NameProduct,
-                    NameCategory = categoryName
+                    NameCategory = NameCategory
                 };
                 _context.Associated.Add(newAssociated);
                 await _context.SaveChangesAsync();

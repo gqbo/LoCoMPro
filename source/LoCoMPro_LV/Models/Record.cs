@@ -24,28 +24,29 @@ namespace LoCoMPro_LV.Models
 
         [Display(Name = "Precio")]
         [Required(ErrorMessage = "El precio es obligatorio.")]
-        [RegularExpression(@"^[0-9.]+$", ErrorMessage = "Solo se permiten números y puntos.")]
-        public double Price { get; set; }
+        [RegularExpression(@"^[1-9]\d*$", ErrorMessage = "El precio debe ser un número entero mayor que 0.")]
+        public double? Price { get; set; }
 
         [Display(Name = "Establecimiento")]
-        [StringLength(100, MinimumLength = 2)]
-        [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
-            ErrorMessage = "El nombre del establecimiento debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
+        [Required(ErrorMessage = "El nombre del establecimiento es obligatorio.")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "El nombre del establecimiento debe tener entre 2 y 100 caracteres.")]
+        [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
+            ErrorMessage = "El nombre del establecimiento debe contener al menos una letra (mayúscula o minúscula).")]
         public string NameStore { get; set; }
 
         [Display(Name = "Provincia")]
-        [StringLength(50, MinimumLength = 2)]
+        [Required(ErrorMessage = "Debe seleccionar una provincia.")]
         public string NameProvince { get; set; }
 
         [Display(Name = "Cantón")]
-        [StringLength(50, MinimumLength = 2)]
+        [Required(ErrorMessage = "Debe seleccionar un cantón.")]
         public string NameCanton { get; set; }
 
         [Display(Name = "Producto")]
         [Required(ErrorMessage = "El nombre del producto es obligatorio.")]
-        [StringLength(50, MinimumLength = 2)]
-        [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
-            ErrorMessage = "El nombre del producto debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre del producto debe tener entre 2 y 50 caracteres.")]
+        [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
+            ErrorMessage = "El nombre del producto no es valido.")]
         public string NameProduct { get; set; }
 
         public GeneratorUser GeneratorUser { get; set; }
