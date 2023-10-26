@@ -11,12 +11,12 @@
             <div class="bg">
                 <div class="info_detail">
                     <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col">
+                        <div class="col-10">
                             <h2>
                                 @Html.DisplayFor(model => model.Record.First().NameProduct)
                             </h2>
                         </div>
-                        <div class="col d-flex justify-content-end">
+                        <div class="col-2 d-flex justify-content-end">
                             <h4>
                                 ₡@Html.DisplayFor(model => model.Record.First().Price)
                             </h4>
@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="row">
-        <table class="table">
+        <table class="table-details">
             <thead>
                 <tr>
                     <th>
@@ -68,16 +68,24 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => firstItem.RecordDate)
-                        </td>
-                        <td class="precio">
-                            ₡@Html.DisplayFor(modelItem => firstItem.Price)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => firstItem.NameGenerator)
+                            <div class="table-item fecha">
+                                @Html.DisplayFor(modelItem => firstItem.RecordDate)
+                            </div>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => firstItem.Description)
+                            <div class="table-item precio">
+                                ₡@Html.DisplayFor(modelItem => firstItem.Price)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-item">
+                                @Html.DisplayFor(modelItem => firstItem.NameGenerator)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-item">
+                                @Html.DisplayFor(modelItem => firstItem.Description)
+                            </div>
                         </td>
                     </tr>
                 }
