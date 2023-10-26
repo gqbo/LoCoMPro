@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="row">
-        <table class="table">
+        <table class="table-details">
             <thead>
                 <tr>
                     <th>
@@ -68,16 +68,24 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => firstItem.RecordDate)
-                        </td>
-                        <td class="precio">
-                            ₡@Html.DisplayFor(modelItem => firstItem.Price)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => firstItem.NameGenerator)
+                            <div class="table-item fecha">
+                                @Html.DisplayFor(modelItem => firstItem.RecordDate)
+                            </div>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => firstItem.Description)
+                            <div class="table-item precio">
+                                ₡@Html.DisplayFor(modelItem => firstItem.Price)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-item">
+                                @Html.DisplayFor(modelItem => firstItem.NameGenerator)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-item">
+                                @Html.DisplayFor(modelItem => firstItem.Description)
+                            </div>
                         </td>
                     </tr>
                 }
