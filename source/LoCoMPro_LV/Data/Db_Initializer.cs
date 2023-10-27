@@ -503,7 +503,7 @@ namespace LoCoMPro_LV.Data
                 new Record{NameGenerator="yordi", GeneratorUser = generator_user[7], RecordDate = DateTime.Parse("2023-1-1"), Price = 1235000,
                     NameStore = "Extremetech", Latitude = 10.0036, Longitude = -84.1152, NameProduct = "Apple Iphone 12 64gb", Store = stores[20], Product = products[1]}
             };
-            
+
             context.Records.AddRange(records);
             context.SaveChanges();
 
