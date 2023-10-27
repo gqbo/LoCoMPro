@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -92,6 +93,28 @@ namespace LoCoMPro_LV.Pages.Records
             }
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
+
+            try
+            {
+                var postData = JsonConvert.DeserializeObject<PostDataModel>(requestBody);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+        }
+
+        public class PostDataModel
+        {
+            public int Rating { get; set; }
+            public string NameGenerator { get; set; }
+            public DateTime RecordDate { get; set; }
         }
     }
 }
