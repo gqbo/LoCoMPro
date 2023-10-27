@@ -28,7 +28,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
         /// </summary>
-        public IList<Record> Record { get; set; } = default!;
+        public IList<RecordStoreModel> Record { get; set; } = default!;
 
         /// <summary>
         /// Cadena de caracteres que se utiliza para filtrar la búsqueda por nombre del producto.
@@ -121,32 +121,38 @@ namespace LoCoMPro_LV.Pages.Records
             Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
             Categories = new SelectList(categories);
 
-            IQueryable<Record> orderedRecordsQuery = from m in _context.Records
-                               select m;
+            var orderedRecordsQuery = from record in _context.Records
+                                      join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
+                                      equals new { store.NameStore, store.Latitude, store.Longitude }
+                                      select new RecordStoreModel
+                                      {
+                                          Record = record,
+                                          Store = store
+                                      };
 
             if (!string.IsNullOrEmpty(SearchString))
             {
-                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.NameProduct.Contains(SearchString));
+                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.Record.NameProduct.Contains(SearchString));
             }
 
             if (!string.IsNullOrEmpty(SearchProvince))
             {
-                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.NameProvince == SearchProvince);
+                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.Store.NameProvince == SearchProvince);
             }
 
             if (!string.IsNullOrEmpty(SearchCanton))
             {
-                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.NameCanton == SearchCanton);
+                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.Store.NameCanton == SearchCanton);
             }
 
             if (!string.IsNullOrEmpty(SearchCategory))
             {
-                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.Product.Associated.Any(c => c.NameCategory == SearchCategory));
+                orderedRecordsQuery = orderedRecordsQuery.Where(s => s.Record.Product.Associated.Any(c => c.NameCategory == SearchCategory));
             }
 
             var groupedRecordsQuery = from record in orderedRecordsQuery
                                       group record by new
-                                      { record.NameProduct, record.NameStore, record.NameCanton, record.NameProvince } into recordGroup
+                                      { record.Record.NameProduct, record.Record.NameStore, record.Store.NameCanton, record.Store.NameProvince } into recordGroup
                                       orderby recordGroup.Key.NameProduct descending
                                       select recordGroup;
 
@@ -155,22 +161,23 @@ namespace LoCoMPro_LV.Pages.Records
             switch (sortOrder)
             {
                 case "Date":
-                    orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.RecordDate));
+                    orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.Record.RecordDate));
                     break;
                 case "Price":
-                    orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.Price));
+                    orderedGroupsQuery = groupedRecordsQuery.OrderBy(group => group.Max(record => record.Record.Price));
                     break;
                 case "price_desc":
-                    orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Price));
+                    orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.Price));
                     break;
                 default:
-                    orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.RecordDate));
+                    orderedGroupsQuery = groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
                     break;
             }
 
             Record = await orderedGroupsQuery
-                .Select(group => group.OrderByDescending(r => r.RecordDate).FirstOrDefault())
+                .Select(group => group.OrderByDescending(r => r.Record.RecordDate).FirstOrDefault())
                 .ToListAsync();
+
 
             SearchCanton = Request.Query["SearchCanton"];
         }

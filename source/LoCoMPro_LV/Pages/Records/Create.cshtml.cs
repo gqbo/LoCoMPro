@@ -137,15 +137,15 @@ namespace LoCoMPro_LV.Pages.Records
 
             var existingStore = await _context.Stores.FirstOrDefaultAsync(s =>
                 s.NameStore == Record.NameStore &&
-                s.NameProvince == Record.NameProvince &&
-                s.NameCanton == Record.NameCanton);
+                s.NameProvince == Record.Store.NameProvince &&
+                s.NameCanton == Record.Store.NameProvince);
             if (existingStore != null)
             {
                 Record.Store = existingStore;
             }
             else
             {
-                if (Record.NameProvince == null || Record.NameCanton==null)
+                if (Record.Store.NameProvince == null || Record.Store.NameProvince ==null)
                 {
                     return RedirectToPage("/Records/Create");
                 } else
@@ -153,16 +153,19 @@ namespace LoCoMPro_LV.Pages.Records
                     var newStore = new Store
                     {
                         NameStore = Record.NameStore,
-                        NameProvince = Record.NameProvince,
-                        NameCanton = Record.NameCanton
+                        NameProvince = Record.Store.NameProvince,
+                        NameCanton = Record.Store.NameProvince
                     };
                     _context.Stores.Add(newStore);
                     await _context.SaveChangesAsync();
                     Record.NameStore = newStore.NameStore;
+                    Record.Store = newStore;
 
                 }
                 
             }
+
+            Record.Store = existingStore;
 
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.NameProduct == Record.NameProduct);
             if (existingProduct != null)
@@ -220,6 +223,8 @@ namespace LoCoMPro_LV.Pages.Records
             string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             DateTime dateTimeConverted = DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
             Record.RecordDate = dateTimeConverted;
+
+            
 
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();

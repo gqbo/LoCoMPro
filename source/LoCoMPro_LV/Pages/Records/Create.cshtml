@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group">
                     <label for="Province">Provincia</label>
-                    <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control form-control-add" >
+                    <select id="Province" asp-for="Record.Store.NameProvince" asp-items="Model.Provinces" class="form-control form-control-add">
                         <option value=""> Provincia  </option>
                     </select>
                 </div>
@@ -37,8 +37,6 @@
                     <input asp-for="Record.Price" id="precioInput" class="form-control form-control-add" placeholder="Precio" onblur="asignarPrecioARecord()" />
                     <span asp-validation-for="Record.Price" class="text-danger"></span>
                 </div>
-
-
                 <div class="form-group">
                     <label for="Category">Categoría</label>
                     <input name="NameCategory" id="Category" type="text" class="form-control form-control-add" placeholder="Categoría" />
