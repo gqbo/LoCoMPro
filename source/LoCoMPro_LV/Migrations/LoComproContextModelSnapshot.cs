@@ -52,11 +52,17 @@ namespace LoCoMPro_LV.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("NameCanton")
                         .HasMaxLength(50)
@@ -144,15 +150,49 @@ namespace LoCoMPro_LV.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
+            modelBuilder.Entity("LoCoMPro_LV.Models.Evaluate", b =>
+                {
+                    b.Property<string>("NameGenerator")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("RecordDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NameEvaluator")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("StarsCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("NameGenerator", "RecordDate", "NameEvaluator");
+
+                    b.HasIndex("NameEvaluator");
+
+                    b.ToTable("Valorations", (string)null);
+                });
+
             modelBuilder.Entity("LoCoMPro_LV.Models.GeneratorUser", b =>
                 {
                     b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("UserName");
 
                     b.ToTable("GeneratorUser", (string)null);
+                });
+
+            modelBuilder.Entity("LoCoMPro_LV.Models.ModeratorUser", b =>
+                {
+                    b.Property<string>("UserName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("UserName");
+
+                    b.ToTable("ModeratorUser", (string)null);
                 });
 
             modelBuilder.Entity("LoCoMPro_LV.Models.Product", b =>
@@ -180,8 +220,8 @@ namespace LoCoMPro_LV.Migrations
             modelBuilder.Entity("LoCoMPro_LV.Models.Record", b =>
                 {
                     b.Property<string>("NameGenerator")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("RecordDate")
                         .HasColumnType("datetime2");
@@ -190,16 +230,17 @@ namespace LoCoMPro_LV.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<string>("NameCanton")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<bool>("Hide")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("NameProduct")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NameProvince")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -214,9 +255,36 @@ namespace LoCoMPro_LV.Migrations
 
                     b.HasIndex("NameProduct");
 
-                    b.HasIndex("NameStore", "NameProvince", "NameCanton");
+                    b.HasIndex("NameStore", "Latitude", "Longitude");
 
                     b.ToTable("Record", (string)null);
+                });
+
+            modelBuilder.Entity("LoCoMPro_LV.Models.Report", b =>
+                {
+                    b.Property<string>("NameGenerator")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("RecordDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NameReporter")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("ReportDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("NameGenerator", "RecordDate", "NameReporter", "ReportDate");
+
+                    b.HasIndex("NameReporter");
+
+                    b.ToTable("Reports", (string)null);
                 });
 
             modelBuilder.Entity("LoCoMPro_LV.Models.Store", b =>
@@ -225,21 +293,23 @@ namespace LoCoMPro_LV.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("NameProvince")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NameCanton")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.HasKey("NameStore", "NameProvince", "NameCanton");
+                    b.Property<string>("NameCanton")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NameProvince")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("NameStore", "Latitude", "Longitude");
 
                     b.HasIndex("NameProvince", "NameCanton");
 
@@ -431,10 +501,40 @@ namespace LoCoMPro_LV.Migrations
                     b.Navigation("TopCategory");
                 });
 
+            modelBuilder.Entity("LoCoMPro_LV.Models.Evaluate", b =>
+                {
+                    b.HasOne("LoCoMPro_LV.Models.GeneratorUser", "GeneratorUser")
+                        .WithMany("Valorations")
+                        .HasForeignKey("NameEvaluator")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LoCoMPro_LV.Models.Record", "Record")
+                        .WithMany("Valorations")
+                        .HasForeignKey("NameGenerator", "RecordDate")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GeneratorUser");
+
+                    b.Navigation("Record");
+                });
+
             modelBuilder.Entity("LoCoMPro_LV.Models.GeneratorUser", b =>
                 {
                     b.HasOne("LoCoMPro_LV.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("GeneratorUser")
+                        .HasForeignKey("UserName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("LoCoMPro_LV.Models.ModeratorUser", b =>
+                {
+                    b.HasOne("LoCoMPro_LV.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ModeratorUsers")
                         .HasForeignKey("UserName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -458,13 +558,32 @@ namespace LoCoMPro_LV.Migrations
 
                     b.HasOne("LoCoMPro_LV.Models.Store", "Store")
                         .WithMany("Record")
-                        .HasForeignKey("NameStore", "NameProvince", "NameCanton");
+                        .HasForeignKey("NameStore", "Latitude", "Longitude");
 
                     b.Navigation("GeneratorUser");
 
                     b.Navigation("Product");
 
                     b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("LoCoMPro_LV.Models.Report", b =>
+                {
+                    b.HasOne("LoCoMPro_LV.Models.GeneratorUser", "GeneratorUser")
+                        .WithMany("Reports")
+                        .HasForeignKey("NameReporter")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LoCoMPro_LV.Models.Record", "Record")
+                        .WithMany("Reports")
+                        .HasForeignKey("NameGenerator", "RecordDate")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GeneratorUser");
+
+                    b.Navigation("Record");
                 });
 
             modelBuilder.Entity("LoCoMPro_LV.Models.Store", b =>
@@ -532,6 +651,8 @@ namespace LoCoMPro_LV.Migrations
             modelBuilder.Entity("LoCoMPro_LV.Models.ApplicationUser", b =>
                 {
                     b.Navigation("GeneratorUser");
+
+                    b.Navigation("ModeratorUsers");
                 });
 
             modelBuilder.Entity("LoCoMPro_LV.Models.Canton", b =>
@@ -551,6 +672,10 @@ namespace LoCoMPro_LV.Migrations
             modelBuilder.Entity("LoCoMPro_LV.Models.GeneratorUser", b =>
                 {
                     b.Navigation("Record");
+
+                    b.Navigation("Reports");
+
+                    b.Navigation("Valorations");
                 });
 
             modelBuilder.Entity("LoCoMPro_LV.Models.Product", b =>
@@ -563,6 +688,13 @@ namespace LoCoMPro_LV.Migrations
             modelBuilder.Entity("LoCoMPro_LV.Models.Province", b =>
                 {
                     b.Navigation("Cantons");
+                });
+
+            modelBuilder.Entity("LoCoMPro_LV.Models.Record", b =>
+                {
+                    b.Navigation("Reports");
+
+                    b.Navigation("Valorations");
                 });
 
             modelBuilder.Entity("LoCoMPro_LV.Models.Store", b =>

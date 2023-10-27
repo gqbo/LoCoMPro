@@ -5,17 +5,24 @@
 }
 <div class="add_store">
     <h1 class="title_add">Agregar Establecimiento</h1>
-    <form method="post">
-        <input type="text" asp-for="Store.NameStore" class="form-control" placeholder="Nombre del Establecimiento" required/>
+    <form method="post" asp-page="/Records/Create">
+        <div class="form-group">
+            <label asp-for="Store.NameStore">Establecimiento</label>
+            <input asp-for="Store.NameStore" id="Store" type="text" class="form-control form-control-add" aria-required="true" placeholder="Establecimiento" />
+            <span asp-validation-for="Store.NameStore" class="text-danger"></span>
+        </div>
         <div class="map" id="map"></div>
         <div id="marker-info" style="display: none;">
-            <input type="hidden" step="0.0001" id="latitude" asp-for="Store.Latitude" />
-            <input type="hidden" step="0.0001" id="longitude" asp-for="Store.Longitude" />
-            <input type="text" id="NameProvince" asp-for="Store.NameProvince" disabled />
-            <input type="text" id="NameCanton" asp-for="Store.NameCanton" disabled/>
+            <input type="text" step="0.0001" id="latitude" asp-for="Store.Latitude" />
+            <input type="text" step="0.0001" id="longitude" asp-for="Store.Longitude" />
+            <input type="text" id="NameProvince" asp-for="Store.NameProvince" />
+            <input type="text" id="NameCanton" asp-for="Store.NameCanton" />
+
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
+
     </form>
+    
 </div>
 
 <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
@@ -58,12 +65,11 @@
                     var address = data.address || {};
                     var province = address.province || 'N/A';
                     var canton = address.county || 'N/A';
-                    if (canton == "N/A") { 
+                    if (canton == "N/A") {
                         canton = address.region || 'N/A';
                     }
                     province = cleanText(province);
                     canton = cleanText(canton);
-
 
                     document.getElementById('NameProvince').value = province;
                     document.getElementById('NameCanton').value = canton;
@@ -74,12 +80,16 @@
         });
         function cleanText(text) {
             var words = text.split(" ");
-            var filteredWords = words.filter(word => word !== "Provincia" && word !== "Cantón");
+            var filteredWords = words.filter(word => word !== "Provincia" && word !== "Cantón" && word !== "Provincia de" && word !== "Cantón de");
             var cleanedText = filteredWords.join(" ");
             return cleanedText;
         }
     });
 </script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script type="text/javascript">
     $(function () {
@@ -90,3 +100,4 @@
         });
     });
 </script>
+

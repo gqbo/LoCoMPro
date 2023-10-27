@@ -11,6 +11,13 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace LoCoMPro_LV.Pages.Records
 {
+
+    public class RecordStoreModel
+    {
+        public Record Record { get; set; }
+        public Store Store { get; set; }
+    }
+
     /// <summary>
     /// Página de detalles de producto, en donde se ven los registros relacionados a un mismo producto.
     /// </summary>
@@ -33,7 +40,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Lista de tipo "Record", que almacena los registros correspondientes al producto que se selecciono para ver en detalle.
         /// </summary>
-        public IList<Record> Record { get; set; } = default!;
+        public IList<RecordStoreModel> Records { get; set; } = default!;
 
         /// <summary>
         /// Nombre del usuario generador del registro seleccionado en la pantalla index, que se utiliza para buscar todos los registros relacionados.
@@ -63,20 +70,25 @@ namespace LoCoMPro_LV.Pages.Records
             if (FirstRecord != null)
             {
 
-                var allRecords = from m in _context.Records
-                                 where m.NameProduct.Contains(FirstRecord.NameProduct) &&
-                                       m.NameStore.Contains(FirstRecord.NameStore) &&
-                                       m.NameProvince.Contains(FirstRecord.NameProvince) &&
-                                       m.NameCanton.Contains(FirstRecord.NameCanton)
-                                 orderby m.RecordDate descending
-                                 select m;
+                var allRecords = from record in _context.Records
+                                 join store in _context.Stores
+                                 on new { record.NameStore, record.Latitude, record.Longitude }
+                                 equals new { store.NameStore, store.Latitude, store.Longitude }
+                                 where record.NameProduct.Contains(FirstRecord.NameProduct) &&
+                                       record.Latitude == FirstRecord.Latitude &&
+                                       record.Longitude == FirstRecord.Longitude
+                                 orderby record.RecordDate descending
+                                 select new RecordStoreModel
+                                 {
+                                     Record = record,
+                                     Store = store
+                                 };
 
-                Record = await allRecords
-                    .ToListAsync();
+                Records = await allRecords.ToListAsync();
             }
             else
             {
-                Record = new List<Record>();
+                Records = new List<RecordStoreModel>();
             }
 
             return Page();
