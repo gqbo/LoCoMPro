@@ -14,6 +14,13 @@ using Microsoft.Data.SqlClient;
 
 namespace LoCoMPro_LV.Pages.Records
 {
+
+    public class RecordStoreModel
+    {
+        public Record Record { get; set; }
+        public Store Store { get; set; }
+    }
+
     /// <summary>
     /// Página de detalles de producto, en donde se ven los registros relacionados a un mismo producto.
     /// </summary>
@@ -22,27 +29,21 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoComproContext _context;
-
-        /// <summary>
-        /// Proporciona acceso a la configuración de la aplicación, como valores definidos en appsettings.json.
-        /// </summary>
-        private readonly IConfiguration Configuration;
+        private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
         /// <summary>
         /// Constructor de la clase DetailsModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public DetailsModel(LoComproContext context, IConfiguration configuration)
+        public DetailsModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
-            Configuration = configuration;
         }
 
         /// <summary>
-        /// Representa una lista paginada de registros para su visualización en la página.
+        /// Lista de tipo "Record", que almacena los registros correspondientes al producto que se selecciono para ver en detalle.
         /// </summary>
-        public PaginatedList<Record> Records { get; set; }
+        public IList<RecordStoreModel> Records { get; set; } = default!;
 
         /// <summary>
         /// Nombre del usuario generador del registro seleccionado en la pantalla index, que se utiliza para buscar todos los registros relacionados.
@@ -61,8 +62,9 @@ namespace LoCoMPro_LV.Pages.Records
         /// utiliza el nombre del generador y la fecha de realización del registro más reciente del producto para realizar la consulta por todos
         /// de todos los registros con ese producto en esa tienda en específico.
         /// </summary>
-        public async Task<IActionResult> OnGetAsync(int? pageIndex)
+        public async Task<IActionResult> OnGetAsync()
         {
+
             var FirstRecord = await _context.Records
                 .FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator && m.RecordDate == RecordDate);
 
@@ -70,23 +72,26 @@ namespace LoCoMPro_LV.Pages.Records
 
             if (FirstRecord != null)
             {
-                var allRecords = from m in _context.Records
-                                 where m.NameProduct.Contains(FirstRecord.NameProduct) &&
-                                       m.NameStore.Contains(FirstRecord.NameStore) &&
-                                       m.NameProvince.Contains(FirstRecord.NameProvince) &&
-                                       m.NameCanton.Contains(FirstRecord.NameCanton)
-                                 orderby m.RecordDate descending
-                                 select m;
 
-                var totalCount = await allRecords.CountAsync(); // Contiene el número total de registros.
+                var allRecords = from record in _context.Records
+                                 join store in _context.Stores
+                                 on new { record.NameStore, record.Latitude, record.Longitude }
+                                 equals new { store.NameStore, store.Latitude, store.Longitude }
+                                 where record.NameProduct.Contains(FirstRecord.NameProduct) &&
+                                       record.Latitude == FirstRecord.Latitude &&
+                                       record.Longitude == FirstRecord.Longitude
+                                 orderby record.RecordDate descending
+                                 select new RecordStoreModel
+                                 {
+                                     Record = record,
+                                     Store = store
+                                 };
 
-                var pageSize = Configuration.GetValue("PageSize", 10);
-                Records = await PaginatedList<Record>.CreateAsync(
-                    allRecords, pageIndex ?? 1, pageSize);
+                Records = await allRecords.ToListAsync();
             }
             else
             {
-                Records = new PaginatedList<Record>(new List<Record>(), 0, 1, 10);
+                Records = new List<RecordStoreModel>();
             }
 
             return Page();

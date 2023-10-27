@@ -11,32 +11,32 @@
             <div class="bg">
                 <div class="info_detail">
                     <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col">
+                        <div class="col-10">
                             <h2>
-                                @Html.DisplayFor(model => model.Records.First().NameProduct)
+                                @Html.DisplayFor(model => model.Records.First().Record.NameProduct)
                             </h2>
                         </div>
-                        <div class="col d-flex justify-content-end">
+                        <div class="col-2 d-flex justify-content-end">
                             <h4>
-                                ₡@Html.DisplayFor(model => model.Records.First().Price)
+                                ₡@Html.DisplayFor(model => model.Records.First().Record.Price)
                             </h4>
                         </div>
                     </div>
                     <div class="row d-flex justify-content-between align-items-center">
                         <div class="col">
                             <h6>
-                                Tienda: @Html.DisplayFor(model => model.Records.First().NameStore)
+                                Tienda: @Html.DisplayFor(model => model.Records.First().Record.NameStore)
                                 <br>
-                                Provincia: @Html.DisplayFor(model => model.Records.First().NameProvince)
+                                Provincia: @Html.DisplayFor(model => model.Records.First().Store.NameProvince)
                                 <br>
-                                Cantón: @Html.DisplayFor(model => model.Records.First().NameCanton)
+                                Cantón: @Html.DisplayFor(model => model.Records.First().Store.NameCanton)
                             </h6>
                         </div>
                     </div>
                     <div class="row d-flex justify-content-between align-items-center">
                         <div class="col d-flex justify-content-end">
                             <h7>
-                                @Html.DisplayFor(model => model.Records.First().RecordDate)
+                                @Html.DisplayFor(model => model.Records.First().Record.RecordDate)
                             </h7>
                         </div>
                     </div>
@@ -46,20 +46,20 @@
         </div>
     </div>
     <div class="row">
-        <table class="table">
+        <table class="table-details">
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Records[0].RecordDate)
+                        @Html.DisplayNameFor(model => model.Records[0].Record.RecordDate)
                     </th >
                     <th class="precio">
-                        @Html.DisplayNameFor(model => model.Records[0].Price)
+                        @Html.DisplayNameFor(model => model.Records[0].Record.Price)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Records[0].NameGenerator)
+                        @Html.DisplayNameFor(model => model.Records[0].Record.NameGenerator)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Records[0].Description)
+                        @Html.DisplayNameFor(model => model.Records[0].Record.Description)
                     </th>
                 </tr>
             </thead>
@@ -68,16 +68,24 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => firstItem.RecordDate)
-                        </td>
-                        <td class="precio">
-                            ₡@Html.DisplayFor(modelItem => firstItem.Price)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => firstItem.NameGenerator)
+                            <div class="table-item fecha">
+                                @Html.DisplayFor(modelItem => firstItem.Record.RecordDate)
+                            </div>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => firstItem.Description)
+                            <div class="table-item precio">
+                                ₡@Html.DisplayFor(modelItem => firstItem.Record.Price)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-item">
+                                @Html.DisplayFor(modelItem => firstItem.Record.NameGenerator)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-item">
+                                @Html.DisplayFor(modelItem => firstItem.Record.Description)
+                            </div>
                         </td>
                     </tr>
                 }

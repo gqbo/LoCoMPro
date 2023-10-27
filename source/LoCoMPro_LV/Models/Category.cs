@@ -11,7 +11,7 @@ namespace LoCoMPro_LV.Models
         [Required(ErrorMessage = "La categoría es obligatoria.")]
         [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
             ErrorMessage = "La categoría debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "El nombre de la categoría debe tener entre 2 y 50 caracteres.")]
         public string NameCategory { get; set; }
 
         [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
