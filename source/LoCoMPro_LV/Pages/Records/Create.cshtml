@@ -26,10 +26,12 @@
                     <span asp-validation-for="Record.Price" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="NameCategory">Categoría</label>
-                    <input asp-for="NameCategory" id="Category" type="text" class="form-control form-control-add" aria-required="true" placeholder="Categoría" />
-                    <span asp-validation-for="NameCategory" class="text-danger"></span>
+                    <label asp-for="SelectCategory">Categoría</label>
+                    <select id="Category" asp-for="SelectCategory" asp-items="Model.Categories" class="form-control form-control-add" aria-required="true" placeholder="Categoría">
+                        <option value=""> Categoría </option>
+                    </select>
                 </div>
+
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-6">
@@ -62,21 +64,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
-        
 
         type = "text/javascript" >
             $(function () {
                 var data = @Html.Raw(Json.Serialize(Model.Product));
                 $("#Products").autocomplete({
-                    source: data,
-                    minLength: 1
-                });
-            });
-
-        type = "text/javascript" >
-            $(function () {
-                var data = @Html.Raw(Json.Serialize(Model.Categories));
-                $("#Category").autocomplete({
                     source: data,
                     minLength: 1
                 });
