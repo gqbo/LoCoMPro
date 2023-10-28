@@ -1,11 +1,11 @@
 ﻿@page
-@model LoCoMPro_LV.Pages.Stores.CreateModel
+@model LoCoMPro_LV.Pages.Stores.CreateStoreModel
 @{
     ViewData["Title"] = "Agregar Establecimiento";
 }
 <div class="add_store">
     <h1 class="title_add">Agregar Establecimiento</h1>
-    <form method="post" asp-page="/Records/Create">
+    <form method="post">
         <div class="form-group">
             <label asp-for="Store.NameStore">Establecimiento</label>
             <input asp-for="Store.NameStore" id="Store" type="text" class="form-control form-control-add" aria-required="true" placeholder="Establecimiento" />
@@ -17,87 +17,92 @@
             <input type="text" step="0.0001" id="longitude" asp-for="Store.Longitude" />
             <input type="text" id="NameProvince" asp-for="Store.NameProvince" />
             <input type="text" id="NameCanton" asp-for="Store.NameCanton" />
-
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
-
     </form>
-    
 </div>
 
-<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var map = L.map('map', {
-            minZoom: 8,
-            maxZoom: 17,
-            dragging: true
-        }).setView([9.9281, -84.0907], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18
-        }).addTo(map);
+@section scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-        var costaRicaBounds = L.latLngBounds(L.latLng(8.032, -85.950), L.latLng(11.217, -82.555));
-        map.setMaxBounds(costaRicaBounds);
+    <script type="text/javascript">
+        $(function () {
+            var data = @Html.Raw(Json.Serialize(Model.Stores));
+            $("#Store").autocomplete({
+                source: data,
+                minLength: 1
+            });
+        });
+    </script>
 
-        map.on('drag', function () {
-            if (!costaRicaBounds.contains(map.getBounds())) {
-                map.panInsideBounds(costaRicaBounds, { animate: true });
+
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var map = L.map('map', {
+                minZoom: 8,
+                maxZoom: 17,
+                dragging: true
+            }).setView([9.9281, -84.0907], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18
+            }).addTo(map);
+
+            var costaRicaBounds = L.latLngBounds(L.latLng(8.032, -85.950), L.latLng(11.217, -82.555));
+            map.setMaxBounds(costaRicaBounds);
+
+            map.on('drag', function () {
+                if (!costaRicaBounds.contains(map.getBounds())) {
+                    map.panInsideBounds(costaRicaBounds, { animate: true });
+                }
+            });
+
+            var marker = L.marker([9.9281, -84.0907], { draggable: true }).addTo(map);
+
+            marker.on('dragend', function (e) {
+                var latlng = e.target.getLatLng();
+
+                document.getElementById('latitude').value = latlng.lat.toFixed(4);
+                document.getElementById('longitude').value = latlng.lng.toFixed(4);
+
+                document.getElementById('marker-info').style.display = 'block';
+
+                var lat = latlng.lat.toFixed(4);
+                var lng = latlng.lng.toFixed(4);
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        var address = data.address || {};
+                        var province = address.province || 'N/A';
+                        var canton = address.county || 'N/A';
+                        if (canton == "N/A") {
+                            canton = address.region || 'N/A';
+                        }
+                        province = cleanText(province);
+                        canton = cleanText(canton);
+
+                        document.getElementById('NameProvince').value = province;
+                        document.getElementById('NameCanton').value = canton;
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud de geocodificación inversa', error);
+                    });
+            });
+            function cleanText(text) {
+                var match = text.match(/Provincia(?: de)? (.+)|Cantón(?: de)? (.+)/);
+                if (match) {
+                    return match[1] || match[2];
+                }
+                return text;
             }
+
+
         });
+    </script>
+}
 
-        var marker = L.marker([9.9281, -84.0907], { draggable: true }).addTo(map);
-
-        marker.on('dragend', function (e) {
-            var latlng = e.target.getLatLng();
-
-            document.getElementById('latitude').value = latlng.lat.toFixed(4);
-            document.getElementById('longitude').value = latlng.lng.toFixed(4);
-
-            document.getElementById('marker-info').style.display = 'block';
-
-            var lat = latlng.lat.toFixed(4);
-            var lng = latlng.lng.toFixed(4);
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
-                .then(response => response.json())
-                .then(data => {
-                    var address = data.address || {};
-                    var province = address.province || 'N/A';
-                    var canton = address.county || 'N/A';
-                    if (canton == "N/A") {
-                        canton = address.region || 'N/A';
-                    }
-                    province = cleanText(province);
-                    canton = cleanText(canton);
-
-                    document.getElementById('NameProvince').value = province;
-                    document.getElementById('NameCanton').value = canton;
-                })
-                .catch(error => {
-                    console.error('Error en la solicitud de geocodificación inversa', error);
-                });
-        });
-        function cleanText(text) {
-            var words = text.split(" ");
-            var filteredWords = words.filter(word => word !== "Provincia" && word !== "Cantón" && word !== "Provincia de" && word !== "Cantón de");
-            var cleanedText = filteredWords.join(" ");
-            return cleanedText;
-        }
-    });
-</script>
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-<script type="text/javascript">
-    $(function () {
-        var data = @Html.Raw(Json.Serialize(Model.Stores));
-        $("#Store").autocomplete({
-            source: data,
-            minLength: 1
-        });
-    });
-</script>
 

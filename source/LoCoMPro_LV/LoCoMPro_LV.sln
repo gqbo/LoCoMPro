@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoCoMPro_LV", "LoCoMPro_LV.csproj", "{7C4B746F-BBB6-413A-949A-252FDD7E1120}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "unit_tests", "..\tests\unit_tests\unit_tests.csproj", "{FE1634B8-163F-40DC-9495-7163E9C6647A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "unit_tests", "..\tests\unit_tests\unit_tests.csproj", "{FE1634B8-163F-40DC-9495-7163E9C6647A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

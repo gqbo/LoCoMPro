@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LoCoMPro_LV.Pages.Stores
 {
-    public class CreateModel : PageModel
+    public class CreateStoreModel : PageModel
     {
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
@@ -13,7 +13,7 @@ namespace LoCoMPro_LV.Pages.Stores
         /// Constructor de la clase IndexModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public CreateModel(LoCoMPro_LV.Data.LoComproContext context)
+        public CreateStoreModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
         }
@@ -34,6 +34,18 @@ namespace LoCoMPro_LV.Pages.Stores
         {
             await LoadStoresAsync();
         }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            return RedirectToPage("../Records/Create", new
+            {
+                latitude = Store.Latitude,
+                longitude = Store.Longitude,
+                nameStore = Store.NameStore,
+                nameProvince = Store.NameProvince,
+                nameCanton = Store.NameCanton
+            });
+        }
+
 
         /// <summary>
         /// Permite almacenar los locales en una colección de datos.

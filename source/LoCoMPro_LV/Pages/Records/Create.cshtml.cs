@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using LoCoMPro_LV.Utils;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -34,13 +35,17 @@ namespace LoCoMPro_LV.Pages.Records
         /// Método invocado cuando se realiza una solicitud GET para crear registros. 
         /// Realiza una serie de llamados a los diferentes métodos encargados de obtener la información de la base de datos.
         /// </summary>
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(double latitude, double longitude, string nameStore, string nameProvince, string nameCanton)
         {
-            await LoadProvincesAsync();
-            await LoadCantonsAsync();
             await LoadStoresAsync();
             await LoadProductsAsync();
             await LoadCategoriesAsync();
+
+            Latitude = latitude;
+            Longitude = longitude;
+            NameStore = nameStore;
+            NameProvince = nameProvince;
+            NameCanton = nameCanton;
             LoadAuthenticatedUserName();
         }
 
@@ -49,34 +54,6 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         [BindProperty]
         public Record Record { get; set; }
-
-        /// <summary>
-        /// Método que carga los datos ingresados por el usuario a los registros y a las diferentes tablas de la base de datos. 
-        /// Realiza una serie de llamados que validan la consistencia de los datos que se desean añadir en la base de datos.
-        /// </summary>
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                Record.NameGenerator = User.Identity.Name;
-                await LoadProvincesAsync();
-                await LoadCantonsAsync();
-                await LoadStoresAsync();
-                await LoadProductsAsync();
-                await LoadCategoriesAsync();
-                return Page();
-            }
-
-            await ProcessStore();
-            await ProcessProduct();
-            await ProcessCategory();
-            await ProcessAssociated();
-            Record.RecordDate = Record.RecordDate = GetCurrentDateTime();
-
-            _context.Records.Add(Record);
-            await _context.SaveChangesAsync();
-            return RedirectToPage("../Index");
-        }
 
         /// <summary>
         /// Lista que donde se almacena las provincias que se encuentran en la BD.
@@ -109,6 +86,60 @@ namespace LoCoMPro_LV.Pages.Records
         public string AuthenticatedUserName { get; set; }
 
         /// <summary>
+        /// Latitud de la tienda seleccionada en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public double Latitude { get; set; }
+
+        /// <summary>
+        /// Longitud de la tienda seleccionada en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public double Longitude { get; set; }
+
+        /// <summary>
+        /// Nombre de la tienda seleccionada en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public string NameStore { get; set; }
+
+        /// <summary>
+        /// Nombre del cantón de la tienda obtenido en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public string NameCanton { get; set; }
+
+        /// <summary>
+        /// Nombre de la provincia obtenido en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public string NameProvince { get; set; }
+
+        /// <summary>
+        /// Método que carga los datos ingresados por el usuario a los registros y a las diferentes tablas de la base de datos. 
+        /// Realiza una serie de llamados que validan la consistencia de los datos que se desean añadir en la base de datos.
+        /// </summary>
+        public async Task<IActionResult> OnPostAsync()
+        {
+            /*if (!ModelState.IsValid)
+            {
+                Record.NameGenerator = User.Identity.Name;
+                await LoadCategoriesAsync();
+                return Page();
+            }*/
+
+            await ProcessStore();
+            await ProcessProduct();
+            await ProcessCategory();
+            await ProcessAssociated();
+            Record.RecordDate = Record.RecordDate = GetCurrentDateTime();
+
+            _context.Records.Add(Record);
+            await _context.SaveChangesAsync();
+            return RedirectToPage("../Index");
+        }
+
+        /// <summary>
         /// String de validación de datos para Category.
         /// </summary>
         [BindProperty]
@@ -117,32 +148,6 @@ namespace LoCoMPro_LV.Pages.Records
         [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$", ErrorMessage = "El nombre de la categoría ingresado no es valido")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "El nombre de la categoría debe tener entre 2 y 50 caracteres.")]
         public String NameCategory { get; set; }
-
-        /// <summary>
-        /// Permite extraer las provincias y almacenarlas en una lista.
-        /// </summary>
-        private async Task LoadProvincesAsync()
-        {
-            var provinces = await _context.Provinces.ToListAsync();
-            Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-        }
-
-        /// <summary>
-        /// Permite extraer los cantones y almacenarlos en un diccionario de provincias con los respectivos cantones .
-        /// </summary>
-        private async Task LoadCantonsAsync()
-        {
-            var cantons = await _context.Cantons.ToListAsync();
-            Cantons = new Dictionary<string, List<string>>();
-            foreach (var canton in cantons)
-            {
-                if (!Cantons.ContainsKey(canton.NameProvince))
-                {
-                    Cantons[canton.NameProvince] = new List<string>();
-                }
-                Cantons[canton.NameProvince].Add(canton.NameCanton);
-            }
-        }
 
         /// <summary>
         /// Permite almacenar los locales en una colección de datos.
@@ -182,12 +187,6 @@ namespace LoCoMPro_LV.Pages.Records
             }
         }
 
-
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public string NameStore { get; set; }
-        public string NameCanton { get; set; }
-        public string NameProvince { get; set; }
         /// <summary>
         /// Valida que repita un local a la hora de almacenarlo en la BD.
         /// </summary>
@@ -197,7 +196,7 @@ namespace LoCoMPro_LV.Pages.Records
             s.NameStore == NameStore);
             if (existingStore != null)
             {
-                var distance = CalculateDistance(existingStore.Latitude, existingStore.Longitude, Latitude, Longitude);
+                var distance = Geolocation.CalculateDistance(existingStore.Latitude, existingStore.Longitude, Latitude, Longitude);
                 if (distance <= 2000)
                 {
                     Record.Store = existingStore;
@@ -215,6 +214,8 @@ namespace LoCoMPro_LV.Pages.Records
                     _context.Stores.Add(newStore);
                     await _context.SaveChangesAsync();
                     Record.NameStore = newStore.NameStore;
+                    Record.Longitude = newStore.Longitude;
+                    Record.Latitude = newStore.Latitude;
                 }
             }
             else
@@ -230,6 +231,8 @@ namespace LoCoMPro_LV.Pages.Records
                 _context.Stores.Add(newStore);
                 await _context.SaveChangesAsync();
                 Record.NameStore = newStore.NameStore;
+                Record.Longitude = newStore.Longitude;
+                Record.Latitude = newStore.Latitude;
             }  
         }
 
@@ -307,31 +310,6 @@ namespace LoCoMPro_LV.Pages.Records
         {
             string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             return DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-        }
-        private static double CalculateDistance(double latitude1, double longitude1, double latitude2, double longitude2)
-        {
-            double earthRadius = 6371000;
-
-            double dLat = DegreesToRadians(latitude2 - latitude1);
-            double dLon = DegreesToRadians(longitude2 - longitude1);
-
-            latitude1 = DegreesToRadians(latitude1);
-            latitude2 = DegreesToRadians(latitude2);
-
-            // Fórmula haversine
-            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                        Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(latitude1) * Math.Cos(latitude2);
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-
-            // Distancia en metros
-            double distance = earthRadius * c;
-
-            return distance;
-        }
-
-        private static double DegreesToRadians(double degrees)
-        {
-            return degrees * (Math.PI / 180);
         }
     }
 }
