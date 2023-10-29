@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using LoCoMPro_LV.Pages.Records;
+using System.Globalization;
+
 
 namespace LoCoMPro_LV.Pages.Reports
 {
@@ -43,6 +45,9 @@ namespace LoCoMPro_LV.Pages.Reports
         [BindProperty(SupportsGet = true)]
         public DateTime RecordDate { get; set; }
 
+        [BindProperty]
+        public Report Report { get; set; }
+
         /// <summary>
         /// Método utilizado cuando en la pantalla de resultados de la búsqueda se selecciona un producto para abrir el detalle. Este método
         /// utiliza el nombre del generador y la fecha de realización del registro más reciente del producto para realizar la consulta por todos
@@ -59,6 +64,31 @@ namespace LoCoMPro_LV.Pages.Reports
             Records = await firstRecordQuery.ToListAsync();
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            Report = new Report
+            {
+                NameReporter = User.Identity.Name,
+                NameGenerator = NameGenerator,
+                RecordDate = RecordDate,
+                ReportDate = GetCurrentDateTime(),
+                Comment = Report.Comment
+            };
+
+            _context.Reports.Add(Report);
+            await _context.SaveChangesAsync();
+            return RedirectToPage("../Index");
+        }
+
+        /// <summary>
+        /// Método que verifica la hora actual para almacenarla en la BD.
+        /// </summary>
+        private static DateTime GetCurrentDateTime()
+        {
+            string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            return DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         }
     }
 }

@@ -1,12 +1,17 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Reports.CreateModel
+@using Microsoft.AspNetCore.Authorization
 
 @{
     ViewData["Title"] = "Create";
 }
 
+@attribute [Authorize]
+
 <div class="container details-container">
-    <h1 class="title_add">Información del Registro</h1>
+    <div class="row d-flex justify-content-center align-items-center">
+        <h1 class="title_add">Información del Registro</h1>
+    </div>
     <div class="row justify-content-center align-items-center">
         <div class="card">
             <div class="bg">
@@ -60,11 +65,18 @@
             <div class="blob"></div>
         </div>
     </div>
-    <h1 class="title_add">Razón del reporte</h1>
-    <div class="row">
-        <div class="form-group">
-            <label class="control-label"></label>
-            <textarea class="form-control form-control-add form-control form-control-add-lg" placeholder=" Añade una descripción" rows="8"></textarea>
+    <form method="post" id="formRegistro">
+        <h1 class="title_add">Razón del reporte</h1>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="form-group">
+                <textarea asp-for="Report.Comment" class="form-control form-control-add form-control form-control-add-lg" placeholder=" Añade una descripción" rows="8"></textarea>
+                <span asp-validation-for="Report.Comment" class="text-danger"></span>
+            </div>
         </div>
-    </div>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col d-flex justify-content-start align-items-center">
+                <input type="submit" value="Reportar" class="add_confirm btn btn-primary btn-sm"/>
+            </div>
+        </div>
+    </form>
 </div>
