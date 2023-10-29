@@ -12,13 +12,13 @@ namespace LoCoMPro_LV.Pages.Stores
         /// <summary>
         /// Constructor de la clase IndexModel.
         /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public CreateStoreModel(LoCoMPro_LV.Data.LoComproContext context)
+         public CreateStoreModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
         }
+
         /// <summary>
-        /// Construye un método de llamado a record para pasar datos del HTML 
+        /// Construye un objeto de tipo Store para almacenar el contenido del HTML. 
         /// </summary>
         [BindProperty]
         public Store Store { get; set; }
@@ -29,11 +29,18 @@ namespace LoCoMPro_LV.Pages.Stores
         /// </summary>
         public HashSet<string> Stores { get; set; }
 
-
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud GET para la página de "crear tienda". 
+        /// Carga las tiendas encontradas en la base de datos y las almacena en una estructura de datos.
+        /// </summary>
         public async Task OnGetAsync()
         {
             await LoadStoresAsync();
         }
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud POST para la página de "crear tienda". 
+        /// Recupera la información relacionada a la geolocalización y la transfiere a la página "crear registro".
+        /// </summary>
         public IActionResult OnPostAsync()
         {
             if (Store.NameCanton == "N/A" || Store.NameProvince == "N/A")
@@ -52,7 +59,7 @@ namespace LoCoMPro_LV.Pages.Stores
 
 
         /// <summary>
-        /// Permite almacenar los locales en una colección de datos.
+        /// Almacena en una estructuras de datos las tiendas encontradas en la base de datos.
         /// </summary>
         private async Task LoadStoresAsync()
         {
