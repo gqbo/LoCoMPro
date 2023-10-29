@@ -22,24 +22,23 @@
                                 <span asp-validation-for="Store.NameStore" class="text-danger"></span>
                             </div>
                         </div>
-@*                         <div class="col-4">
+                        <div class="col-4">
                             <div class="form-group-store">
-                                <label asp-for="Store.NameProvince">Provincia</label>
-                                <select id="Province" asp-for="Store.NameProvince" class="form-control form-control-add" aria-required="true" placeholder="Provincia">
-                                    <option value="">Provincia </option>
+                                <label asp-for="NameProvinceInput">Provincia</label>
+                                <select id="Province" asp-for="NameProvinceInput" asp-items="Model.Provinces" class="form-control form-control-add" aria-required="true" placeholder="Provincia">
+                                    <option value=""> Provincia  </option>
                                 </select>
-                                <span asp-validation-for="Store.NameProvince" class="text-danger"></span>
+                                <span asp-validation-for="NameProvinceInput" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group-store">
-                                <label asp-for="Store.NameCanton">Canton</label>
-                                <select id="Canton" asp-for="Store.NameCanton" class="form-control form-control-add" aria-required="true" placeholder="Canton">
-                                    <option value="">Canton </option>
+                                <label asp-for="NameCantonInput">Cantón</label>
+                                <select id="Canton" asp-for="NameCantonInput" class="form-control form-control-add" aria-required="true" placeholder="Cantón">
                                 </select>
-                                <span asp-validation-for="Store.NameCanton" class="text-danger"></span>
+                                <span asp-validation-for="NameCantonInput" class="text-danger"></span>
                             </div>
-                        </div> *@
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
@@ -75,6 +74,30 @@
                 source: data,
                 minLength: 1
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var provinceDropdown = document.getElementById("Province");
+            var cantonDropdown = document.getElementById("Canton");
+            var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
+            function actualizarDropdownCantones() {
+                var selectedProvince = provinceDropdown.value;
+                cantonDropdown.innerHTML = '';
+                var defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.text = " Cantón";
+                cantonDropdown.appendChild(defaultOption);
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
+            provinceDropdown.addEventListener("change", actualizarDropdownCantones);
+            actualizarDropdownCantones();
         });
     </script>
 
