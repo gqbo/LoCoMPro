@@ -42,21 +42,13 @@
                         </div> *@
                     </div>
                     <div class="row">
-                            @if (TempData.ContainsKey("ErrorMessage"))
-                            {
-                                <div class="col-12">
-                                    <div class="text-danger text-danger-map">
-                                        @TempData["ErrorMessage"]
-                                    </div>
-                                </div>
-                            }
                         <div class="col-12 d-flex justify-content-center">
                             <div class="map" id="map"></div>
                             <div id="marker-info" style="display: none;">
-                                <input type="text" step="0.0001" id="latitude" asp-for="Store.Latitude" />
-                                <input type="text" step="0.0001" id="longitude" asp-for="Store.Longitude" />
-                                <input type="text" id="NameProvince" asp-for="Store.NameProvince" />
-                                <input type="text" id="NameCanton" asp-for="Store.NameCanton" />
+                                <input type="hidden" step="0.0001" id="latitude" asp-for="Store.Latitude" />
+                                <input type="hidden" step="0.0001" id="longitude" asp-for="Store.Longitude" />
+                                <input type="hidden" id="NameProvince" asp-for="Store.NameProvince" />
+                                <input type="hidden" id="NameCanton" asp-for="Store.NameCanton" />
                             </div>
                         </div>
                     </div>
@@ -91,36 +83,14 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var map = L.map('map', {
-                minZoom: 8,
-                maxZoom: 17,
-                dragging: true
-            }).setView([9.9281, -84.0907], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18
-            }).addTo(map);
+            var initialLatitude = 9.9281;
+            var initialLongitude = -84.0907;
 
-            var costaRicaBounds = L.latLngBounds(L.latLng(8.032, -85.950), L.latLng(11.217, -82.555));
-            map.setMaxBounds(costaRicaBounds);
+            function updateLocationInfo(lat, lng) {
 
-            map.on('drag', function () {
-                if (!costaRicaBounds.contains(map.getBounds())) {
-                    map.panInsideBounds(costaRicaBounds, { animate: true });
-                }
-            });
+                document.getElementById('latitude').value = lat.toFixed(4);
+                document.getElementById('longitude').value = lng.toFixed(4);
 
-            var marker = L.marker([9.9281, -84.0907], { draggable: true }).addTo(map);
-
-            marker.on('dragend', function (e) {
-                var latlng = e.target.getLatLng();
-
-                document.getElementById('latitude').value = latlng.lat.toFixed(4);
-                document.getElementById('longitude').value = latlng.lng.toFixed(4);
-
-                document.getElementById('marker-info').style.display = 'block';
-
-                var lat = latlng.lat.toFixed(4);
-                var lng = latlng.lng.toFixed(4);
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
                     .then(response => response.json())
                     .then(data => {
@@ -140,7 +110,36 @@
                     .catch(error => {
                         console.error('Error en la solicitud de geocodificación inversa', error);
                     });
+            }
+
+            var map = L.map('map', {
+                minZoom: 8,
+                maxZoom: 17,
+                dragging: true
+            }).setView([initialLatitude, initialLongitude], 12);
+
+            updateLocationInfo(initialLatitude, initialLongitude);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18
+            }).addTo(map);
+
+            var costaRicaBounds = L.latLngBounds(L.latLng(8.032, -85.950), L.latLng(11.217, -82.555));
+            map.setMaxBounds(costaRicaBounds);
+
+            map.on('drag', function () {
+                if (!costaRicaBounds.contains(map.getBounds())) {
+                    map.panInsideBounds(costaRicaBounds, { animate: true });
+                }
             });
+
+            var marker = L.marker([initialLatitude, initialLongitude], { draggable: true }).addTo(map);
+
+            marker.on('dragend', function (e) {
+                var latlng = e.target.getLatLng();
+                updateLocationInfo(latlng.lat, latlng.lng);
+            });
+
             function cleanText(text) {
                 var match = text.match(/Provincia(?: de)? (.+)|Cantón(?: de)? (.+)/);
                 if (match) {
@@ -148,10 +147,9 @@
                 }
                 return text;
             }
-
-
         });
     </script>
+
 }
 
 
