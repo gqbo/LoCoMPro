@@ -55,6 +55,9 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty(SupportsGet = true)]
         public DateTime RecordDate { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public Evaluate EvaluateInput { get; set; }
+
         /// <summary>
         /// Método utilizado cuando en la pantalla de resultados de la búsqueda se selecciona un producto para abrir el detalle. Este método
         /// utiliza el nombre del generador y la fecha de realización del registro más reciente del producto para realizar la consulta por todos
@@ -95,26 +98,44 @@ namespace LoCoMPro_LV.Pages.Records
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostSubmitRating(string nameGenerator, DateTime recordDate, int rating)
         {
-            var requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
+            if (string.IsNullOrEmpty(nameGenerator) || recordDate == DateTime.MinValue || rating < 1 || rating > 5)
+            {
+                return BadRequest();
+            }
 
             try
             {
-                var postData = JsonConvert.DeserializeObject<PostDataModel>(requestBody);
+                var evaluate = new Evaluate
+                {
+                    NameGenerator = nameGenerator,
+                    RecordDate = recordDate,
+                    StarsCount = rating,
+                    NameEvaluator = User.Identity.Name
+                    // Aquí puedes establecer otras propiedades de Evaluate si es necesario.
+                };
+
+                var existingEvaluation = await _context.Valorations
+                    .FirstOrDefaultAsync(e => e.NameEvaluator == User.Identity.Name
+                    && e.NameGenerator == evaluate.NameGenerator
+                    && e.RecordDate == evaluate.RecordDate);
+
+                if (existingEvaluation != null)
+                {
+                    existingEvaluation.StarsCount = evaluate.StarsCount;
+                }
+                else
+                {
+                    _context.Valorations.Add(evaluate);
+                }
+                await _context.SaveChangesAsync();
                 return new OkResult();
             }
             catch (Exception ex)
             {
                 return new BadRequestObjectResult(ex.Message);
             }
-        }
-
-        public class PostDataModel
-        {
-            public int Rating { get; set; }
-            public string NameGenerator { get; set; }
-            public DateTime RecordDate { get; set; }
         }
     }
 }
