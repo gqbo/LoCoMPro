@@ -55,6 +55,9 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty(SupportsGet = true)]
         public DateTime RecordDate { get; set; }
 
+        /// <summary>
+        /// Objeto de tipo Evaluate que guarda la información de la valoración de estrellas para actualizar la base de datos.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public Evaluate EvaluateInput { get; set; }
 
@@ -98,6 +101,10 @@ namespace LoCoMPro_LV.Pages.Records
             return Page();
         }
 
+        /// <summary>
+        /// Método utilizado para el manejo de la solicitud POST que se realiza a la hora de valorar con estrellas
+        /// un registro en específico. Además se encarga de actualizar la base de datos con la nueva valoración.
+        /// </summary>
         public async Task<IActionResult> OnPostSubmitRating(string nameGenerator, DateTime recordDate, int rating)
         {
             if (string.IsNullOrEmpty(nameGenerator) || recordDate == DateTime.MinValue || rating < 1 || rating > 5)
@@ -113,7 +120,6 @@ namespace LoCoMPro_LV.Pages.Records
                     RecordDate = recordDate,
                     StarsCount = rating,
                     NameEvaluator = User.Identity.Name
-                    // Aquí puedes establecer otras propiedades de Evaluate si es necesario.
                 };
 
                 var existingEvaluation = await _context.Valorations
