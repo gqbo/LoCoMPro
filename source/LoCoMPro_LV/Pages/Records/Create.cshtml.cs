@@ -148,8 +148,9 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         private async Task LoadCategoriesAsync()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.OrderBy(c => c.NameCategory).ToListAsync();
             Categories = new SelectList(categories, "NameCategory", "NameCategory");
+
         }
 
         /// <summary>

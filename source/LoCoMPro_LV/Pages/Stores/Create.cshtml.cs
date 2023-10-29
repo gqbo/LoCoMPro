@@ -34,8 +34,14 @@ namespace LoCoMPro_LV.Pages.Stores
         {
             await LoadStoresAsync();
         }
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPostAsync()
         {
+            if (Store.NameCanton == null || Store.NameProvince == "N/A" || Store.NameCanton == "N/A")
+            {
+                TempData["ErrorMessage"] = "Los campos de ubicación son inválidos.";
+                return Page();
+            }
+
             return RedirectToPage("../Records/Create", new
             {
                 latitude = Store.Latitude,
