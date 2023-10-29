@@ -9,8 +9,10 @@
 @attribute [Authorize]
 
 <div class="container details-container">
-    <div class="row d-flex justify-content-center align-items-center">
-        <h1 class="title_add">Información del Registro</h1>
+    <div class="row">
+        <div class="col d-flex justify-content-center align-items-center">
+            <h1 class="title_add-report">Información del registro</h1>
+        </div>
     </div>
     <div class="row justify-content-center align-items-center">
         <div class="card">
@@ -66,16 +68,20 @@
         </div>
     </div>
     <form method="post" id="formRegistro">
-        <h1 class="title_add">Razón del reporte</h1>
+        <div class="row">
+            <div class="col d-flex justify-content-center align-items-center">
+                <h1 class="title_add-report">Razón del reporte</h1>
+            </div>
+        </div>
         <div class="row d-flex justify-content-center align-items-center">
             <div class="form-group">
                 <textarea asp-for="Report.Comment" class="form-control form-control-add form-control form-control-add-lg" placeholder=" Añade una descripción" rows="8"></textarea>
                 <span asp-validation-for="Report.Comment" class="text-danger"></span>
             </div>
         </div>
-        <div class="row d-flex justify-content-center align-items-center">
-            <div class="col d-flex justify-content-start align-items-center">
-                <input type="submit" value="Reportar" class="add_confirm btn btn-primary btn-sm"/>
+        <div class="row">
+            <div class="col d-flex justify-content-center align-items-center">
+                <input type="submit" value="Reportar" class="add_confirm btn btn-primary btn-sm" />
             </div>
         </div>
     </form>

@@ -10,7 +10,7 @@ using System.Globalization;
 namespace LoCoMPro_LV.Pages.Reports
 {
     /// <summary>
-    /// Página de detalles de producto, en donde se ven los registros relacionados a un mismo producto.
+    /// Página Create de Records para la creación de nuevos los reportes relacionados a los registros.
     /// </summary>
     public class CreateModel : PageModel
     {
@@ -20,7 +20,7 @@ namespace LoCoMPro_LV.Pages.Reports
         private readonly LoComproContext _context;
 
         /// <summary>
-        /// Constructor de la clase DetailsModel.
+        /// Constructor de la clase CreateModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
         public CreateModel(LoComproContext context)
@@ -29,7 +29,7 @@ namespace LoCoMPro_LV.Pages.Reports
         }
 
         /// <summary>
-        /// Lista de tipo "Record", que almacena los registros correspondientes al producto que se selecciono para ver en detalle.
+        /// Lista de tipo "RecordStoreModel", que almacena los registros correspondientes al producto que se selecciono para ver en detalle, con su respectiva tienda.
         /// </summary>
         public List<RecordStoreModel> Records { get; set; } = new List<RecordStoreModel>();
 
@@ -45,13 +45,14 @@ namespace LoCoMPro_LV.Pages.Reports
         [BindProperty(SupportsGet = true)]
         public DateTime RecordDate { get; set; }
 
+        /// <summary>
+        /// Es un objeto de tipo Report, para guardar los datos y enviar el objeto a la base de datos.
+        /// </summary>
         [BindProperty]
         public Report Report { get; set; }
 
         /// <summary>
-        /// Método utilizado cuando en la pantalla de resultados de la búsqueda se selecciona un producto para abrir el detalle. Este método
-        /// utiliza el nombre del generador y la fecha de realización del registro más reciente del producto para realizar la consulta por todos
-        /// de todos los registros con ese producto en esa tienda en específico.
+        /// El metodo setea los datos del objeto RecordStoreModel, con la informacion del Record asociado al reporte que se va a crear.
         /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
@@ -66,6 +67,9 @@ namespace LoCoMPro_LV.Pages.Reports
             return Page();
         }
 
+        /// <summary>
+        /// Este metodo utiliza la informacion recopilada en la vista para crear el reporte y enviarlo a la base de datos.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             Report = new Report
