@@ -24,22 +24,6 @@ namespace LoCoMPro_LV.Pages.Stores
         [BindProperty]
         public Store Store { get; set; }
 
-        [BindProperty]
-        public string NameProvinceInput { get; set; }
-
-        [BindProperty]
-        public string NameCantonInput { get; set; }
-
-        /// <summary>
-        /// Lista que donde se almacena las provincias que se encuentran en la BD.
-        /// </summary>
-        public SelectList Provinces { get; set; }
-
-        /// <summary>
-        /// Diccionario donde se almacena los cantones  asociados a las provincias que se encuentran en la BD.
-        /// </summary>
-        public Dictionary<string, List<string>> Cantons { get; set; }
-
         /// <summary>
         /// Lista Hash de Store para almacenar los locales.
         /// </summary>
@@ -51,8 +35,6 @@ namespace LoCoMPro_LV.Pages.Stores
         /// </summary>
         public async Task OnGetAsync()
         {
-            await LoadProvincesAsync();
-            await LoadCantonsAsync();
             await LoadStoresAsync();
         }
         /// <summary>
@@ -73,32 +55,6 @@ namespace LoCoMPro_LV.Pages.Stores
                 nameProvince = Store.NameProvince,
                 nameCanton = Store.NameCanton
             });
-        }
-
-        /// <summary>
-        /// Permite extraer las provincias y almacenarlas en una lista.
-        /// </summary>
-        private async Task LoadProvincesAsync()
-        {
-            var provinces = await _context.Provinces.OrderBy(c => c.NameProvince).ToListAsync();
-            Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-        }
-
-        /// <summary>
-        /// Permite extraer los cantones y almacenarlos en un diccionario de provincias con los respectivos cantones .
-        /// </summary>
-        private async Task LoadCantonsAsync()
-        {
-            var cantons = await _context.Cantons.OrderBy(c => c.NameCanton).ToListAsync();
-            Cantons = new Dictionary<string, List<string>>();
-            foreach (var canton in cantons)
-            {
-                if (!Cantons.ContainsKey(canton.NameProvince))
-                {
-                    Cantons[canton.NameProvince] = new List<string>();
-                }
-                Cantons[canton.NameProvince].Add(canton.NameCanton);
-            }
         }
 
         /// <summary>
