@@ -20,7 +20,6 @@ namespace LoCoMPro_LV.Pages.Records
     {
         public Record Record { get; set; }
         public Store Store { get; set; }
-
         public int AverageRating { get; set; }
     }
 
@@ -44,7 +43,7 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Lista de tipo "Record", que almacena los registros correspondientes al producto que se selecciono para ver en detalle.
+        /// Lista de tipo "RecordStoreModel", que almacena los registros correspondientes al producto que se selecciono para ver en detalle, con su respectiva tienda.
         /// </summary>
         public IList<RecordStoreModel> Records { get; set; } = default!;
 
