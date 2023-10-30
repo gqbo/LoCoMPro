@@ -372,3 +372,10 @@ table {
     font-family: Roboto;
     line-height: 24px;
 }
+
+.map {
+    width: 80%;
+    height: 500px;
+    box-shadow: 5px 5px 5px #888;
+    margin-top: 50px;
+}
