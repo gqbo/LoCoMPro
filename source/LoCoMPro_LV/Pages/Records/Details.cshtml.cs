@@ -9,6 +9,9 @@ using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
+using Microsoft.Data.SqlClient;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using System.Data;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -17,6 +20,8 @@ namespace LoCoMPro_LV.Pages.Records
     {
         public Record Record { get; set; }
         public Store Store { get; set; }
+
+        public int AverageRating { get; set; }
     }
 
     /// <summary>
@@ -88,10 +93,21 @@ namespace LoCoMPro_LV.Pages.Records
                                  select new RecordStoreModel
                                  {
                                      Record = record,
-                                     Store = store
+                                     Store = store,
                                  };
 
-                Records = await allRecords.ToListAsync();
+                List<int> averageRatings = new List<int>();
+                List<RecordStoreModel> updatedRecords = allRecords.ToList();
+
+                int index = 0;
+                foreach (var recordStoreModel in updatedRecords)
+                {
+                    int averageRating = GetAverageRating(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
+                    averageRatings.Add(averageRating);
+                    recordStoreModel.AverageRating = averageRatings[index];
+                    index++;
+                }
+                Records = updatedRecords;
             }
             else
             {
@@ -103,7 +119,7 @@ namespace LoCoMPro_LV.Pages.Records
 
         /// <summary>
         /// Método utilizado para el manejo de la solicitud POST que se realiza a la hora de valorar con estrellas
-        /// un registro en específico. Además se encarga de actualizar la base de datos con la nueva valoración.
+        /// un registro en específico donde se encarga de actualizar la base de datos con la nueva valoración.
         /// </summary>
         public async Task<IActionResult> OnPostSubmitRating(string nameGenerator, DateTime recordDate, int rating)
         {
@@ -142,6 +158,27 @@ namespace LoCoMPro_LV.Pages.Records
             {
                 return new BadRequestObjectResult(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Método utilizado para obtener el promedio de las valoraciones de estrellas de un registro en específico utilizando
+        /// una función escalar creada en la base de datos.
+        /// </summary>
+        private int GetAverageRating(string nameGenerator, DateTime recordDate)
+        {
+            int averageRating = 0;
+            using (var con = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
+            {
+                con.Open();
+                using (var com = new SqlCommand("SELECT dbo.GetStarsAverage(@NameGenerator, @RecordDate)", con))
+                {
+                    com.Parameters.Add(new SqlParameter("@NameGenerator", nameGenerator));
+                    com.Parameters.Add(new SqlParameter("@RecordDate", recordDate));
+
+                    averageRating = (int)com.ExecuteScalar();
+                }
+            }
+            return averageRating;
         }
     }
 }

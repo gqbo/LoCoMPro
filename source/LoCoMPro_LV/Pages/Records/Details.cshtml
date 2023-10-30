@@ -92,17 +92,17 @@
                             </div>
                         </td>
                         <td>
-                            <form method="post">
-                                <div class="ratings-wrapper">
-                                    <div class="ratings">
-                                        <span data-rating="5" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate">★</span>
-                                        <span data-rating="4" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate">★</span>
-                                        <span data-rating="3" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate">★</span>
-                                        <span data-rating="2" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate">★</span>
-                                        <span data-rating="1" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate">★</span>
-                                    </div>
+                            <div class="ratings-wrapper">
+                                <div class="ratings">
+                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                    {
+                                        <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate" 
+                                        @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
+                                            <span>★</span>
+                                        </span>
+                                    }
                                 </div>
-                            </form>
+                            </div>
                         </td>
                     </tr>
                 }
