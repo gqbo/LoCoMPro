@@ -175,7 +175,11 @@ namespace LoCoMPro_LV.Pages.Records
                     com.Parameters.Add(new SqlParameter("@NameGenerator", nameGenerator));
                     com.Parameters.Add(new SqlParameter("@RecordDate", recordDate));
 
-                    averageRating = (int)com.ExecuteScalar();
+                    var resultOfFunction = com.ExecuteScalar();
+                    if (resultOfFunction != DBNull.Value && resultOfFunction != null)
+                    {
+                        averageRating = Convert.ToInt32(resultOfFunction);
+                    }
                 }
             }
             return averageRating;
