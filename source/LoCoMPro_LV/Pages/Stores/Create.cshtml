@@ -18,36 +18,33 @@
                         <div class="col-4">
                             <div class="form-group-store">
                                 <label asp-for="Store.NameStore">Establecimiento</label>
-                                <input asp-for="Store.NameStore" id="Store" type="text" class="form-control form-control-add autocomplete-input" aria-required="true" placeholder="Establecimiento" />
+                                <input asp-for="Store.NameStore" id="Store" type="text" class="form-control form-control-add autocomplete-input" aria-required="true" placeholder="Establecimiento"/>
                                 <span asp-validation-for="Store.NameStore" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group-store">
-                                <label asp-for="NameProvinceInput">Provincia</label>
-                                <select id="Province" asp-for="NameProvinceInput" asp-items="Model.Provinces" class="form-control form-control-add" aria-required="true" placeholder="Provincia">
-                                    <option value=""> Provincia  </option>
-                                </select>
-                                <span asp-validation-for="NameProvinceInput" class="text-danger"></span>
+                                <div id="marker-info"> 
+                                    <label asp-for="Store.NameProvince">Provincia</label>
+                                    <input type="text" id="NameProvince" class="form-control form-control-add" aria-required="true" asp-for="Store.NameProvince" placeholder="Provincia" readonly/>
+                                </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group-store">
-                                <label asp-for="NameCantonInput">Cantón</label>
-                                <select id="Canton" asp-for="NameCantonInput" class="form-control form-control-add" aria-required="true" placeholder="Cantón">
-                                </select>
-                                <span asp-validation-for="NameCantonInput" class="text-danger"></span>
+                                <div id="marker-info">
+                                    <label asp-for="Store.NameCanton">Cantón</label>
+                                    <input asp-for="Store.NameCanton" id="NameCanton" type="text" class="form-control form-control-add" aria-required="true" asp-for="Store.NameCanton" placeholder="Cantón" readonly />
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             <div class="map" id="map"></div>
-                            <div id="marker-info" style="display: none;">
+                            <div id="marker-info" >
                                 <input type="hidden" step="0.0001" id="latitude" asp-for="Store.Latitude" />
                                 <input type="hidden" step="0.0001" id="longitude" asp-for="Store.Longitude" />
-                                <input type="hidden" id="NameProvince" asp-for="Store.NameProvince" />
-                                <input type="hidden" id="NameCanton" asp-for="Store.NameCanton" />
                             </div>
                         </div>
                     </div>
@@ -172,7 +169,6 @@
             }
         });
     </script>
-
 }
 
 
