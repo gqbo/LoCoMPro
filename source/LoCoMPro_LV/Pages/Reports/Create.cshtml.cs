@@ -19,10 +19,6 @@ namespace LoCoMPro_LV.Pages.Reports
         /// </summary>
         private readonly LoComproContext _context;
 
-        /// <summary>
-        /// Constructor de la clase CreateModel.
-        /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
         public CreateModel(LoComproContext context)
         {
             _context = context;
@@ -52,7 +48,7 @@ namespace LoCoMPro_LV.Pages.Reports
         public Report Report { get; set; }
 
         /// <summary>
-        /// El metodo setea los datos del objeto RecordStoreModel, con la informacion del Record asociado al reporte que se va a crear.
+        /// El metodo setea los datos del objeto RecordStoreModel, con la informacion del Record recopilada de la pantalla de detalles.
         /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
