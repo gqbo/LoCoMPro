@@ -189,9 +189,8 @@ namespace LoCoMPro_LV.Pages.Records
         {
             var existingStore = await _context.Stores.FirstOrDefaultAsync(s =>
                 s.NameStore == Record.NameStore &&
-                s.NameProvince == Record.NameProvince &&
-                s.NameCanton == Record.NameCanton);
-
+                s.NameProvince == Record.Store.NameProvince &&
+                s.NameCanton == Record.Store.NameProvince);
             if (existingStore != null)
             {
                 Record.Store = existingStore;
@@ -201,8 +200,8 @@ namespace LoCoMPro_LV.Pages.Records
                 var newStore = new Store
                 {
                     NameStore = Record.NameStore,
-                    NameProvince = Record.NameProvince,
-                    NameCanton = Record.NameCanton
+                    /*NameProvince = Record.NameProvince,
+                    NameCanton = Record.NameCanton*/
                 };
                 _context.Stores.Add(newStore);
                 await _context.SaveChangesAsync();

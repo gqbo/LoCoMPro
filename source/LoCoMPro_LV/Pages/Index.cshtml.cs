@@ -96,12 +96,12 @@ namespace LoCoMPro_LV.Pages
 
             if (!string.IsNullOrEmpty(SearchProvince))
             {
-                recordsQuery = recordsQuery.Where(s => s.NameProvince == SearchProvince);
+                recordsQuery = recordsQuery.Where(s => s.Store.NameProvince == SearchProvince);
             }
 
             if (!string.IsNullOrEmpty(SearchCanton))
             {
-                recordsQuery = recordsQuery.Where(s => s.NameCanton == SearchCanton);
+                recordsQuery = recordsQuery.Where(s => s.Store.NameCanton == SearchCanton);
             }
 
             if (!string.IsNullOrEmpty(SearchCategory))

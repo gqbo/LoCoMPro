@@ -21,19 +21,6 @@
                     <span asp-validation-for="Record.NameStore" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Record.NameProvince">Provincia</label>
-                    <select id="Province" asp-for="Record.NameProvince" asp-items="Model.Provinces" class="form-control form-control-add" aria-required="true" placeholder="Provincia">
-                        <option value=""> Provincia  </option>
-                    </select>
-                    <span asp-validation-for="Record.NameProvince" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Record.NameCanton">Cantón</label>
-                    <select id="Canton" asp-for="Record.NameCanton" class="form-control form-control-add" aria-required="true" placeholder="Cantón">
-                    </select>
-                    <span asp-validation-for="Record.NameCanton" class="text-danger"></span>
-                </div>
-                <div class="form-group">
                     <label asp-for="Record.NameProduct">Producto</label>
                     <input asp-for="Record.NameProduct" id="Products" type="text" class="form-control form-control-add" aria-required="true" placeholder="Producto" />
                     <span asp-validation-for="Record.NameProduct" class="text-danger"></span>

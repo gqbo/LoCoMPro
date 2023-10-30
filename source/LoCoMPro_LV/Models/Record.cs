@@ -9,7 +9,7 @@ namespace LoCoMPro_LV.Models
     {
         [Key]
         [Required(ErrorMessage = "El nombre del generador es obligatorio.")]
-        [StringLength(256, MinimumLength = 2, ErrorMessage = "El nombre del generador tener entre 2 y 256 caracteres.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre del generador tener entre 2 y 256 caracteres.")]
         [Display(Name = "Nombre de usuario")]
         public string NameGenerator { get; set; }
 
@@ -34,13 +34,11 @@ namespace LoCoMPro_LV.Models
             ErrorMessage = "El nombre del establecimiento no es un nombre valido.")]
         public string NameStore { get; set; }
 
-        [Display(Name = "Provincia")]
-        [Required(ErrorMessage = "Debe seleccionar una provincia.")]
-        public string NameProvince { get; set; }
+        [Required(ErrorMessage = "El grado de latitud es necesario")]
+        public double Latitude { get; set; }
 
-        [Display(Name = "Cantón")]
-        [Required(ErrorMessage = "Debe seleccionar un cantón.")]
-        public string NameCanton { get; set; }
+        [Required(ErrorMessage = "El grado de longitud es necesario")]
+        public double Longitude { get; set; }
 
         [Display(Name = "Producto")]
         [Required(ErrorMessage = "El nombre del producto es obligatorio.")]
@@ -48,11 +46,16 @@ namespace LoCoMPro_LV.Models
         [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
             ErrorMessage = "El nombre del producto no es valido.")]
         public string NameProduct { get; set; }
+        public bool Hide { get; set; }
 
         public GeneratorUser GeneratorUser { get; set; }
 
         public Store Store { get; set; }
 
         public Product Product { get; set; }
+
+        public ICollection<Report> Reports { get; set; }
+
+        public ICollection<Evaluate> Valorations { get; set; }
     }
 }

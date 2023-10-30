@@ -32,17 +32,20 @@
             </nav>
         </section>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - LoCoMPro_LV
+    <row>
+        <div class="container main-body">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
+    </row>
+    <row>
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2023 - LoCoMPro_LV
+            </div>
+        </footer>
+    </row>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

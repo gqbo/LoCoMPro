@@ -17,9 +17,12 @@ namespace LoCoMPro_LV.Data
         public DbSet<Store> Stores { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<GeneratorUser> GeneratorUsers { get; set; }
+        public DbSet<ModeratorUser> ModeratorUsers { get; set; }
         public DbSet<Record> Records { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Associated> Associated { get; set; }
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<Evaluate> Valorations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -30,9 +33,12 @@ namespace LoCoMPro_LV.Data
             builder.Entity<Product>().ToTable("Product");
             builder.Entity<Store>().ToTable("Store");
             builder.Entity<GeneratorUser>().ToTable("GeneratorUser");
+            builder.Entity<ModeratorUser>().ToTable("ModeratorUser");
             builder.Entity<Record>().ToTable("Record");
             builder.Entity<Category>().ToTable("Category");
             builder.Entity<Associated>().ToTable("Associated");
+            builder.Entity<Report>().ToTable("Reports");
+            builder.Entity<Evaluate>().ToTable("Valorations");
 
             builder.Entity<ApplicationUser>().HasKey(e => e.UserName);
             builder.Entity<ApplicationUser>().Property(e => e.UserName).IsRequired();
@@ -46,7 +52,7 @@ namespace LoCoMPro_LV.Data
                 .HasKey(c => new { c.NameProvince, c.NameCanton});
 
             builder.Entity<Store>()
-                .HasKey(s => new {s.NameStore, s.NameProvince, s.NameCanton});
+                .HasKey(s => new {s.NameStore, s.Latitude, s.Longitude});
 
             builder.Entity<Category>()
                 .HasKey(ca => new {ca.NameCategory});
@@ -56,6 +62,12 @@ namespace LoCoMPro_LV.Data
             
             builder.Entity<Associated>()
                 .HasKey(a => new { a.NameProduct, a.NameCategory });
+
+            builder.Entity<Report>()
+                .HasKey(r => new { r.NameGenerator, r.RecordDate, r.NameReporter, r.ReportDate });
+
+            builder.Entity<Evaluate>()
+                .HasKey(r => new { r.NameGenerator, r.RecordDate, r.NameEvaluator });
 
             builder.Entity<ApplicationUser>()
                 .HasOne(c => c.Canton)
@@ -67,6 +79,11 @@ namespace LoCoMPro_LV.Data
                 .WithMany(g => g.GeneratorUser)
                 .HasForeignKey(g => new { g.UserName });
 
+            builder.Entity<ModeratorUser>()
+                .HasOne(e => e.ApplicationUser)
+                .WithMany(g => g.ModeratorUsers)
+                .HasForeignKey(g => new { g.UserName });
+
             builder.Entity<Store>()
                 .HasOne(c => c.Canton)
                 .WithMany(s => s.Store)
@@ -75,7 +92,7 @@ namespace LoCoMPro_LV.Data
             builder.Entity<Record>()
                 .HasOne(c => c.Store)
                 .WithMany(r => r.Record)
-                .HasForeignKey(r => new { r.NameStore, r.NameProvince, r.NameCanton });
+                .HasForeignKey(r => new { r.NameStore, r.Latitude, r.Longitude });
 
             builder.Entity<Record>()
                 .HasOne(c => c.GeneratorUser)
@@ -101,6 +118,26 @@ namespace LoCoMPro_LV.Data
                 .HasOne(ca => ca.Category)
                 .WithMany(a => a.Associated)
                 .HasForeignKey(a => new { a.NameCategory});
+
+            builder.Entity<Report>()
+                .HasOne(r => r.Record)
+                .WithMany(re => re.Reports)
+                .HasForeignKey(re => new { re.NameGenerator, re.RecordDate });
+
+            builder.Entity<Report>()
+                .HasOne(c => c.GeneratorUser)
+                .WithMany(r => r.Reports)
+                .HasForeignKey(r => new { r.NameReporter });
+
+            builder.Entity<Evaluate>()
+                .HasOne(r => r.Record)
+                .WithMany(re => re.Valorations)
+                .HasForeignKey(re => new { re.NameGenerator, re.RecordDate });
+
+            builder.Entity<Evaluate>()
+                .HasOne(c => c.GeneratorUser)
+                .WithMany(r => r.Valorations)
+                .HasForeignKey(r => new { r.NameEvaluator });
 
             builder.Entity<ApplicationUser>().Ignore(e => e.Id);
             builder.Entity<ApplicationUser>().Ignore(e => e.PhoneNumber);
