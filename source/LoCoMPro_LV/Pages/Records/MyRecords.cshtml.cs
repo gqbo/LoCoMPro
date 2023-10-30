@@ -7,20 +7,43 @@ using System.Threading.Tasks;
 
 namespace LoCoMPro_LV.Pages.Records
 {
+    /// <summary>
+    /// Página para visualizar mis aportes.
+    /// </summary>
     public class MyRecordsModel : PageModel
     {
+        /// <summary>
+        /// Contexto de la base de datos de LoCoMPro.
+        /// </summary>
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
+        /// <summary>
+        /// Constructor de la clase CreateModel.
+        /// </summary>
+        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
         public MyRecordsModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Construye un método de llamado a record para pasar datos del HTML 
+        /// </summary>
         public List<Record> Records { get; set; }
 
+        /// <summary>
+        /// String que permite elegir entorno a que atributo se ordenara.
+        /// </summary>
         public string eleccion { get; set; }
+
+        /// <summary>
+        /// String que permite elegir el orden.
+        /// </summary>
         public string sortOrder { get; set; }
 
+        /// <summary>
+        /// Permite mostrar los resultados de Mis Aportes en la vista del mismo nombre. 
+        /// </summary>
         public async Task OnGet(string sortOrder, string eleccion)
         {
             this.eleccion = eleccion;
@@ -41,7 +64,9 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
 
-
+        /// <summary> 
+        /// Permite realizar un ordenamiento por medio de la fecha ya sea en forma ascendente o descendente.
+        /// </summary>
         private IQueryable<Record> ApplyDateSorting(IQueryable<Record> query, string sortOrder)
         {
             bool isDateDescending = string.Equals(sortOrder, "Date_desc", StringComparison.OrdinalIgnoreCase);
@@ -49,6 +74,10 @@ namespace LoCoMPro_LV.Pages.Records
             ViewData["DateSort"] = isDateDescending ? "Date" : "Date_desc";
             return query;
         }
+
+        /// <summary> 
+        /// Permite realizar un ordenamiento por medio del precio ya sea en forma ascendente o descendente.
+        /// </summary>
         private IQueryable<Record> ApplyPriceSorting(IQueryable<Record> query, string sortOrder)
         {
             bool isPriceDescending = string.Equals(sortOrder, "Price_desc", StringComparison.OrdinalIgnoreCase);
