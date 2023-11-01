@@ -23,10 +23,8 @@ namespace LoCoMPro_LV.Models
         [Display(Name = "Apellido")]
         public string LastName { get; set; }
 
-        /*[Required(ErrorMessage = "El grado de latitud es necesario")]*/
         public double Latitude { get; set; }
 
-        /*[Required(ErrorMessage = "El grado de longitud es necesario")]*/
         public double Longitude { get; set; }
 
         [StringLength(50, MinimumLength = 2)]
