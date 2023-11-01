@@ -26,9 +26,9 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             <div class="map" id="map"></div>
-                            <div id="marker-info">
-                                <input type="hidden" step="0.0001" lang="en" id="latitude" asp-for="Store.Latitude" />
-                                <input type="hidden" step="0.0001" lang="en" id="longitude" asp-for="Store.Longitude" />
+                            <div id="marker-info" class="marker-info">
+                                <input type="number" display="none" step="0.0001" lang="en" id="latitude" asp-for="Store.Latitude" />
+                                <input type="number" display="none" step="0.0001" lang="en" id="longitude" asp-for="Store.Longitude" />
                                 <input type="hidden" id="NameProvince" asp-for="Store.NameProvince" />
                                 <input type="hidden" id="NameCanton" asp-for="Store.NameCanton" />
                             </div>
