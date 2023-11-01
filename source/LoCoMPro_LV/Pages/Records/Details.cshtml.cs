@@ -9,7 +9,7 @@ using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Data;
 
@@ -34,12 +34,18 @@ namespace LoCoMPro_LV.Pages.Records
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
         /// <summary>
+        /// Se utiliza para acceder a los valores de configuración.
+        /// </summary>
+        private readonly IConfiguration _configuration;
+
+        /// <summary>
         /// Constructor de la clase DetailsModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public DetailsModel(LoCoMPro_LV.Data.LoComproContext context)
+        public DetailsModel(LoCoMPro_LV.Data.LoComproContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -58,12 +64,6 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public DateTime RecordDate { get; set; }
-
-        /// <summary>
-        /// Objeto de tipo Evaluate que guarda la información de la valoración de estrellas para actualizar la base de datos.
-        /// </summary>
-        [BindProperty(SupportsGet = true)]
-        public Evaluate EvaluateInput { get; set; }
 
         /// <summary>
         /// Método utilizado cuando en la pantalla de resultados de la búsqueda se selecciona un producto para abrir el detalle. Este método
@@ -95,17 +95,8 @@ namespace LoCoMPro_LV.Pages.Records
                                      Store = store,
                                  };
 
-                List<int> averageRatings = new List<int>();
                 List<RecordStoreModel> updatedRecords = allRecords.ToList();
-
-                int index = 0;
-                foreach (var recordStoreModel in updatedRecords)
-                {
-                    int averageRating = GetAverageRating(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
-                    averageRatings.Add(averageRating);
-                    recordStoreModel.AverageRating = averageRatings[index];
-                    index++;
-                }
+                SetAverageRatings(updatedRecords);
                 Records = updatedRecords;
             }
             else
@@ -137,20 +128,7 @@ namespace LoCoMPro_LV.Pages.Records
                     NameEvaluator = User.Identity.Name
                 };
 
-                var existingEvaluation = await _context.Valorations
-                    .FirstOrDefaultAsync(e => e.NameEvaluator == User.Identity.Name
-                    && e.NameGenerator == evaluate.NameGenerator
-                    && e.RecordDate == evaluate.RecordDate);
-
-                if (existingEvaluation != null)
-                {
-                    existingEvaluation.StarsCount = evaluate.StarsCount;
-                }
-                else
-                {
-                    _context.Valorations.Add(evaluate);
-                }
-                await _context.SaveChangesAsync();
+                await AddEvaluationAsync(evaluate);
                 return new OkResult();
             }
             catch (Exception ex)
@@ -160,28 +138,72 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
+        /// Método utilizado para verificar si una valoración ya existe en la base de datos, con el objetivo de evitar crear una nueva tupla, 
+        /// solo modificar la valoración de estrellas.
+        /// </summary>
+        private async Task<Evaluate> CheckExistingEvaluationAsync(Evaluate evaluate)
+        {
+            return await _context.Valorations
+                .FirstOrDefaultAsync(e => e.NameEvaluator == User.Identity.Name
+                && e.NameGenerator == evaluate.NameGenerator
+                && e.RecordDate == evaluate.RecordDate);
+        }
+
+        /// <summary>
+        /// Método utilizado para modificar o agregar una nueva valoración de un usuario sobre un registro. 
+        /// </summary>
+        private async Task AddEvaluationAsync(Evaluate evaluate)
+        {
+            var existingEvaluation = await CheckExistingEvaluationAsync(evaluate);
+            if (existingEvaluation != null)
+            {
+                existingEvaluation.StarsCount = evaluate.StarsCount;
+            }
+            else
+            {
+                _context.Valorations.Add(evaluate);
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Método utilizado para obtener el promedio de las valoraciones de estrellas de un registro en específico utilizando
         /// una función escalar creada en la base de datos.
         /// </summary>
         private int GetAverageRating(string nameGenerator, DateTime recordDate)
         {
             int averageRating = 0;
-            using (var con = new SqlConnection(_context.Database.GetDbConnection().ConnectionString))
+            string connectionString = _configuration.GetConnectionString("LoCoMProContextRemote");
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                con.Open();
-                using (var com = new SqlCommand("SELECT dbo.GetStarsAverage(@NameGenerator, @RecordDate)", con))
-                {
-                    com.Parameters.Add(new SqlParameter("@NameGenerator", nameGenerator));
-                    com.Parameters.Add(new SqlParameter("@RecordDate", recordDate));
+                using var command = new SqlCommand("SELECT dbo.GetStarsAverage(@NameGenerator, @RecordDate)", connection);
+                command.Parameters.Add(new SqlParameter("@NameGenerator", nameGenerator));
+                command.Parameters.Add(new SqlParameter("@RecordDate", recordDate));
+                connection.Open();
 
-                    var resultOfFunction = com.ExecuteScalar();
-                    if (resultOfFunction != DBNull.Value && resultOfFunction != null)
-                    {
-                        averageRating = Convert.ToInt32(resultOfFunction);
-                    }
+                var resultOfFunction = command.ExecuteScalar();
+                if (resultOfFunction != DBNull.Value && resultOfFunction != null)
+                {
+                    averageRating = Convert.ToInt32(resultOfFunction);
                 }
             }
             return averageRating;
+        }
+
+        /// <summary>
+        /// Método utilizado para definir el promedio de las valoraciones de estrellas de un registro en específico utilizando
+        /// una función escalar creada en la base de datos.
+        /// </summary>
+        private void SetAverageRatings(List<RecordStoreModel> updatedRecords)
+        {
+            List<int> averageRatings = new List<int>();
+
+            foreach (var recordStoreModel in updatedRecords)
+            {
+                int averageRating = GetAverageRating(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
+                averageRatings.Add(averageRating);
+                recordStoreModel.AverageRating = averageRatings.Last();
+            }
         }
     }
 }
