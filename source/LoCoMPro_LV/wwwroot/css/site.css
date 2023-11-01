@@ -106,6 +106,10 @@ body {
         transition-property: width, left;
     }
 
+.container-store {
+    padding: 20px;
+}
+
 .container-index {
     padding: 13%;
     width: 500px;
@@ -137,6 +141,11 @@ body {
 
 .form-group {
     margin: 20px;
+}
+
+.form-group-store {
+    margin: 20px;
+    width: 300px;
 }
 
 .searchString {
@@ -392,6 +401,31 @@ table {
     line-height: 24px;
 }
 
+.map {
+    width: 1000px;
+    height: 500px;
+    box-shadow: 5px 5px 5px #888;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.autocomplete-input.ui-autocomplete {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.text-danger-map {
+    margin-left: 10% !important;
+}
+}
+
 .title_add-report {
     margin: 25px;
+}
+
+.marker-info {
+    display: none;
 }

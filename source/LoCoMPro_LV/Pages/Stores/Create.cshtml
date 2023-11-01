@@ -1,0 +1,150 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Stores.CreateStoreModel
+@{
+    ViewData["Title"] = "Agregar Establecimiento";
+}
+
+<div class="container-store">
+    <div class="row">
+        <div class="col d-flex justify-content-center align-items-center">
+            <section>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <h1 class="title_add">Agregar Establecimiento</h1>
+                    </div>
+                </div>
+                <form method="post">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group-store">
+                                <label asp-for="Store.NameStore">Establecimiento</label>
+                                <input asp-for="Store.NameStore" id="Store" type="text" class="form-control form-control-add autocomplete-input" aria-required="true" placeholder="Establecimiento" />
+                                <span asp-validation-for="Store.NameStore" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <div class="map" id="map"></div>
+                            <div id="marker-info" class="marker-info">
+                                <input type="number" display="none" step="0.0001" lang="en" id="latitude" asp-for="Store.Latitude" />
+                                <input type="number" display="none" step="0.0001" lang="en" id="longitude" asp-for="Store.Longitude" />
+                                <input type="hidden" id="NameProvince" asp-for="Store.NameProvince" />
+                                <input type="hidden" id="NameCanton" asp-for="Store.NameCanton" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <button class="add_confirm btn btn-primary btn-sm" type="submit">Continuar</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var data = @Html.Raw(Json.Serialize(Model.Stores));
+            $("#Store").autocomplete({
+                source: data,
+                minLength: 1
+            });
+        });
+    </script>
+
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var initialLatitude = 9.9281;
+            var initialLongitude = -84.0907;
+
+            function updateLocationInfo(lat, lng) {
+
+                document.getElementById('latitude').value = lat.toFixed(4);
+                document.getElementById('longitude').value = lng.toFixed(4);
+
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var address = data.address || {};
+                        var province = address.province || 'N/A';
+                        var canton = address.county || 'N/A';
+                        if (canton == "N/A") {
+                            canton = address.region || 'N/A';
+                        }
+                        if (canton == "N/A") {
+                            canton = address.town || 'N/A';
+                        }
+                        province = cleanText(province);
+                        canton = cleanText(canton);
+                        document.getElementById('NameProvince').value = province;
+                        document.getElementById('NameCanton').value = canton;
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud de geocodificación inversa', error);
+                    });
+            }
+
+            var map = L.map('map', {
+                minZoom: 8,
+                maxZoom: 17,
+                dragging: true
+            }).setView([initialLatitude, initialLongitude], 12);
+
+            updateLocationInfo(initialLatitude, initialLongitude);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18
+            }).addTo(map);
+
+            var costaRicaBounds = L.latLngBounds(L.latLng(8.032, -85.950), L.latLng(11.217, -82.555));
+            map.setMaxBounds(costaRicaBounds);
+
+            map.on('drag', function () {
+                if (!costaRicaBounds.contains(map.getBounds())) {
+                    map.panInsideBounds(costaRicaBounds, { animate: true });
+                }
+            });
+
+            var marker = L.marker([initialLatitude, initialLongitude], { draggable: true }).addTo(map);
+
+            marker.on('dragend', function (e) {
+                var latlng = e.target.getLatLng();
+                updateLocationInfo(latlng.lat, latlng.lng);
+            });
+
+            function cleanText(text) {
+                var match = text.match(/Provincia(?: de)? (.+)|Cantón(?: de)? (.+)/);
+                var location;
+                if (match) {
+                    location = match[1] || match[2];
+                    return location;
+                } else {
+                    var locationName = text;
+                    var provinceIndex = text.indexOf(" Province");
+                    if (provinceIndex !== -1) {
+                        locationName = text.substring(0, provinceIndex);
+                    }
+                    if (locationName == "San Jose") {
+                        locationName = "San José";
+                    }
+                    return locationName;
+                }
+            }
+
+        });
+    </script>
+
+}
+
+
