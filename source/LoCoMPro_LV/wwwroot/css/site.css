@@ -410,3 +410,7 @@ table {
 .title_add-report {
     margin: 25px;
 }
+
+.marker-info {
+    display: none;
+}
