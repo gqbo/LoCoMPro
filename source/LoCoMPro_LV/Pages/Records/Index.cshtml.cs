@@ -19,24 +19,18 @@ namespace LoCoMPro_LV.Pages.Records
         private readonly LoComproContext _context;
 
         /// <summary>
-        /// Proporciona acceso a la configuración de la aplicación, como valores definidos en appsettings.json.
-        /// </summary>
-        private readonly IConfiguration Configuration;
-
-        /// <summary>
         /// Constructor de la clase IndexModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public IndexModel(LoComproContext context, IConfiguration configuration)
+        public IndexModel(LoComproContext context)
         {
             _context = context;
-            Configuration = configuration;
         }
 
         /// <summary>
-        /// Representa una lista paginada de registros para su visualización en la página.
+        /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
         /// </summary>
-        public PaginatedList<RecordStoreModel> Records { get; set; }
+        public IList<RecordStoreModel> Record { get; set; } = default!;
 
         /// <summary>
         /// Cadena de caracteres que se utiliza para filtrar la búsqueda por nombre del producto.
@@ -104,9 +98,9 @@ namespace LoCoMPro_LV.Pages.Records
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             var orderedGroupsQuery = ApplySorting(orderedRecordsQuery, sortOrder);
             var totalCount = await orderedGroupsQuery.CountAsync();
-            var pageSize = Configuration.GetValue("PageSize", 10);
-            Records = await PaginatedList<RecordStoreModel>.CreateAsync(
-                orderedGroupsQuery.Select(group => group.OrderByDescending(r => r.Record.RecordDate).FirstOrDefault()), pageIndex ?? 1, pageSize);
+            Record = await orderedGroupsQuery
+                .Select(group => group.OrderByDescending(r => r.Record.RecordDate).FirstOrDefault())
+                .ToListAsync();
         }
 
         /// <summary>

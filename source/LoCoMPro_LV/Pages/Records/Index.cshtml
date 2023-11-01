@@ -167,45 +167,31 @@
     }
 </script>
 
-<table class="table">
+<table class="table" id="miTabla">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Records[0].Record.NameProduct)
+                @Html.DisplayNameFor(model => model.Record[0].Record.NameProduct)
             </th>
-            <th class="precio">
-                <a class="ordering-text" asp-page="./Index"
-                   asp-route-SearchString="@Model.SearchString"
-                   asp-route-SearchProvince="@Model.SearchProvince"
-                   asp-route-SearchCanton="@Model.SearchCanton"
-                   asp-route-SearchCategory="@Model.SearchCategory"
-                   asp-route-sortOrder="@Model.PriceSort">
-                    @Html.DisplayNameFor(model => model.Records[0].Record.Price)
-                </a>
+            <th class="precio" id="priceColumn">
+                <a href="#" id="orderPrice">@Html.DisplayNameFor(model => model.Record[0].Record.Price)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Records[0].Record.NameStore)
+                @Html.DisplayNameFor(model => model.Record[0].Record.NameStore)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Records[0].Store.NameProvince)
+                @Html.DisplayNameFor(model => model.Record[0].Store.NameProvince)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Records[0].Store.NameCanton)
+                @Html.DisplayNameFor(model => model.Record[0].Store.NameCanton)
             </th>
-            <th>
-                <a class="ordering-text" asp-page="./Index"
-                   asp-route-SearchString="@Model.SearchString"
-                   asp-route-SearchProvince="@Model.SearchProvince"
-                   asp-route-SearchCanton="@Model.SearchCanton"
-                   asp-route-SearchCategory="@Model.SearchCategory"
-                   asp-route-sortOrder="@Model.DateTimeSort">
-                    @Html.DisplayNameFor(model => model.Records[0].Record.RecordDate)
-                </a>
+            <th class="date" id="dateColumn">
+                <a href="#" id="orderDate">@Html.DisplayNameFor(model => model.Record[0].Record.RecordDate)</a>
             </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var firstItem in Model.Records)
+        @foreach (var firstItem in Model.Record)
         {
 
             <tr>
@@ -244,7 +230,129 @@
     </tbody>
 </table>
 
-@{
+<div id="pagination" class="pagination">
+    <button id="previousPage" class="page-link">Anterior</button>
+    <!-- Botones de paginación se generarán aquí -->
+    <button id="nextPage" class="page-link">Siguiente</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var tabla = document.getElementById("miTabla");
+        var tableBody = tabla.querySelector("tbody");
+        var pagination = document.getElementById("pagination");
+        var registrosPorPagina = 2;
+        var ordenAscendentePrecio = true;
+        var ordenAscendenteFecha = true;
+        var filas = Array.from(tableBody.querySelectorAll("tr"));
+
+        function mostrarFilas(pagina) {
+            var inicio = (pagina - 1) * registrosPorPagina;
+            var fin = pagina * registrosPorPagina;
+            var paginatedRows = filas.slice(inicio, fin);
+
+            tableBody.innerHTML = ""; // Limpiar el tbody
+
+            paginatedRows.forEach(function (fila) {
+                tableBody.appendChild(fila);
+            });
+        }
+
+        function generarPaginacion(totalPaginas) {
+            var html = '<button id="previousPage" class="page-link">Anterior</button>';
+            for (var i = 1; i <= totalPaginas; i++) {
+                if (i === currentPage) {
+                    html += '<button class="page-link current-page" data-page="' + i + '">' + i + '</button>';
+                } else {
+                    html += '<button class="page-link" data-page="' + i + '">' + i + '</button>';
+                }
+            }
+            html += '<button id="nextPage" class="page-link">Siguiente</button>';
+            pagination.innerHTML = html;
+
+            var pageButtons = pagination.querySelectorAll("button");
+            pageButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    if (this.id === "previousPage") {
+                        if (currentPage > 1) {
+                            currentPage--;
+                        }
+                    } else if (this.id === "nextPage") {
+                        if (currentPage < totalPaginas) {
+                            currentPage++;
+                        }
+                    } else {
+                        currentPage = parseInt(this.getAttribute("data-page"));
+                    }
+
+                    mostrarFilas(currentPage);
+
+                    pageButtons.forEach(function (btn) {
+                        btn.classList.remove("current-page");
+                    });
+
+                    // Agregar la clase "current-page" al botón de la página actual
+                    pageButtons[currentPage].classList.add("current-page");
+                });
+            });
+
+            pageButtons[currentPage].classList.add("current-page");
+        }
+
+        function ordenarPorPrecio() {
+            filas.sort(function (a, b) {
+                var precioA = parseFloat(a.querySelector(".precio").textContent.replace("₡", "").replace(",", ""));
+                var precioB = parseFloat(b.querySelector(".precio").textContent.replace("₡", "").replace(",", ""));
+                return ordenAscendentePrecio ? precioA - precioB : precioB - precioA;
+            });
+
+            mostrarFilas(currentPage);
+            ordenAscendentePrecio = !ordenAscendentePrecio;
+        }
+
+        function ordenarPorFecha() {
+            filas.sort(function (a, b) {
+                var fechaStringA = a.querySelector(".fecha").textContent;
+                var fechaStringB = b.querySelector(".fecha").textContent;
+                var fechaA = parseFecha(fechaStringA);
+                var fechaB = parseFecha(fechaStringB);
+                return ordenAscendenteFecha ? fechaA - fechaB : fechaB - fechaA;
+            });
+
+            mostrarFilas(currentPage);
+            ordenAscendenteFecha = !ordenAscendenteFecha;
+        }
+
+        function parseFecha(fechaString) {
+            var parts = fechaString.split('/');
+            var day = parseInt(parts[0], 10);
+            var month = parseInt(parts[1] - 1, 10);
+            var year = parseInt(parts[2], 10);
+            return new Date(year, month, day);
+        }
+
+        var currentPage = 1;
+        var totalRegistros = filas.length;
+        var totalPaginas = Math.ceil(totalRegistros / registrosPorPagina);
+
+        mostrarFilas(currentPage);
+        generarPaginacion(totalPaginas);
+
+        var enlaceOrdenarPrecio = document.getElementById("orderPrice");
+        enlaceOrdenarPrecio.addEventListener("click", function (e) {
+            e.preventDefault();
+            ordenarPorPrecio();
+        });
+
+        var enlaceOrdenarFecha = document.getElementById("orderDate");
+        enlaceOrdenarFecha.addEventListener("click", function (e) {
+            e.preventDefault();
+            ordenarPorFecha();
+        });
+    });
+</script>
+
+@* @{
     var prevDisabled = !Model.Records.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.Records.HasNextPage ? "disabled" : "";
     var totalPages = Model.Records.TotalPages;
@@ -333,4 +441,129 @@
             </li>
         </ul>
     </nav>
+</div> *@
+
+
+
+
+
+@* <div id="pagination" class="pagination">
+    <button id="previousPage" class="page-link">Anterior</button>
+    <!-- Botones de paginación se generarán aquí -->
+    <button id="nextPage" class="page-link">Siguiente</button>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var tabla = document.getElementById("miTabla");
+        var tableBody = tabla.querySelector("tbody");
+        var pagination = document.getElementById("pagination");
+        var registrosPorPagina = 2;
+        var currentPage = 1;
+        var ordenAscendentePrecio = true;
+        var ordenAscendenteFecha = true;
+        var filas = Array.from(tableBody.querySelectorAll("tr"));
+
+        // Función para mostrar filas en la página actual
+        function mostrarFilas() {
+            var inicio = (currentPage - 1) * registrosPorPagina;
+            var fin = currentPage * registrosPorPagina;
+            var paginatedRows = filas.slice(inicio, fin);
+
+            tableBody.innerHTML = ""; // Limpiar el tbody
+
+            paginatedRows.forEach(function (fila) {
+                tableBody.appendChild(fila);
+            });
+        }
+
+        // Función para generar los controles de paginación
+        function generarPaginacion() {
+            var totalRegistros = filas.length;
+            var totalPaginas = Math.ceil(totalRegistros / registrosPorPagina);
+
+            var html = "";
+            html += '<button id="previousPage" class="page-link">Anterior</button>';
+
+            for (var i = 1; i <= totalPaginas; i++) {
+                html += '<button class="page-link" data-page="' + i + '">' + i + '</button>';
+            }
+
+            html += '<button id="nextPage" class="page-link">Siguiente</button>';
+
+            pagination.innerHTML = html;
+
+            var pageButtons = pagination.querySelectorAll("button");
+
+            pageButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    if (this.id === "previousPage") {
+                        if (currentPage > 1) {
+                            currentPage--;
+                        }
+                    } else if (this.id === "nextPage") {
+                        if (currentPage < totalPaginas) {
+                            currentPage++;
+                        }
+                    } else {
+                        currentPage = parseInt(this.getAttribute("data-page"));
+                    }
+
+                    mostrarFilas();
+                });
+            });
+        }
+
+        // Función para ordenar las filas por precio
+        function ordenarPorPrecio() {
+            filas.sort(function (a, b) {
+                var precioA = parseFloat(a.querySelector(".precio").textContent.replace("₡", "").replace(",", ""));
+                var precioB = parseFloat(b.querySelector(".precio").textContent.replace("₡", "").replace(",", ""));
+                return ordenAscendentePrecio ? precioA - precioB : precioB - precioA;
+            });
+
+            mostrarFilas();
+            ordenAscendentePrecio = !ordenAscendentePrecio;
+        }
+
+    // Función para ordenar las filas por fecha
+    function ordenarPorFecha() {
+        filas.sort(function (a, b) {
+            var fechaStringA = a.querySelector(".fecha").textContent;
+            var fechaStringB = b.querySelector(".fecha").textContent;
+            var fechaA = parseFecha(fechaStringA);
+            var fechaB = parseFecha(fechaStringB);
+            return ordenAscendenteFecha ? fechaA - fechaB : fechaB - fechaA;
+        });
+
+        mostrarFilas();
+        ordenAscendenteFecha = !ordenAscendenteFecha;
+    }
+
+    // Función para parsear la fecha en formato "dd/MM/yyyy"
+    function parseFecha(fechaString) {
+        var parts = fechaString.split('/');
+        var day = parseInt(parts[0], 10);
+        var month = parseInt(parts[1] - 1, 10);
+        var year = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+    }
+
+        // Inicializar la paginación y la tabla
+        mostrarFilas();
+        generarPaginacion();
+
+        // Agregar eventos para ordenamiento por precio y fecha
+        var enlaceOrdenarPrecio = document.getElementById("orderPrice");
+        enlaceOrdenarPrecio.addEventListener("click", function (e) {
+            e.preventDefault();
+            ordenarPorPrecio();
+        });
+
+        var enlaceOrdenarFecha = document.getElementById("orderDate");
+        enlaceOrdenarFecha.addEventListener("click", function (e) {
+            e.preventDefault();
+            ordenarPorFecha();
+        });
+    });
+</script> *@
