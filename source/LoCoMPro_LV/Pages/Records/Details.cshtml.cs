@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Newtonsoft.Json;
 using System.Data.SqlClient;
-using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Data;
 using LoCoMPro_LV.Utils;
 
@@ -31,18 +24,14 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
 
         /// <summary>
         /// Se utiliza para acceder a las utilidades de la base de datos.
         /// </summary>
         private readonly DatabaseUtils _databaseUtils;
 
-        /// <summary>
-        /// Constructor de la clase DetailsModel.
-        /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public DetailsModel(LoCoMPro_LV.Data.LoComproContext context, DatabaseUtils databaseUtils)
+        public DetailsModel(LoComproContext context, DatabaseUtils databaseUtils)
         {
             _context = context;
             _databaseUtils = databaseUtils;
@@ -75,8 +64,6 @@ namespace LoCoMPro_LV.Pages.Records
 
             var FirstRecord = await _context.Records
                 .FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator && m.RecordDate == RecordDate);
-
-            Console.WriteLine(NameGenerator);
 
             if (FirstRecord != null)
             {
