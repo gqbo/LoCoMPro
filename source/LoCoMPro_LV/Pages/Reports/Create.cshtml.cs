@@ -10,7 +10,7 @@ using System.Globalization;
 namespace LoCoMPro_LV.Pages.Reports
 {
     /// <summary>
-    /// Página Create de Records para la creación de nuevos los reportes relacionados a los registros.
+    /// Página Create de Reports para la creación de nuevos los reportes relacionados a los registros.
     /// </summary>
     public class CreateModel : PageModel
     {
