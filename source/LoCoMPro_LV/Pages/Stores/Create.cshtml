@@ -22,33 +22,15 @@
                                 <span asp-validation-for="Store.NameStore" class="text-danger"></span>
                             </div>
                         </div>
-@*                         <div class="col-4">
-                            <div class="form-group-store">
-                                <label asp-for="Store.NameProvince">Provincia</label>
-                                <select id="Province" asp-for="Store.NameProvince" class="form-control form-control-add" aria-required="true" placeholder="Provincia">
-                                    <option value="">Provincia </option>
-                                </select>
-                                <span asp-validation-for="Store.NameProvince" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group-store">
-                                <label asp-for="Store.NameCanton">Canton</label>
-                                <select id="Canton" asp-for="Store.NameCanton" class="form-control form-control-add" aria-required="true" placeholder="Canton">
-                                    <option value="">Canton </option>
-                                </select>
-                                <span asp-validation-for="Store.NameCanton" class="text-danger"></span>
-                            </div>
-                        </div> *@
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             <div class="map" id="map"></div>
                             <div id="marker-info">
-                                <input type="number" step="0.0001" lang="en" id="latitude" asp-for="Store.Latitude" />
-                                <input type="number" step="0.0001" lang="en" id="longitude" asp-for="Store.Longitude" />
-                                <input type="text" id="NameProvince" asp-for="Store.NameProvince" />
-                                <input type="text" id="NameCanton" asp-for="Store.NameCanton" />
+                                <input type="hidden" step="0.0001" lang="en" id="latitude" asp-for="Store.Latitude" />
+                                <input type="hidden" step="0.0001" lang="en" id="longitude" asp-for="Store.Longitude" />
+                                <input type="hidden" id="NameProvince" asp-for="Store.NameProvince" />
+                                <input type="hidden" id="NameCanton" asp-for="Store.NameCanton" />
                             </div>
                         </div>
                     </div>
@@ -78,9 +60,9 @@
         });
     </script>
 
-
     <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var initialLatitude = 9.9281;
@@ -94,16 +76,17 @@
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
                         var address = data.address || {};
                         var province = address.province || 'N/A';
                         var canton = address.county || 'N/A';
                         if (canton == "N/A") {
                             canton = address.region || 'N/A';
                         }
+                        if (canton == "N/A") {
+                            canton = address.town || 'N/A';
+                        }
                         province = cleanText(province);
                         canton = cleanText(canton);
-
                         document.getElementById('NameProvince').value = province;
                         document.getElementById('NameCanton').value = canton;
                     })
@@ -142,11 +125,23 @@
 
             function cleanText(text) {
                 var match = text.match(/Provincia(?: de)? (.+)|Cantón(?: de)? (.+)/);
+                var location;
                 if (match) {
-                    return match[1] || match[2];
+                    location = match[1] || match[2];
+                    return location;
+                } else {
+                    var locationName = text;
+                    var provinceIndex = text.indexOf(" Province");
+                    if (provinceIndex !== -1) {
+                        locationName = text.substring(0, provinceIndex);
+                    }
+                    if (locationName == "San Jose") {
+                        locationName = "San José";
+                    }
+                    return locationName;
                 }
-                return text;
             }
+
         });
     </script>
 
