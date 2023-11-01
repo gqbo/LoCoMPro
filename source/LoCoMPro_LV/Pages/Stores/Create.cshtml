@@ -42,9 +42,10 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             <div class="map" id="map"></div>
-                            <div id="marker-info" >
-                                <input type="hidden" step="0.0001" id="latitude" asp-for="Store.Latitude" />
-                                <input type="hidden" step="0.0001" id="longitude" asp-for="Store.Longitude" />
+                            <div id="marker-info" class="marker-info">
+                                <input type="number" display="none" step="0.0001" lang="en" id="latitude" asp-for="Store.Latitude" />
+                                <input type="number" display="none" step="0.0001" lang="en" id="longitude" asp-for="Store.Longitude" />
+
                             </div>
                         </div>
                     </div>
@@ -74,31 +75,6 @@
         });
     </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var provinceDropdown = document.getElementById("Province");
-            var cantonDropdown = document.getElementById("Canton");
-            var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
-            function actualizarDropdownCantones() {
-                var selectedProvince = provinceDropdown.value;
-                cantonDropdown.innerHTML = '';
-                var defaultOption = document.createElement("option");
-                defaultOption.value = "";
-                defaultOption.text = " Cantón";
-                cantonDropdown.appendChild(defaultOption);
-                cantonsByProvince[selectedProvince].forEach(function (canton) {
-                    var option = document.createElement("option");
-                    option.value = canton;
-                    option.text = canton;
-                    cantonDropdown.appendChild(option);
-                });
-            }
-            provinceDropdown.addEventListener("change", actualizarDropdownCantones);
-            actualizarDropdownCantones();
-        });
-    </script>
-
-
     <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
     <script>
@@ -114,16 +90,17 @@
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
                         var address = data.address || {};
                         var province = address.province || 'N/A';
                         var canton = address.county || 'N/A';
                         if (canton == "N/A") {
                             canton = address.region || 'N/A';
                         }
+                        if (canton == "N/A") {
+                            canton = address.town || 'N/A';
+                        }
                         province = cleanText(province);
                         canton = cleanText(canton);
-
                         document.getElementById('NameProvince').value = province;
                         document.getElementById('NameCanton').value = canton;
                     })
@@ -162,11 +139,23 @@
 
             function cleanText(text) {
                 var match = text.match(/Provincia(?: de)? (.+)|Cantón(?: de)? (.+)/);
+                var location;
                 if (match) {
-                    return match[1] || match[2];
+                    location = match[1] || match[2];
+                    return location;
+                } else {
+                    var locationName = text;
+                    var provinceIndex = text.indexOf(" Province");
+                    if (provinceIndex !== -1) {
+                        locationName = text.substring(0, provinceIndex);
+                    }
+                    if (locationName == "San Jose") {
+                        locationName = "San José";
+                    }
+                    return locationName;
                 }
-                return text;
             }
+
         });
     </script>
 }

@@ -3,17 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using LoCoMPro_LV.Data;
 
 namespace LoCoMPro_LV.Pages.Stores
 {
+    /// <summary>
+    /// Página Create de Stores para la creación de nuevas tiendas relacionadas a un registro.
+    /// </summary>
     public class CreateStoreModel : PageModel
     {
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
-
         /// <summary>
-        /// Constructor de la clase IndexModel.
+        /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-         public CreateStoreModel(LoCoMPro_LV.Data.LoComproContext context)
+        private readonly LoComproContext _context;
+
+         public CreateStoreModel(LoComproContext context)
         {
             _context = context;
         }
@@ -37,6 +41,7 @@ namespace LoCoMPro_LV.Pages.Stores
         {
             await LoadStoresAsync();
         }
+
         /// <summary>
         /// Método invocado cuando se realiza una solicitud POST para la página de "crear tienda". 
         /// Recupera la información relacionada a la geolocalización y la transfiere a la página "crear registro".
