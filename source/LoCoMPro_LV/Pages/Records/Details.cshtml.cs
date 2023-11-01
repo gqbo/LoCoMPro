@@ -12,10 +12,10 @@ using Newtonsoft.Json;
 using System.Data.SqlClient;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Data;
+using LoCoMPro_LV.Utils;
 
 namespace LoCoMPro_LV.Pages.Records
 {
-
     public class RecordStoreModel
     {
         public Record Record { get; set; }
@@ -34,18 +34,18 @@ namespace LoCoMPro_LV.Pages.Records
         private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
         /// <summary>
-        /// Se utiliza para acceder a los valores de configuración.
+        /// Se utiliza para acceder a las utilidades de la base de datos.
         /// </summary>
-        private readonly IConfiguration _configuration;
+        private readonly DatabaseUtils _databaseUtils;
 
         /// <summary>
         /// Constructor de la clase DetailsModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public DetailsModel(LoCoMPro_LV.Data.LoComproContext context, IConfiguration configuration)
+        public DetailsModel(LoCoMPro_LV.Data.LoComproContext context, DatabaseUtils databaseUtils)
         {
             _context = context;
-            _configuration = configuration;
+            _databaseUtils = databaseUtils;
         }
 
         /// <summary>
@@ -80,21 +80,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             if (FirstRecord != null)
             {
-
-                var allRecords = from record in _context.Records
-                                 join store in _context.Stores
-                                 on new { record.NameStore, record.Latitude, record.Longitude }
-                                 equals new { store.NameStore, store.Latitude, store.Longitude }
-                                 where record.NameProduct.Contains(FirstRecord.NameProduct) &&
-                                       record.Latitude == FirstRecord.Latitude &&
-                                       record.Longitude == FirstRecord.Longitude
-                                 orderby record.RecordDate descending
-                                 select new RecordStoreModel
-                                 {
-                                     Record = record,
-                                     Store = store,
-                                 };
-
+                var allRecords = GetCombinedRecordsAndStores(FirstRecord).ToList();
                 List<RecordStoreModel> updatedRecords = allRecords.ToList();
                 SetAverageRatings(updatedRecords);
                 Records = updatedRecords;
@@ -138,6 +124,27 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
+        /// Método utilizado para combinar registros de las tablas Records y Stores, creando así un nuevo tipo RecordStoreModel
+        /// </summary>
+        private IQueryable<RecordStoreModel> GetCombinedRecordsAndStores(Record firstRecord)
+        {
+            var query = from record in _context.Records
+                        join store in _context.Stores
+                        on new { record.NameStore, record.Latitude, record.Longitude }
+                        equals new { store.NameStore, store.Latitude, store.Longitude }
+                        where record.NameProduct.Contains(firstRecord.NameProduct) &&
+                              record.Latitude == firstRecord.Latitude &&
+                              record.Longitude == firstRecord.Longitude
+                        orderby record.RecordDate descending
+                        select new RecordStoreModel
+                        {
+                            Record = record,
+                            Store = store,
+                        };
+            return query;
+        }
+
+        /// <summary>
         /// Método utilizado para verificar si una valoración ya existe en la base de datos, con el objetivo de evitar crear una nueva tupla, 
         /// solo modificar la valoración de estrellas.
         /// </summary>
@@ -172,21 +179,14 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         private int GetAverageRating(string nameGenerator, DateTime recordDate)
         {
-            int averageRating = 0;
-            string connectionString = _configuration.GetConnectionString("LoCoMProContextRemote");
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            string connectionString = _databaseUtils.GetConnectionString();
+            string sqlQuery = "SELECT dbo.GetStarsAverage(@NameGenerator, @RecordDate)";
+            SqlParameter[] parameters = new SqlParameter[]
             {
-                using var command = new SqlCommand("SELECT dbo.GetStarsAverage(@NameGenerator, @RecordDate)", connection);
-                command.Parameters.Add(new SqlParameter("@NameGenerator", nameGenerator));
-                command.Parameters.Add(new SqlParameter("@RecordDate", recordDate));
-                connection.Open();
-
-                var resultOfFunction = command.ExecuteScalar();
-                if (resultOfFunction != DBNull.Value && resultOfFunction != null)
-                {
-                    averageRating = Convert.ToInt32(resultOfFunction);
-                }
-            }
+                new SqlParameter("@NameGenerator", nameGenerator),
+                new SqlParameter("@RecordDate", recordDate)
+            };
+            int averageRating = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
             return averageRating;
         }
 
