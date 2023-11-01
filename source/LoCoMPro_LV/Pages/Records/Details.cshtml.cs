@@ -57,7 +57,8 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Método utilizado cuando en la pantalla de resultados de la búsqueda se selecciona un producto para abrir el detalle. Este método
         /// utiliza el nombre del generador y la fecha de realización del registro más reciente del producto para realizar la consulta por todos
-        /// de todos los registros con ese producto en esa tienda en específico.
+        /// de todos los registros con ese producto en esa tienda en específico. Además se saca el promedio de estrellas para cada registro asociado
+        /// a un producto.
         /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
@@ -68,9 +69,9 @@ namespace LoCoMPro_LV.Pages.Records
             if (FirstRecord != null)
             {
                 var allRecords = GetCombinedRecordsAndStores(FirstRecord).ToList();
-                List<RecordStoreModel> updatedRecords = allRecords.ToList();
-                SetAverageRatings(updatedRecords);
-                Records = updatedRecords;
+                List<RecordStoreModel> currentRecords = allRecords.ToList();
+                SetAverageRatings(currentRecords);
+                Records = currentRecords;
             }
             else
             {
@@ -83,6 +84,9 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Método utilizado para el manejo de la solicitud POST que se realiza a la hora de valorar con estrellas
         /// un registro en específico donde se encarga de actualizar la base de datos con la nueva valoración.
+        /// <param name="nameGenerator">Contiene el nombre del generador de un registro cuando se crea una solicitud POST a la hora de valorar un registro</param>
+        /// <param name="recordDate">Contiene la fecha de un registro cuando se crea una solicitud POST a la hora de valorar un registro</param>
+        /// <param name="rating">Contiene la valoración que se le da a un registro.</param>
         /// </summary>
         public async Task<IActionResult> OnPostSubmitRating(string nameGenerator, DateTime recordDate, int rating)
         {
@@ -112,6 +116,7 @@ namespace LoCoMPro_LV.Pages.Records
 
         /// <summary>
         /// Método utilizado para combinar registros de las tablas Records y Stores, creando así un nuevo tipo RecordStoreModel
+        /// <param name="firstRecord">Información del registro más reciente del producto del cual se quieren ver los detalles</param>
         /// </summary>
         private IQueryable<RecordStoreModel> GetCombinedRecordsAndStores(Record firstRecord)
         {
@@ -134,28 +139,30 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Método utilizado para verificar si una valoración ya existe en la base de datos, con el objetivo de evitar crear una nueva tupla, 
         /// solo modificar la valoración de estrellas.
+        /// <param name="valoration">Valoración utilizada para verificar si ya existe en la base de datos.</param>
         /// </summary>
-        private async Task<Evaluate> CheckExistingEvaluationAsync(Evaluate evaluate)
+        private async Task<Evaluate> CheckExistingEvaluationAsync(Evaluate valoration)
         {
             return await _context.Valorations
                 .FirstOrDefaultAsync(e => e.NameEvaluator == User.Identity.Name
-                && e.NameGenerator == evaluate.NameGenerator
-                && e.RecordDate == evaluate.RecordDate);
+                && e.NameGenerator == valoration.NameGenerator
+                && e.RecordDate == valoration.RecordDate);
         }
 
         /// <summary>
         /// Método utilizado para modificar o agregar una nueva valoración de un usuario sobre un registro. 
+        /// <param name="valoration">Valoración utilizada para crear una nueva valoración en la base de datos.</param>
         /// </summary>
-        private async Task AddEvaluationAsync(Evaluate evaluate)
+        private async Task AddEvaluationAsync(Evaluate valoration)
         {
-            var existingEvaluation = await CheckExistingEvaluationAsync(evaluate);
+            var existingEvaluation = await CheckExistingEvaluationAsync(valoration);
             if (existingEvaluation != null)
             {
-                existingEvaluation.StarsCount = evaluate.StarsCount;
+                existingEvaluation.StarsCount = valoration.StarsCount;
             }
             else
             {
-                _context.Valorations.Add(evaluate);
+                _context.Valorations.Add(valoration);
             }
             await _context.SaveChangesAsync();
         }
@@ -163,6 +170,8 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Método utilizado para obtener el promedio de las valoraciones de estrellas de un registro en específico utilizando
         /// una función escalar creada en la base de datos.
+        /// <param name="nameGenerator">Nombre del generador de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// <param name="recordDate">Fecha de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
         /// </summary>
         private int GetAverageRating(string nameGenerator, DateTime recordDate)
         {
@@ -180,12 +189,13 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Método utilizado para definir el promedio de las valoraciones de estrellas de un registro en específico utilizando
         /// una función escalar creada en la base de datos.
+        /// <param name="currentRecords">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
         /// </summary>
-        private void SetAverageRatings(List<RecordStoreModel> updatedRecords)
+        private void SetAverageRatings(List<RecordStoreModel> currentRecords)
         {
             List<int> averageRatings = new List<int>();
 
-            foreach (var recordStoreModel in updatedRecords)
+            foreach (var recordStoreModel in currentRecords)
             {
                 int averageRating = GetAverageRating(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
                 averageRatings.Add(averageRating);
