@@ -14,28 +14,21 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoComproContext _context;
-
-        /// <summary>
-        /// Proporciona acceso a la configuración de la aplicación, como valores definidos en appsettings.json.
-        /// </summary>
-        private readonly IConfiguration Configuration;
+        private readonly LoCoMPro_LV.Data.LoComproContext _context;
 
         /// <summary>
         /// Constructor de la clase DetailsModel.
         /// </summary>
-        /// <param name="context">El contexto de la base de datos de LoCoMPro.</param>
-        /// <param name="configuration">Proporciona acceso a la configuración de la aplicación, como valores definidos en appsettings.json.</param>
-        public DetailsModel(LoComproContext context, IConfiguration configuration)
+        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
+        public DetailsModel(LoCoMPro_LV.Data.LoComproContext context)
         {
             _context = context;
-            Configuration = configuration;
         }
 
         /// <summary>
-        /// Representa una lista paginada de registros para su visualización en la página.
+        /// Lista de tipo "Record", que almacena los registros correspondientes al producto que se selecciono para ver en detalle.
         /// </summary>
-        public PaginatedList<RecordStoreModel> Records { get; set; }
+        public IList<RecordStoreModel> Records { get; set; } = default!;
 
         /// <summary>
         /// Nombre del usuario generador del registro seleccionado en la pantalla index, que se utiliza para buscar todos los registros relacionados.
@@ -54,13 +47,13 @@ namespace LoCoMPro_LV.Pages.Records
         /// utiliza el nombre del generador y la fecha de realización del registro más reciente del producto para realizar la consulta por todos
         /// de todos los registros con ese producto en esa tienda en específico.
         /// </summary>
-        public async Task<IActionResult> OnGetAsync(int? pageIndex)
+        public async Task<IActionResult> OnGetAsync()
         {
 
             var FirstRecord = await _context.Records
                 .FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator && m.RecordDate == RecordDate);
 
-            var pageSize = Configuration.GetValue("PageSize", 10);
+            Console.WriteLine(NameGenerator);
 
             if (FirstRecord != null)
             {
@@ -78,14 +71,12 @@ namespace LoCoMPro_LV.Pages.Records
                                      Record = record,
                                      Store = store
                                  };
-                var totalCount = await allRecords.CountAsync(); // Contiene el número total de registros.
 
-                Records = await PaginatedList<RecordStoreModel>.CreateAsync(
-                    allRecords, pageIndex ?? 1, pageSize);
+                Records = await allRecords.ToListAsync();
             }
             else
             {
-                Records = new PaginatedList<RecordStoreModel>(new List<RecordStoreModel>(), 0, pageIndex ?? 1, pageSize);
+                Records = new List<RecordStoreModel>();
             }
 
             return Page();
