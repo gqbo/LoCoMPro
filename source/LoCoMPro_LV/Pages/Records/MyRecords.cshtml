@@ -14,15 +14,17 @@
                 <th>
                     <a class="ordering-text" asp-page="MyRecords" asp-route-sortOrder="@ViewData["PriceSort"]" asp-route-eleccion="precio">
                         @Html.DisplayNameFor(model => model.Records[0].Price)
+                    </a>
+                    <a>
                         @if (Model.eleccion == "precio")
                         {
                             @if (Model.eleccion == "precio" && Model.sortOrder == "Price")
                             {
-                                <span class="arrow-up">&#8593;</span>
+                                <span class="arrow-up">&#129093;</span>
                             }
                             @if (Model.eleccion == "precio" && Model.sortOrder == "Price_desc")
                             {
-                                <span class="arrow-down">&#8595;</span>
+                                <span class="arrow-down">&#129095;</span>
                             }
                         }
                     </a>
@@ -33,15 +35,17 @@
                 <th>
                     <a class="ordering-text" asp-page="MyRecords" asp-route-sortOrder="@ViewData["DateSort"]" asp-route-eleccion="fecha">
                         @Html.DisplayNameFor(model => model.Records[0].RecordDate)
+                    </a> 
+                    <a>
                         @if (Model.eleccion == "fecha")
                         {
                             @if (Model.eleccion == "fecha" && Model.sortOrder == "Date")
                             {
-                                <span class="arrow-up">&#8593;</span>
+                                <span class="arrow-up">&#129093;</span>
                             }
                             @if (Model.eleccion == "fecha" && Model.sortOrder == "Date_desc")
                             {
-                                <span class="arrow-down">&#8595;</span>
+                                <span class="arrow-down">&#129095;</span>
                             }
                         }
                     </a>
