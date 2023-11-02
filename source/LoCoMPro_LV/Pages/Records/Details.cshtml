@@ -1,4 +1,5 @@
 ﻿@page
+@Html.AntiForgeryToken()
 @model LoCoMPro_LV.Pages.Records.DetailsModel
 
 @{
@@ -66,8 +67,10 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Records[0].Record.RecordDate)
                     </th>
-                    <th class="precio">
-                        @Html.DisplayNameFor(model => model.Records[0].Record.Price)
+                    <th>
+                        <div class="table-item precio">
+                            @Html.DisplayNameFor(model => model.Records[0].Record.Price)
+                        </div>
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Records[0].Record.NameGenerator)
@@ -76,6 +79,9 @@
                         @Html.DisplayNameFor(model => model.Records[0].Record.Description)
                     </th>
                     <th>
+                        Valoración
+                    </th>
+                    <th class="report">
                         Reportar
                     </th>
                 </tr>
@@ -105,6 +111,19 @@
                             </div>
                         </td>
                         <td>
+                            <div class="ratings-wrapper">
+                                <div class="ratings">
+                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                    {
+                                        <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate" 
+                                        @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
+                                            <span>★</span>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td>
                             <div class="table-item report">
                                 <a class="election" asp-page="../Reports/Create" asp-route-NameGenerator="@firstItem.Record.NameGenerator" asp-route-RecordDate="@firstItem.Record.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")"><img src="~/Images/report.png"></a>
                             </div>
@@ -119,4 +138,75 @@
         <a href="javascript:history.go(-1);">Volver</a>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    const ratingsWrappers = document.querySelectorAll('.ratings-wrapper');
+
+    function manageStarRatings() {
+        ratingsWrappers.forEach(ratingsWrapper => {
+            const stars = ratingsWrapper.querySelectorAll('.ratings span');
+            const isAuthenticated = '@User.Identity.IsAuthenticated';
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+
+                    if (isAuthenticated == "True") {
+                      
+                        var rating = star.getAttribute('data-rating');
+                        var nameGenerator = star.getAttribute('data-nameGenerator');
+                        var recordDate = star.getAttribute('data-RecordDate');
+
+                        updateStarColors(stars, rating);
+                        sendPost(rating, nameGenerator, recordDate);
+                    } else {
+                        window.location.href = '../Identity/Account/Login';
+                    }
+                });
+            });
+        });
+    }
+
+
+    function updateStarColors(stars, rating) {
+        stars.forEach(star => {
+            const starRating = parseInt(star.getAttribute('data-rating'));
+            if (starRating <= rating) {
+                star.setAttribute('data-clicked', '');
+            } else {
+                star.removeAttribute('data-clicked');
+            }
+        });
+    }
+
+    function logData(ratingsWrapper, rating) {
+        const recordId = ratingsWrapper.getAttribute('data-record-id');
+        const [nameGenerator, recordDate] = recordId.split('-');
+        var userName = '@User.Identity.Name';
+        console.log(`Estrellas: ${rating}`);
+        console.log(`Usuario autor: ${nameGenerator}`);
+        console.log(`Fecha: ${recordDate}`);
+        console.log(`Usuario calificador: ${userName}`);
+    }
+
+    function sendPost(rating, nameGenerator, recordDate) {
+        $.ajax({
+            type: 'POST',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            url: '/Records/Details?handler=SubmitRating',
+            data: { rating: rating, nameGenerator: nameGenerator, recordDate: recordDate },
+            success: function (data) {
+            },
+            error: function (error) {
+            }
+        });
+    }
+ 
+    manageStarRatings();
+
+</script>
 
