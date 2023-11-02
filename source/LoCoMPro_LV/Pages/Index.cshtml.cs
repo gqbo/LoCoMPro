@@ -1,4 +1,5 @@
 ﻿using LoCoMPro_LV.Models;
+using LoCoMPro_LV.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +15,9 @@ namespace LoCoMPro_LV.Pages
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
 
-        /// <summary>
-        /// Constructor de la clase IndexModel.
-        /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public IndexModel(LoCoMPro_LV.Data.LoComproContext context)
+        public IndexModel(LoComproContext context)
         {
             _context = context;
         }
