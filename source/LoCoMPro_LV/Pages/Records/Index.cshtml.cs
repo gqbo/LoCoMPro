@@ -54,9 +54,9 @@ namespace LoCoMPro_LV.Pages.Records
         public string SearchCanton { get; set; }
 
         /// <summary>
-        /// Lista de cantones para la selección.
+        /// Diccionario de cantones para la selección.
         /// </summary>
-        public SelectList Cantons { get; set; }
+        public Dictionary<string, List<string>> Cantons { get; set; }
 
         /// <summary>
         /// Categoría utilizada como filtro de búsqueda.
@@ -68,7 +68,6 @@ namespace LoCoMPro_LV.Pages.Records
         /// Lista de categorías para la selección.
         /// </summary>
         public SelectList Categories { get; set; }
-
 
         /// <summary>
         /// Indica el orden en el que se deben mostrar los registros por fecha.
@@ -118,7 +117,15 @@ namespace LoCoMPro_LV.Pages.Records
                                     .ToListAsync();
 
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-            Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
+            Cantons = new Dictionary<string, List<string>>();
+                 foreach (var canton in cantons)
+                 {
+                     if (!Cantons.ContainsKey(canton.NameProvince))
+                     {
+                         Cantons[canton.NameProvince] = new List<string>();
+                     }
+                     Cantons[canton.NameProvince].Add(canton.NameCanton);
+                 }
             Categories = new SelectList(categories);
 
             var orderedRecordsQuery = from record in _context.Records
