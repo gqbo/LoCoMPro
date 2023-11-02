@@ -12,6 +12,25 @@ using LoCoMPro_LV.Data;
 
 namespace LoCoMPro_LV.Areas.Identity.Pages.Account
 {
+    public class UserInfo
+    {
+        public UserInfo(string firstName, string lastName, string userName, string email, string password)
+        {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.userName = userName;
+            this.email = email;
+            this.password = password;
+        }
+
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string userName { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
+
+    }
+
     /// <summary>
     /// Clase que maneja la lógica relacionada con el registro de usuarios en la aplicación web.
     /// Recopila y valida la información que los usuario proporcionan al registrarse en la aplicación web.
@@ -109,6 +128,8 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
+        public UserInfo userInfo { get; set; }
+
         /// <summary>
         /// Método invocado cuando se realiza una solicitud GET que prepara la página de registro para su visualización, 
         /// obteniendo los esquemas de autenticación externa disponibles y, opcionalmente, almacenando la URL de retorno para 
@@ -122,14 +143,33 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         }
 
         /// <summary>
-        /// Método invocado cuando se realiza una solicitud POST para la página de registro de usuarios. 
-        /// Crea un nuevo usuario desde cero con la información brindada en el formulario de registro de usuarios.
-        /// Si la información brindada es válida, se crea el usuario, se loguea y se redirige a la página de inicio.
+        /// Método utilizado para recibir solicitudes POST desde la vista Register, con el objetivo de guardar la información que
+        /// el usuario ingresó en el formulario.
         /// </summary>
-        /// <param name="returnUrl">Define el URL a la cuál se va a retornar después de registrar un usuario. Por defecto es null</param>
-        public IActionResult OnPostAsync(string returnUrl = null)
+        public IActionResult OnPostSaveUserInfo(string firstName, string lastName, string userName, string email, string password)
         {
-            return Page();
+            try
+            {
+                userInfo = new UserInfo(firstName, lastName, userName, email, password);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            try
+            {
+                await Task.Delay(0);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
 
         /// <summary>

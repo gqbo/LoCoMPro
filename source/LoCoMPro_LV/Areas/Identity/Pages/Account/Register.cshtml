@@ -1,4 +1,5 @@
 ﻿@page
+@Html.AntiForgeryToken()
 @model RegisterModel
 @{
     ViewData["Title"] = "LoCoMPro";
@@ -65,7 +66,7 @@
             </div>
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
-                    <button class="register_submit btn btn-primary" type="submit">Registrarse</button>
+                    <button class="register_submit btn btn-primary" type="button">Continuar</button>
                 </div>
             </div>
         </form>
@@ -75,4 +76,35 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const continueButton = document.querySelector('.register_submit');
+
+        function registerInfoWrapper() {
+            continueButton.addEventListener('click', function () {
+                const firstName = document.querySelector('input[name="Input.FirstName"]').value;
+                const lastName = document.querySelector('input[name="Input.LastName"]').value;
+                const userName = document.querySelector('input[name="Input.UserName"]').value;
+                const email = document.querySelector('input[name="Input.Email"]').value;
+                const password = document.querySelector('input[name="Input.Password"]').value;
+                sendPost(firstName, lastName, userName, email, password);
+                window.location.href = '../Account/UserLocation';
+            });
+        }
+
+        function sendPost(firstName, lastName, userName, email, password) {
+            $.ajax({
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                url: '/Identity/Account/UserLocation?handler=SaveUserInfo',
+                data: { firstName: firstName, lastName: lastName, userName: userName, email: email, password }
+            });
+        }
+
+        registerInfoWrapper();
+
+    </script>
 }
