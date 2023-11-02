@@ -1,38 +1,27 @@
-﻿/*.pagination {
+﻿.pagination {
     --bs-pagination-hover-color: #0A3143 !important;
     --bs-pagination-focus-color: #0A3143 !important;
+    --bs-pagination-color: #0A3143 !important;
     --bs-pagination-active-bg: #0A3143 !important;
     --bs-pagination-active-border-color: #0A3143 !important;
-}
-
-.page-item:not(:first-child) .page-link {
-    margin-left: calc(var(--bs-border-width) * 5) !important;
-    border-radius: 10px !important;
-}
-
-.page-item:first-child .page-link {
-    border-radius: 10px !important;
-}
-
-.page-item:first-child:focus .page-link {
-    color: #0A3143 !important;
-}
-
-.active > .page-link, .page-link.active {
-    color: var(--bs-pagination-active-color) !important;
+    justify-content: center;
 }
 
 .page-link {
     color: #0A3143 !important;
-}*/
-
-/*.pagination .page-link.active {
-    font-weight: bold !important;
-    color: red !important;*/ /* Puedes ajustar el color a tu preferencia */
-/*}*/
+    border-radius: 10px !important;
+    margin-left: calc(var(--bs-border-width) * 5) !important;
+}
 
 .current-page {
-    background-color: #007bff !important;
+    background-color: #0A3143 !important;
     color: #fff !important;
-    border: 1px solid #007bff !important;
+    border: 1px solid #276E90 !important;
+}
+
+/* Estilo para la clase 'a-ordering' */
+.a-ordering {
+    cursor: pointer !important;
+    color: black !important;
+    /* Otros estilos específicos para tus enlaces de ordenamiento */
 }
