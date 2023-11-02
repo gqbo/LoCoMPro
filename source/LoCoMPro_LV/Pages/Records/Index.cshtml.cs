@@ -19,13 +19,24 @@ namespace LoCoMPro_LV.Pages.Records
         private readonly LoComproContext _context;
 
         /// <summary>
+        /// Proporciona acceso a la configuración de la aplicación, como valores definidos en appsettings.json.
+        /// </summary>
+        private readonly IConfiguration Configuration;
+
+        /// <summary>
         /// Constructor de la clase IndexModel.
         /// </summary>
         /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public IndexModel(LoComproContext context)
+        public IndexModel(LoComproContext context, IConfiguration configuration)
         {
             _context = context;
+            Configuration = configuration;
         }
+
+/*        /// <summary>
+        /// Representa una lista paginada de registros para su visualización en la página.
+        /// </summary>
+        public PaginatedList<RecordStoreModel> Record { get; set; }*/
 
         /// <summary>
         /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
@@ -91,8 +102,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// Método que se ejecuta cuando se carga la página y se realiza la búsqueda y paginación de registros.
         /// </summary>
         /// <param name="sortOrder">El orden en el que se deben mostrar los registros.</param>
-        /// <param name="pageIndex">El número de página actual.</param>
-        public async Task OnGetAsync(string sortOrder, int? pageIndex)
+        public async Task OnGetAsync(string sortOrder)
         {
             await InitializeSortingAndSearching(sortOrder);
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
