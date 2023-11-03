@@ -37,8 +37,17 @@
                         <div class="col-md-4">
                             <div class="form-group_advanced">
                                 <label for="Canton">Cantón</label>
-                                <select id="Canton" asp-for="SearchCanton" asp-for=" Record[0].Store.NameCanton" class="form-control_advanced form-control">
+                                <select id="Canton" asp-for="SearchCanton" class="form-control_advanced form-control">
                                     <option value="">Todos</option>
+                                    @foreach (var province in Model.Cantons.Keys)
+                                    {
+                                        <optgroup label="@province">
+                                            @foreach (var canton in Model.Cantons[province])
+                                            {
+                                                <option value="@canton">@canton</option>
+                                            }
+                                        </optgroup>
+                                    }
                                 </select>
                             </div>
                         </div>
