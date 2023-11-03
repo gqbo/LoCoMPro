@@ -71,20 +71,25 @@
         var provinceDropdown = document.getElementById("Province");
         var cantonDropdown = document.getElementById("Canton");
         var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
+
         function actualizarDropdownCantones() {
             var selectedProvince = provinceDropdown.value;
             cantonDropdown.innerHTML = '';
             var defaultOption = document.createElement("option");
             defaultOption.value = "";
-            defaultOption.text = " Todos";
+            defaultOption.text = "Todos";
             cantonDropdown.appendChild(defaultOption);
-            cantonsByProvince[selectedProvince].forEach(function (canton) {
-                var option = document.createElement("option");
-                option.value = canton;
-                option.text = canton;
-                cantonDropdown.appendChild(option);
-            });
+
+            if (selectedProvince in cantonsByProvince) {
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
         }
+
         provinceDropdown.addEventListener("change", actualizarDropdownCantones);
         actualizarDropdownCantones();
     });
