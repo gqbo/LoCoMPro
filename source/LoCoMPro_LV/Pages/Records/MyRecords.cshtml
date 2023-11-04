@@ -6,12 +6,20 @@
 }
 @attribute [Authorize]
 <div class="container container-search index align-items-center">
-    <h1 class="title_add centered-text" >Mis Aportes</h1>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 class="title_add">Mis Aportes</h1>
+        </div>
+    </div>
     <table class="table table-striped" >
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.Records[0].NameProduct)</th>
-                <th>@Html.DisplayNameFor(model => model.Records[0].Price)</th>
+                <th>
+                    <div class="table-item precio">
+                        @Html.DisplayNameFor(model => model.Records[0].Price)
+                    </div>
+                </th>
                 <th>@Html.DisplayNameFor(model => model.Records[0].NameStore)</th>
                 <th>@Html.DisplayNameFor(model => model.Records[0].Store.NameProvince)</th>
                 <th>@Html.DisplayNameFor(model => model.Records[0].Store.NameCanton)</th>
@@ -23,7 +31,11 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => record.NameProduct)</td>
-                    <td>₡@Html.DisplayFor(modelItem => record.Price)</td>
+                    <td>
+                        <div class="table-item precio">
+                            ₡@Html.DisplayFor(modelItem => record.Price)
+                        </div>
+                    </td>
                     <td>@Html.DisplayFor(modelItem => record.Store.NameStore)</td>
                     <td>@Html.DisplayFor(modelItem => record.Store.NameProvince)</td>
                     <td>@Html.DisplayFor(modelItem => record.Store.NameCanton)</td>
@@ -34,14 +46,3 @@
     </table>
 </div>
 
-@section scripts{
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-}
-
-<style>
-    .centered-text {
-        text-align: center;
-    }
-</style>
