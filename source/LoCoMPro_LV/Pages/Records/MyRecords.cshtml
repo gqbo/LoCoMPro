@@ -1,0 +1,47 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Records.MyRecordsModel
+@using Microsoft.AspNetCore.Authorization
+@{
+    ViewData["Title"] = "Mis Registros";
+}
+@attribute [Authorize]
+<div class="container container-search index align-items-center">
+    <h1 class="title_add centered-text" >Mis Aportes</h1>
+    <table class="table table-striped" >
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Records[0].NameProduct)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].Price)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].NameStore)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].Store.NameProvince)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].Store.NameCanton)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].RecordDate)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model.Records)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => record.NameProduct)</td>
+                    <td>₡@Html.DisplayFor(modelItem => record.Price)</td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameStore)</td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameProvince)</td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameCanton)</td>
+                    <td>@Html.DisplayFor(modelItem => record.RecordDate)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+}
+
+<style>
+    .centered-text {
+        text-align: center;
+    }
+</style>
