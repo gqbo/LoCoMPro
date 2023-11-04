@@ -1,48 +1,36 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Reports.IndexModel
-
+@using Microsoft.AspNetCore.Authorization
+@using LoCoMPro_LV.Models
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Consulta";
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Report[0].Comment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Report[0].Record)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Report[0].GeneratorUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Report) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Record.NameGenerator)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GeneratorUser.UserName)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+@attribute [Authorize]
+<div class="container container-search index align-items-center">
+    <h1 class="title_add centered-text" >Reportes</h1>
+    <table class="table table-striped" >
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameProduct)</th>
+                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.RecordDate)</th>
+                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameGenerator)</th>
+                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Reports[0].Comment)</th>
+                <th>Valoracion</th>
+                <th>Cantidad de reportes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reports in Model.recordStoreReports)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => reports.Record.NameProduct)</td>
+                    <td>@Html.DisplayFor(modelItem => reports.Record.RecordDate)</td>
+                    <td>@Html.DisplayFor(modelItem => reports.Record.NameGenerator)</td>
+                    <td>@Html.DisplayFor(modelItem => reports.Reports[0].Comment)</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
