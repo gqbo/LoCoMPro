@@ -1,10 +1,8 @@
-﻿using LoCoMPro_LV.Utils;
-using LoCoMPro_LV.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using LoCoMPro_LV.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using LoCoMPro_LV.Models;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -18,26 +16,11 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         private readonly LoComproContext _context;
 
-        /// <summary>
-        /// Proporciona acceso a la configuración de la aplicación, como valores definidos en appsettings.json.
-        /// </summary>
-        private readonly IConfiguration Configuration;
-
-        /// <summary>
-        /// Constructor de la clase IndexModel.
-        /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public IndexModel(LoComproContext context, IConfiguration configuration)
+        public IndexModel(LoComproContext context)
         {
             _context = context;
-            Configuration = configuration;
         }
-
-/*        /// <summary>
-        /// Representa una lista paginada de registros para su visualización en la página.
-        /// </summary>
-        public PaginatedList<RecordStoreModel> Record { get; set; }*/
-
+        
         /// <summary>
         /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
         /// </summary>
@@ -67,9 +50,9 @@ namespace LoCoMPro_LV.Pages.Records
         public string SearchCanton { get; set; }
 
         /// <summary>
-        /// Lista de cantones para la selección.
+        /// Diccionario de cantones para la selección.
         /// </summary>
-        public SelectList Cantons { get; set; }
+        public Dictionary<string, List<string>> Cantons { get; set; }
 
         /// <summary>
         /// Categoría utilizada como filtro de búsqueda.
@@ -82,7 +65,6 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         public SelectList Categories { get; set; }
 
-
         /// <summary>
         /// Indica el orden en el que se deben mostrar los registros por fecha.
         /// </summary>
@@ -94,9 +76,9 @@ namespace LoCoMPro_LV.Pages.Records
         public string PriceSort { get; set; }
 
         /// <summary>
-        /// Representa el orden actual en el que se deben mostrar los registros en la página.
+        /// El filtro actual aplicado para la búsqueda de registros.
         /// </summary>
-        public string CurrentSort { get; set; }
+        public string CurrentFilter { get; set; }
 
         /// <summary>
         /// Método que se ejecuta cuando se carga la página y se realiza la búsqueda y paginación de registros.
@@ -119,7 +101,6 @@ namespace LoCoMPro_LV.Pages.Records
         /// <param name="sortOrder">El orden en el que se deben mostrar los registros.</param>
         private async Task InitializeSortingAndSearching(string sortOrder)
         {
-            CurrentSort = sortOrder;
             DateTimeSort = sortOrder == "Date" ? "date_desc" : "Date";
             PriceSort = sortOrder == "Price" ? "price_desc" : "Price";
 
@@ -131,7 +112,15 @@ namespace LoCoMPro_LV.Pages.Records
                 .ToListAsync();
 
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-            Cantons = new SelectList(cantons, "NameCanton", "NameCanton");
+            Cantons = new Dictionary<string, List<string>>();
+            foreach (var canton in cantons)
+            {
+                if (!Cantons.ContainsKey(canton.NameProvince))
+                {
+                    Cantons[canton.NameProvince] = new List<string>();
+                }
+                Cantons[canton.NameProvince].Add(canton.NameCanton);
+            }
             Categories = new SelectList(categories);
         }
 
@@ -142,13 +131,13 @@ namespace LoCoMPro_LV.Pages.Records
         private IQueryable<RecordStoreModel> BuildOrderedRecordsQuery()
         {
             IQueryable<RecordStoreModel> orderedRecordsQuery = from record in _context.Records
-                                                     join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
-                                                     equals new { store.NameStore, store.Latitude, store.Longitude }
-                                                     select new RecordStoreModel
-                                                     {
-                                                         Record = record,
-                                                         Store = store
-                                                     };
+                                                               join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
+                                                               equals new { store.NameStore, store.Latitude, store.Longitude }
+                                                               select new RecordStoreModel
+                                                               {
+                                                                   Record = record,
+                                                                   Store = store
+                                                               };
 
             if (!string.IsNullOrEmpty(SearchString))
             {

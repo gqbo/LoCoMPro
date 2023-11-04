@@ -19,9 +19,7 @@
     border: 1px solid #276E90 !important;
 }
 
-/* Estilo para la clase 'a-ordering' */
 .a-ordering {
     cursor: pointer !important;
     color: black !important;
-    /* Otros estilos específicos para tus enlaces de ordenamiento */
 }

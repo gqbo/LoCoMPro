@@ -37,8 +37,17 @@
                         <div class="col-md-4">
                             <div class="form-group_advanced">
                                 <label for="Canton">Cantón</label>
-                                <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control_advanced form-control">
+                                <select id="Canton" asp-for="SearchCanton" class="form-control_advanced form-control">
                                     <option value="">Todos</option>
+                                    @foreach (var province in Model.Cantons.Keys)
+                                    {
+                                        <optgroup label="@province">
+                                            @foreach (var canton in Model.Cantons[province])
+                                            {
+                                                <option value="@canton">@canton</option>
+                                            }
+                                        </optgroup>
+                                    }
                                 </select>
                             </div>
                         </div>
@@ -56,6 +65,35 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
+
+        function actualizarDropdownCantones() {
+            var selectedProvince = provinceDropdown.value;
+            cantonDropdown.innerHTML = '';
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Todos";
+            cantonDropdown.appendChild(defaultOption);
+
+            if (selectedProvince in cantonsByProvince) {
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
+        }
+
+        provinceDropdown.addEventListener("change", actualizarDropdownCantones);
+        actualizarDropdownCantones();
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -91,46 +129,6 @@
             searchButton.disabled = true;
         }
     }
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var provinceDropdown = document.getElementById("Province");
-        var cantonDropdown = document.getElementById("Canton");
-
-        var cantonsByProvince = {
-            "Alajuela": ["Alajuela", "Atenas", "Grecia", "Guatuso", "Los Chiles", "Naranjo", "Orotina", "Palmares", "Poás", "Rio Cuarto", "San Carlos", "San Mateo", "San Ramón", "Sarchí", "Upala", "Zarcero"],
-            "Cartago": ["Alvarado", "Cartago", "El Guarco", "Jiménez", "La Unión", "Oreamuno", "Paraíso", "Turrialba"],
-            "Guanacaste": ["Abangares", "Bagaces", "Carrillo", "Cañas", "Hojancha", "La Cruz", "Liberia", "Nandayure", "Nicoya", "Santa Cruz", "Tilarán"],
-            "Heredia": ["Barva", "Belén", "Flores", "Heredia", "San Isidro", "San Pablo", "San Rafael", "Santa Bárbara", "Santo Domingo", "Sarapiquí"],
-            "Limón": ["Guácimo", "Limón", "Matina", "Pococí", "Siquirres", "Talamanca"],
-            "Puntarenas": ["Buenos Aires", "Corredores", "Coto Brus", "Esparza", "Garabito", "Golfito", "Monte Verde", "Montes de Oro", "Osa", "Parrita", "Puerto Jiménez", "Puntarenas", "Quepos"],
-            "San José": ["Acosta", "Alajuelita", "Aserrí", "Curridabat", "Desamparados", "Dota", "Escazú", "Goicoechea", "León Cortés", "Mora", "Moravia", "Montes de Oca", "Pérez Zeledón", "Puriscal", "San José", "Santa Ana", "Tarrazú", "Tibás", "Turrubares", "Vásquez de Coronado"]
-        };
-
-        function actualizarDropdownCantones() {
-            var selectedProvince = provinceDropdown.value;
-            cantonDropdown.innerHTML = '';
-
-            var defaultOption = document.createElement("option");
-            defaultOption.value = "";
-            defaultOption.text = "Todos";
-            cantonDropdown.appendChild(defaultOption);
-
-            if (selectedProvince && cantonsByProvince[selectedProvince]) {
-                cantonsByProvince[selectedProvince].forEach(function (canton) {
-                    var option = document.createElement("option");
-                    option.value = canton;
-                    option.text = canton;
-                    cantonDropdown.appendChild(option);
-                });
-            }
-        }
-
-        provinceDropdown.addEventListener("change", actualizarDropdownCantones);
-
-        actualizarDropdownCantones();
-    });
 </script>
 
 <script>

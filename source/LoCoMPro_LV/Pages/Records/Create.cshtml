@@ -16,11 +16,6 @@
                     <span asp-validation-for="Record.NameGenerator" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Record.NameStore">Establecimiento</label>
-                    <input asp-for="Record.NameStore" id="Store" type="text" class="form-control form-control-add" aria-required="true" placeholder="Establecimiento" />
-                    <span asp-validation-for="Record.NameStore" class="text-danger"></span>
-                </div>
-                <div class="form-group">
                     <label asp-for="Record.NameProduct">Producto</label>
                     <input asp-for="Record.NameProduct" id="Products" type="text" class="form-control form-control-add" aria-required="true" placeholder="Producto" />
                     <span asp-validation-for="Record.NameProduct" class="text-danger"></span>
@@ -31,10 +26,12 @@
                     <span asp-validation-for="Record.Price" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="NameCategory">Categoría</label>
-                    <input asp-for="NameCategory" id="Category" type="text" class="form-control form-control-add" aria-required="true" placeholder="Categoría" />
-                    <span asp-validation-for="NameCategory" class="text-danger"></span>
+                    <label asp-for="SelectCategory">Categoría</label>
+                    <select id="Category" asp-for="SelectCategory" asp-items="Model.Categories" class="form-control form-control-add" aria-required="true" placeholder="Categoría">
+                        <option value=""> Categoría </option>
+                    </select>
                 </div>
+
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-6">
@@ -49,10 +46,10 @@
                 </div>
             </div>
         </div>
-        <form method="post" id="formRegistro">
+        <form method="post">
             <div class="row">
                 <div class="col d-flex justify-content-start align-items-center">
-                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" onclick="saveRecord();" />
+                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" />
                 </div>
                 <div class="col d-flex justify-content-end align-items-center">
                     <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
@@ -67,49 +64,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var provinceDropdown = document.getElementById("Province");
-            var cantonDropdown = document.getElementById("Canton");
-            var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
-            function actualizarDropdownCantones() {
-                var selectedProvince = provinceDropdown.value;
-                cantonDropdown.innerHTML = '';
-                var defaultOption = document.createElement("option");
-                defaultOption.value = "";
-                defaultOption.text = " Cantón";
-                cantonDropdown.appendChild(defaultOption);
-                cantonsByProvince[selectedProvince].forEach(function (canton) {
-                    var option = document.createElement("option");
-                    option.value = canton;
-                    option.text = canton;
-                    cantonDropdown.appendChild(option);
-                });
-            }
-            provinceDropdown.addEventListener("change", actualizarDropdownCantones);
-            actualizarDropdownCantones();
-        });
 
-        type = "text/javascript" >
-            $(function () {
-                var data = @Html.Raw(Json.Serialize(Model.Stores));
-                $("#Store").autocomplete({
-                    source: data,
-                    minLength: 1
-                });
-            });
         type = "text/javascript" >
             $(function () {
                 var data = @Html.Raw(Json.Serialize(Model.Product));
                 $("#Products").autocomplete({
-                    source: data,
-                    minLength: 1
-                });
-            });
-
-        type = "text/javascript" >
-            $(function () {
-                var data = @Html.Raw(Json.Serialize(Model.Categories));
-                $("#Category").autocomplete({
                     source: data,
                     minLength: 1
                 });

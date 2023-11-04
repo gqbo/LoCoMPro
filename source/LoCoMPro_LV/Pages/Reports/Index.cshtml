@@ -1,0 +1,48 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Reports.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Report[0].Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Report[0].Record)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Report[0].GeneratorUser)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Report) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Record.NameGenerator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GeneratorUser.UserName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
