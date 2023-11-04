@@ -9,13 +9,6 @@ using LoCoMPro_LV.Utils;
 
 namespace LoCoMPro_LV.Pages.Records
 {
-    public class RecordStoreModel
-    {
-        public Record Record { get; set; }
-        public Store Store { get; set; }
-        public int AverageRating { get; set; }
-    }
-
     /// <summary>
     /// Página de detalles de producto, en donde se ven los registros relacionados a un mismo producto.
     /// </summary>
