@@ -1,0 +1,48 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Records.MyRecordsModel
+@using Microsoft.AspNetCore.Authorization
+@{
+    ViewData["Title"] = "Mis Registros";
+}
+@attribute [Authorize]
+<div class="container container-search index align-items-center">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 class="title_add">Mis Aportes</h1>
+        </div>
+    </div>
+    <table class="table table-striped" >
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Records[0].NameProduct)</th>
+                <th>
+                    <div class="table-item precio">
+                        @Html.DisplayNameFor(model => model.Records[0].Price)
+                    </div>
+                </th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].NameStore)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].Store.NameProvince)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].Store.NameCanton)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].RecordDate)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model.Records)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => record.NameProduct)</td>
+                    <td>
+                        <div class="table-item precio">
+                            ₡@Html.DisplayFor(modelItem => record.Price)
+                        </div>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameStore)</td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameProvince)</td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameCanton)</td>
+                    <td>@Html.DisplayFor(modelItem => record.RecordDate)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
