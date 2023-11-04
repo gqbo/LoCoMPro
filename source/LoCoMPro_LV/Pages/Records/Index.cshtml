@@ -165,70 +165,93 @@
     }
 </script>
 
-<table class="table" id="miTabla">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].Record.NameProduct)
-            </th>
-            <th class="precio" id="priceColumn">
-                <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Record[0].Record.Price)</a>
-                <span class="arrow" id="priceArrow"></span>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].Record.NameStore)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].Store.NameProvince)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Record[0].Store.NameCanton)
-            </th>
-            <th class="date" id="dateColumn">
-                <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Record[0].Record.RecordDate)</a>
-                <span class="arrow" id="dateArrow"></span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var firstItem in Model.Record)
-        {
+<div class="container container-search index align-items-center">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="filtro-form filter-box bg-red">
+                <h4>Filtros</h4>
+@*                 <div class="form-group">
+                    <label for="ProvinceFilter">Provincia</label>
+                    <select id="ProvinceFilter" asp-items="new SelectList(Model.FilteredProvinces)" class="form-control" onchange="filtrarTabla()">
+                        <option value="">Todas</option>
+                    </select>
+                </div> *@
+                @*                 <div class="form-group">
+                <label for="CantonFilter">Canton</label>
+                <select id="CantonFilter" asp-items="new SelectList(Model.FilteredCantons)" class="form-control" onchange="filtrarTabla()">
+                <option value="">Todas</option>
+                </select>
+                </div> *@
+            </div>
+        </div>
+        <div class="col-md-9">
+            <table class="table" id="miTabla">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Record[0].Record.NameProduct)
+                        </th>
+                        <th class="precio" id="priceColumn">
+                            <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Record[0].Record.Price)</a>
+                            <span class="arrow" id="priceArrow"></span>
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Record[0].Record.NameStore)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Record[0].Store.NameProvince)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Record[0].Store.NameCanton)
+                        </th>
+                        <th class="date" id="dateColumn">
+                            <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Record[0].Record.RecordDate)</a>
+                            <span class="arrow" id="dateArrow"></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var firstItem in Model.Record)
+                    {
 
-            <tr>
-                <td>
-                    <div class="table-item">
-                        <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.Record.NameGenerator" asp-route-RecordDate="@firstItem.Record.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.Record.NameProduct)</a>
-                    </div>
-                </td>
-                <td>
-                    <div class="table-item precio">
-                        ₡@Html.DisplayFor(modelItem => firstItem.Record.Price)
-                    </div>
-                </td>
-                <td>
-                    <div class="table-item">
-                        @Html.DisplayFor(modelItem => firstItem.Record.NameStore)
-                    </div>
-                </td>
-                <td>
-                    <div class="table-item">
-                        @Html.DisplayFor(modelItem => firstItem.Store.NameProvince)
-                    </div>
-                </td>
-                <td>
-                    <div class="table-item">
-                        @Html.DisplayFor(modelItem => firstItem.Store.NameCanton)
-                    </div>
-                </td>
-                <td>
-                    <div class="table-item fecha">
-                        @Html.DisplayFor(modelItem => firstItem.Record.RecordDate)
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        <tr>
+                            <td>
+                                <div class="table-item">
+                                    <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.Record.NameGenerator" asp-route-RecordDate="@firstItem.Record.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.Record.NameProduct)</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item precio">
+                                    ₡@Html.DisplayFor(modelItem => firstItem.Record.Price)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item">
+                                    @Html.DisplayFor(modelItem => firstItem.Record.NameStore)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item">
+                                    @Html.DisplayFor(modelItem => firstItem.Store.NameProvince)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item">
+                                    @Html.DisplayFor(modelItem => firstItem.Store.NameCanton)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item fecha">
+                                    @Html.DisplayFor(modelItem => firstItem.Record.RecordDate)
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <div id="pagination" class="pagination">
     <button id="previousPage" class="page-link">Anterior</button>
@@ -240,13 +263,13 @@
         var tabla = document.getElementById("miTabla");
         var tableBody = tabla.querySelector("tbody");
         var pagination = document.getElementById("pagination");
-        var registrosPorPagina = 1;
+        var registrosPorPagina = 10;
         var currentPage = 1;
         var sortOrderPrice = "asc";
         var sortOrderDate = "desc";
         var currentSortColumn = null;
 
-        // Esta función se encarga de mostrar las filas de la tabla que deben estar visibles en la página actual. 
+        // Esta función se encarga de mostrar las filas de la tabla que deben estar visibles en la página actual.
         // Filtra las filas según la página actual y oculta las demás.
         function mostrarFilas() {
             var filas = tableBody.querySelectorAll("tr");
@@ -262,7 +285,7 @@
             });
         }
 
-        // Esta función se encarga de ordenar la tabla por el precio de los productos en orden ascendente o descendente. 
+        // Esta función se encarga de ordenar la tabla por el precio de los productos en orden ascendente o descendente.
         // Utiliza el valor de sortOrderPrice para determinar el orden y actualiza la tabla en consecuencia.
         function ordenarTablaPorPrecio() {
             var filas = Array.from(tableBody.querySelectorAll("tr"));
@@ -287,7 +310,7 @@
             });
         }
 
-        // Esta función se encarga de ordenar la tabla por la fecha de los registros en orden ascendente o descendente. 
+        // Esta función se encarga de ordenar la tabla por la fecha de los registros en orden ascendente o descendente.
         // Utiliza el valor de sortOrderDate para determinar el orden y actualiza la tabla en consecuencia.
         function ordenarTablaPorFecha() {
             var filas = Array.from(tableBody.querySelectorAll("tr"));
@@ -312,7 +335,7 @@
             });
         }
 
-        // Genera la paginación en la parte inferior de la tabla. Calcula el número de páginas y muestra los botones de 
+        // Genera la paginación en la parte inferior de la tabla. Calcula el número de páginas y muestra los botones de
         // navegación para ir a páginas anteriores y siguientes. Además, muestra un número limitado de botones de página alrededor de la página actual.
         function generarPaginacion() {
             var filas = tableBody.querySelectorAll("tr");

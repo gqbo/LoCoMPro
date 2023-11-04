@@ -429,3 +429,11 @@ table {
 .marker-info {
     display: none;
 }
+
+
+.filter-box {
+    padding: 1rem !important;
+    border-radius: 20px !important;
+    border: 1px solid #000 !important;
+    background: white !important;
+}
