@@ -292,13 +292,47 @@ td {
     padding: 10px;
 }
 
-.table th:nth-child(5), .table td:nth-child(5) {
+.table th:nth-child(6), .table td:nth-child(6) {
     width: 15%;
+    padding: 10px;
+}
+
+.table-reports th:nth-child(1), .table-reports td:nth-child(1) {
+    width: 18%;
+    padding: 10px;
+}
+
+.table-reports th:nth-child(2), .table-reports td:nth-child(2) {
+    width: 15%;
+    padding: 10px;
+}
+
+.table-reports th:nth-child(3), .table-reports td:nth-child(3) {
+    width: 17%;
+    padding: 10px;
+}
+
+.table-reports th:nth-child(4), .table-reports td:nth-child(4) {
+    width: 26%;
+    padding: 10px;
+}
+
+.table-reports th:nth-child(5), .table-reports td:nth-child(5) {
+    width: 5%;
+    padding: 10px;
+}
+
+.table-reports th:nth-child(6), .table-reports td:nth-child(6) {
+    width: 17%;
     padding: 10px;
 }
 
 table {
     width: 100%;
+}
+
+.table-reports {
+    margin-top: 20px !important;
 }
 
 .election {

@@ -7,8 +7,12 @@
 }
 @attribute [Authorize]
 <div class="container container-search index align-items-center">
-    <h1 class="title_add centered-text" >Reportes</h1>
-    <table class="table table-striped" >
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 class="title_add">Reportes</h1>
+        </div>
+    </div>
+    <table class="table-reports">
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameProduct)</th>
