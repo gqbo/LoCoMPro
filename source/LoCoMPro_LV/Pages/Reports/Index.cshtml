@@ -31,7 +31,19 @@
                     <td>@Html.DisplayFor(modelItem => reports.Record.RecordDate)</td>
                     <td>@Html.DisplayFor(modelItem => reports.Record.NameGenerator)</td>
                     <td>@Html.DisplayFor(modelItem => reports.Reports[0].Comment)</td>
-                    <td></td>
+                    <td>
+                        <div class="ratings-wrapper">
+                            <div class="ratings">
+                                @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                {
+                                    <span data-rating="@starNumber"
+                                    @(starNumber <= reports.recordValoration ? "data-clicked" : "")>
+                                        <span>★</span>
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    </td>
                     <td></td>
                 </tr>
             }
