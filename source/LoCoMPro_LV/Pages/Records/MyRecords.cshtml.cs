@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Models;
-using System.Linq;
-using System.Threading.Tasks;
+using LoCoMPro_LV.Data;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -15,13 +14,8 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
-
-        /// <summary>
-        /// Constructor de la clase CreateModel.
-        /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public MyRecordsModel(LoCoMPro_LV.Data.LoComproContext context)
+        private readonly LoComproContext _context;
+        public MyRecordsModel(LoComproContext context)
         {
             _context = context;
         }
@@ -62,7 +56,6 @@ namespace LoCoMPro_LV.Pages.Records
             }
             Records = await query.ToListAsync();
         }
-
 
         /// <summary> 
         /// Permite realizar un ordenamiento por medio de la fecha ya sea en forma ascendente o descendente.
