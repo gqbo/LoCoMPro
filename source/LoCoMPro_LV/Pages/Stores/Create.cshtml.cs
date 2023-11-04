@@ -1,6 +1,7 @@
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 
@@ -26,7 +27,6 @@ namespace LoCoMPro_LV.Pages.Stores
         /// </summary>
         [BindProperty]
         public Store Store { get; set; }
-
 
         /// <summary>
         /// Lista Hash de Store para almacenar los locales.

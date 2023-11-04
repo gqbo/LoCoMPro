@@ -18,8 +18,24 @@
                         <div class="col-4">
                             <div class="form-group-store">
                                 <label asp-for="Store.NameStore">Establecimiento</label>
-                                <input asp-for="Store.NameStore" id="Store" type="text" class="form-control form-control-add autocomplete-input" aria-required="true" placeholder="Establecimiento" />
+                                <input asp-for="Store.NameStore" id="Store" type="text" class="form-control form-control-add autocomplete-input" aria-required="true" placeholder="Establecimiento"/>
                                 <span asp-validation-for="Store.NameStore" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group-store">
+                                <div id="marker-info"> 
+                                    <label asp-for="Store.NameProvince">Provincia</label>
+                                    <input type="text" id="NameProvince" class="form-control form-control-add" aria-required="true" asp-for="Store.NameProvince" placeholder="Provincia" readonly/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group-store">
+                                <div id="marker-info">
+                                    <label asp-for="Store.NameCanton">Cantón</label>
+                                    <input asp-for="Store.NameCanton" id="NameCanton" type="text" class="form-control form-control-add" aria-required="true" asp-for="Store.NameCanton" placeholder="Cantón" readonly />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -29,8 +45,7 @@
                             <div id="marker-info" class="marker-info">
                                 <input type="number" display="none" step="0.0001" lang="en" id="latitude" asp-for="Store.Latitude" />
                                 <input type="number" display="none" step="0.0001" lang="en" id="longitude" asp-for="Store.Longitude" />
-                                <input type="hidden" id="NameProvince" asp-for="Store.NameProvince" />
-                                <input type="hidden" id="NameCanton" asp-for="Store.NameCanton" />
+
                             </div>
                         </div>
                     </div>
@@ -62,7 +77,6 @@
 
     <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var initialLatitude = 9.9281;
@@ -144,7 +158,6 @@
 
         });
     </script>
-
 }
 
 
