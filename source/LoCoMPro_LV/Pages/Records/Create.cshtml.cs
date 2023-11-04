@@ -148,8 +148,9 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         private async Task LoadCategoriesAsync()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.OrderBy(c => c.NameCategory).ToListAsync();
             Categories = new SelectList(categories, "NameCategory", "NameCategory");
+
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Valida que repita un local a la hora de almacenarlo en la BD.
+        /// Verifica si es una nueva tienda, en caso de que no lo sea no la almacena.
         /// </summary>
         private async Task ProcessStore()
         {

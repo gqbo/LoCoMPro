@@ -7,7 +7,7 @@ using LoCoMPro_LV.Data;
 namespace LoCoMPro_LV.Pages.Records
 {
     /// <summary>
-    /// Página para visualizar mis aportes.
+    /// Página Create de Records para la creación de nuevos registros registros.
     /// </summary>
     public class MyRecordsModel : PageModel
     {
@@ -21,8 +21,9 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Construye un método de llamado a record para pasar datos del HTML 
+        /// Enlazar los valores de las propiedades en un objeto con los datos provenientes de una solicitud HTTP.
         /// </summary>
+        [BindProperty]
         public List<Record> Records { get; set; }
 
         /// <summary>

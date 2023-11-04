@@ -1,41 +1,57 @@
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using LoCoMPro_LV.Data;
 
 namespace LoCoMPro_LV.Pages.Stores
 {
+    /// <summary>
+    /// Página Create de Stores para la creación de nuevas tiendas relacionadas a un registro.
+    /// </summary>
     public class CreateStoreModel : PageModel
     {
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
-
         /// <summary>
-        /// Constructor de la clase IndexModel.
+        /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public CreateStoreModel(LoCoMPro_LV.Data.LoComproContext context)
+        private readonly LoComproContext _context;
+
+         public CreateStoreModel(LoComproContext context)
         {
             _context = context;
         }
+
         /// <summary>
-        /// Construye un método de llamado a record para pasar datos del HTML 
+        /// Construye un objeto de tipo Store para almacenar el contenido del HTML. 
         /// </summary>
         [BindProperty]
         public Store Store { get; set; }
-
 
         /// <summary>
         /// Lista Hash de Store para almacenar los locales.
         /// </summary>
         public HashSet<string> Stores { get; set; }
 
-
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud GET para la página de "crear tienda". 
+        /// Carga las tiendas encontradas en la base de datos y las almacena en una estructura de datos.
+        /// </summary>
         public async Task OnGetAsync()
         {
             await LoadStoresAsync();
         }
-        public async Task<IActionResult> OnPostAsync()
+
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud POST para la página de "crear tienda". 
+        /// Recupera la información relacionada a la geolocalización y la transfiere a la página "crear registro".
+        /// </summary>
+        public IActionResult OnPostAsync()
         {
+            if (Store.NameCanton == "N/A" || Store.NameProvince == "N/A")
+            {
+                return Page();
+            }
             return RedirectToPage("../Records/Create", new
             {
                 latitude = Store.Latitude,
@@ -46,9 +62,8 @@ namespace LoCoMPro_LV.Pages.Stores
             });
         }
 
-
         /// <summary>
-        /// Permite almacenar los locales en una colección de datos.
+        /// Almacena en una estructuras de datos las tiendas encontradas en la base de datos.
         /// </summary>
         private async Task LoadStoresAsync()
         {

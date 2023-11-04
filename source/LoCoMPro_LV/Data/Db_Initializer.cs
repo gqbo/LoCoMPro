@@ -43,7 +43,7 @@ namespace LoCoMPro_LV.Data
                 new Canton{NameCanton = "Goicoechea", Province = provinces[0], NameProvince = "San José"},
                 new Canton{NameCanton = "Santa Ana", Province = provinces[0], NameProvince = "San José"},
                 new Canton{NameCanton = "Alajuelita", Province = provinces[0], NameProvince = "San José"},
-                new Canton{NameCanton = "Vásquez de Coronado", Province = provinces[0], NameProvince = "San José"},
+                new Canton{NameCanton = "Vázquez de Coronado", Province = provinces[0], NameProvince = "San José"},
                 new Canton{NameCanton = "Acosta", Province = provinces[0], NameProvince = "San José"},
                 new Canton{NameCanton = "Tibás", Province = provinces[0], NameProvince = "San José"},
                 new Canton{NameCanton = "Moravia", Province = provinces[0], NameProvince = "San José"},
@@ -59,7 +59,7 @@ namespace LoCoMPro_LV.Data
                 new Canton{NameCanton = "San Ramón", Province = provinces[1], NameProvince = "Alajuela"},
                 new Canton{NameCanton = "Guatuso", Province = provinces[1], NameProvince = "Alajuela"},
                 new Canton{NameCanton = "Alajuela", Province = provinces[1], NameProvince = "Alajuela"},
-                new Canton{NameCanton = "Rio Cuarto", Province = provinces[1], NameProvince = "Alajuela"},
+                new Canton{NameCanton = "Río Cuarto", Province = provinces[1], NameProvince = "Alajuela"},
                 new Canton{NameCanton = "Zarcero", Province = provinces[1], NameProvince = "Alajuela"},
                 new Canton{NameCanton = "Orotina", Province = provinces[1], NameProvince = "Alajuela"},
                 new Canton{NameCanton = "Grecia", Province = provinces[1], NameProvince = "Alajuela"},
@@ -505,6 +505,119 @@ namespace LoCoMPro_LV.Data
             };
 
             context.Records.AddRange(records);
+            context.SaveChanges();
+
+            var valorations = new Evaluate[]
+           {
+                new Evaluate{NameEvaluator = "gabriel", NameGenerator="anne", RecordDate = DateTime.Parse("2022-1-18"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "brad", NameGenerator="anne", RecordDate = DateTime.Parse("2022-1-18"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "james", NameGenerator="anne", RecordDate = DateTime.Parse("2022-1-18"), StarsCount = 2},
+
+                new Evaluate{NameEvaluator = "james", NameGenerator="brad", RecordDate = DateTime.Parse("2023-8-27"), StarsCount = 1},
+                new Evaluate{NameEvaluator = "yordi", NameGenerator="brad", RecordDate = DateTime.Parse("2023-8-27"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="brad", RecordDate = DateTime.Parse("2023-8-27"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "gabriel", NameGenerator="cristopher", RecordDate = DateTime.Parse("2021-3-11"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "keanu", NameGenerator="cristopher", RecordDate = DateTime.Parse("2021-3-11"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "sebastian", NameGenerator="cristopher", RecordDate = DateTime.Parse("2021-3-11"), StarsCount = 4},
+
+                new Evaluate{NameEvaluator = "anne", NameGenerator="emma", RecordDate = DateTime.Parse("2022-2-12"), StarsCount = 1},
+                new Evaluate{NameEvaluator = "keanu", NameGenerator="emma", RecordDate = DateTime.Parse("2022-2-12"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "natalie", NameGenerator="emma", RecordDate = DateTime.Parse("2022-2-12"), StarsCount = 2},
+
+                new Evaluate{NameEvaluator = "yordi", NameGenerator="gabriel", RecordDate = DateTime.Parse("2021-2-12"), StarsCount = 1},
+                new Evaluate{NameEvaluator = "cristopher", NameGenerator="gabriel", RecordDate = DateTime.Parse("2021-2-12"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "james", NameGenerator="gabriel", RecordDate = DateTime.Parse("2021-2-12"), StarsCount = 5},
+
+                new Evaluate{NameEvaluator = "cristopher", NameGenerator="james", RecordDate = DateTime.Parse("2021-2-12"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "gabriel", NameGenerator="james", RecordDate = DateTime.Parse("2021-2-12"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "keanu", NameGenerator="james", RecordDate = DateTime.Parse("2021-2-12"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "emma", NameGenerator="keanu", RecordDate = DateTime.Parse("2023-4-25"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "natalie", NameGenerator="keanu", RecordDate = DateTime.Parse("2023-4-25"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "sebastian", NameGenerator="keanu", RecordDate = DateTime.Parse("2023-4-25"), StarsCount = 5},
+
+                new Evaluate{NameEvaluator = "brad", NameGenerator="natalie", RecordDate = DateTime.Parse("2023-5-10"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "james", NameGenerator="natalie", RecordDate = DateTime.Parse("2023-5-10"), StarsCount = 1},
+                new Evaluate{NameEvaluator = "keanu", NameGenerator="natalie", RecordDate = DateTime.Parse("2023-5-10"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "gabriel", NameGenerator="sebastian", RecordDate = DateTime.Parse("2023-9-7"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="sebastian", RecordDate = DateTime.Parse("2023-9-7"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "yordi", NameGenerator="sebastian", RecordDate = DateTime.Parse("2023-9-7"), StarsCount = 5},
+
+                new Evaluate{NameEvaluator = "brad", NameGenerator="yordi", RecordDate = DateTime.Parse("2022-2-15"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "james", NameGenerator="yordi", RecordDate = DateTime.Parse("2022-2-15"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "keanu", NameGenerator="yordi", RecordDate = DateTime.Parse("2022-2-15"), StarsCount = 2},
+
+                new Evaluate{NameEvaluator = "gabriel", NameGenerator="natalie", RecordDate = DateTime.Parse("2022-2-21"), StarsCount = 1},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="natalie", RecordDate = DateTime.Parse("2022-2-21"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "sebastian", NameGenerator="natalie", RecordDate = DateTime.Parse("2022-2-21"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "anne", NameGenerator="emma", RecordDate = DateTime.Parse("2022-2-16"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "brad", NameGenerator="emma", RecordDate = DateTime.Parse("2022-2-16"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "james", NameGenerator="emma", RecordDate = DateTime.Parse("2022-2-16"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "brad", NameGenerator="james", RecordDate = DateTime.Parse("2022-3-4"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "cristopher", NameGenerator="james", RecordDate = DateTime.Parse("2022-3-4"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="james", RecordDate = DateTime.Parse("2022-3-4"), StarsCount = 2},
+
+                new Evaluate{NameEvaluator = "james", NameGenerator="gabriel", RecordDate = DateTime.Parse("2023-5-22"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "keanu", NameGenerator="gabriel", RecordDate = DateTime.Parse("2023-5-22"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "natalie", NameGenerator="gabriel", RecordDate = DateTime.Parse("2023-5-22"), StarsCount = 3},
+       
+                new Evaluate{NameEvaluator = "anne", NameGenerator="yordi", RecordDate = DateTime.Parse("2023-1-18"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "brad", NameGenerator="yordi", RecordDate = DateTime.Parse("2023-1-18"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "james", NameGenerator="yordi", RecordDate = DateTime.Parse("2023-1-18"), StarsCount = 4},
+
+                new Evaluate{NameEvaluator = "cristopher", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-11-1"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-11-1"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "anne", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-11-1"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "natalie", NameGenerator="gabriel", RecordDate = DateTime.Parse("2023-8-10"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "sebastian", NameGenerator="gabriel", RecordDate = DateTime.Parse("2023-8-10"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="gabriel", RecordDate = DateTime.Parse("2023-8-10"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "brad", NameGenerator="keanu", RecordDate = DateTime.Parse("2023-8-6"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "gabriel", NameGenerator="keanu", RecordDate = DateTime.Parse("2023-8-6"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "james", NameGenerator="keanu", RecordDate = DateTime.Parse("2023-8-6"), StarsCount = 5},
+
+                new Evaluate{NameEvaluator = "anne", NameGenerator="cristopher", RecordDate = DateTime.Parse("2023-8-6"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "brad", NameGenerator="cristopher", RecordDate = DateTime.Parse("2023-8-6"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "cristopher", NameGenerator="cristopher", RecordDate = DateTime.Parse("2023-8-6"), StarsCount = 5},
+
+                new Evaluate{NameEvaluator = "emma", NameGenerator="brad", RecordDate = DateTime.Parse("2023-3-15"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "gabriel", NameGenerator="brad", RecordDate = DateTime.Parse("2023-3-15"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "james", NameGenerator="brad", RecordDate = DateTime.Parse("2023-3-15"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "anne", NameGenerator="cristopher", RecordDate = DateTime.Parse("2022-7-20"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "brad", NameGenerator="cristopher", RecordDate = DateTime.Parse("2022-7-20"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "james", NameGenerator="cristopher", RecordDate = DateTime.Parse("2022-7-20"), StarsCount = 4},
+
+                new Evaluate{NameEvaluator = "cristopher", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-3-10"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-3-10"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "anne", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-3-10"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "natalie", NameGenerator="emma", RecordDate = DateTime.Parse("2022-4-12"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "sebastian", NameGenerator="emma", RecordDate = DateTime.Parse("2022-4-12"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "yordi", NameGenerator="emma", RecordDate = DateTime.Parse("2022-4-12"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "brad", NameGenerator="yordi", RecordDate = DateTime.Parse("2022-8-25"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "cristopher", NameGenerator="yordi", RecordDate = DateTime.Parse("2022-8-25"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="yordi", RecordDate = DateTime.Parse("2022-8-25"), StarsCount = 3},
+
+                new Evaluate{NameEvaluator = "james", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-3-11"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "keanu", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-3-11"), StarsCount = 4},
+                new Evaluate{NameEvaluator = "natalie", NameGenerator="sebastian", RecordDate = DateTime.Parse("2022-3-11"), StarsCount = 5},
+                        
+                new Evaluate{NameEvaluator = "cristopher", NameGenerator="james", RecordDate = DateTime.Parse("2023-10-10"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "brad", NameGenerator="james", RecordDate = DateTime.Parse("2023-10-10"), StarsCount = 2},
+                new Evaluate{NameEvaluator = "emma", NameGenerator="james", RecordDate = DateTime.Parse("2023-10-10"), StarsCount = 5},
+             
+                new Evaluate{NameEvaluator = "gabriel", NameGenerator="sebastian", RecordDate = DateTime.Parse("2023-10-9"), StarsCount = 3},
+                new Evaluate{NameEvaluator = "brad", NameGenerator="sebastian", RecordDate = DateTime.Parse("2023-10-9"), StarsCount = 5},
+                new Evaluate{NameEvaluator = "james", NameGenerator="sebastian", RecordDate = DateTime.Parse("2023-10-9"), StarsCount = 5}
+            };
+            context.Valorations.AddRange(valorations);
             context.SaveChanges();
 
             var categories = new Category[]
