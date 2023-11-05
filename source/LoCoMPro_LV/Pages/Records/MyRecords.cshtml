@@ -18,7 +18,7 @@
                 <th>
                     <div class="table-item precio">
                         <a class="ordering-text" asp-page="MyRecords" asp-route-sortOrder="@ViewData["PriceSort"]" asp-route-eleccion="precio">
-                            @Html.DisplayNameFor(model => model.Records[0].Price)
+                        @Html.DisplayNameFor(model => model.Records[0].Price)
                         </a>
                         <a>
                             @if (Model.eleccion == "precio")

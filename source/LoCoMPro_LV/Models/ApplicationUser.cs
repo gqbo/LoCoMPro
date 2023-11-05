@@ -37,6 +37,8 @@ namespace LoCoMPro_LV.Models
 
         public Canton Canton { get; set; }
 
+        public bool IsModerator { get; set; }
+
         public ICollection<GeneratorUser> GeneratorUser { get; set; }
 
         public ICollection<ModeratorUser> ModeratorUsers { get; set; }
