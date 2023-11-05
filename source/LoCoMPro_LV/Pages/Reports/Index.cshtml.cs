@@ -151,6 +151,12 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
+        /// <summary>
+        /// Método utilizado para obtener la cantidad de reportes que posee un registro en específico utilizando
+        /// una función escalar creada en la base de datos.
+        /// <param name="nameGenerator">Nombre del generador de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// <param name="recordDate">Fecha de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// </summary>
         private int GetCountReports(string nameGenerator, DateTime recordDate)
         {
             string connectionString = _databaseUtils.GetConnectionString();
@@ -164,6 +170,11 @@ namespace LoCoMPro_LV.Pages.Reports
             return countReports;
         }
 
+        /// <summary>
+        /// Método utilizado para definir la cantidad de reportes en específico utilizando
+        /// una función escalar creada en la base de datos.
+        /// <param name="currentReports">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
+        /// </summary>
         private void SetCountReports(List<RecordStoreReportModel> currentReports)
         {
             foreach (var recordStoreModel in currentReports)
