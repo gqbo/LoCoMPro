@@ -47,6 +47,8 @@ namespace LoCoMPro_LV.Pages.Reports
 
             SetAverageRatings(currentReports);
 
+            SetCountReports(currentReports);
+
             recordStoreReports = GroupRecords(currentReports);
         }
 
@@ -149,6 +151,27 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
+        private int GetCountReports(string nameGenerator, DateTime recordDate)
+        {
+            string connectionString = _databaseUtils.GetConnectionString();
+            string sqlQuery = "SELECT dbo.GetCountReports(@NameGenerator, @RecordDate)";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@NameGenerator", nameGenerator),
+                new SqlParameter("@RecordDate", recordDate)
+            };
+            int countReports = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
+            return countReports;
+        }
+
+        private void SetCountReports(List<RecordStoreReportModel> currentReports)
+        {
+            foreach (var recordStoreModel in currentReports)
+            {
+                int countReports = GetCountReports(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
+                recordStoreModel.recordValoration = countReports;
+            }
+        }
     }
 }
 
