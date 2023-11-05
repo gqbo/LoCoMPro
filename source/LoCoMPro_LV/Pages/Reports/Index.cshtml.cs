@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using LoCoMPro_LV.Pages.Records;
 using LoCoMPro_LV.Utils;
 using System.Data.SqlClient;
 
@@ -106,7 +99,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <summary>
         /// Este metodo recibe una lista de "RecordStoreReportModel", y los agrupa a todos que son del mismo registro.
         /// </summary>
-        /// <param name="currentRecords">Lista de "RecordStoreReportModel" que van a ser agrupados</param>
+        /// <param name="currentReports">Lista de "RecordStoreReportModel" que van a ser agrupados</param>
         private List<RecordStoreReportModel> GroupRecords(List<RecordStoreReportModel> currentReports)
         {
             var groupedRecordsQuery = from record in currentReports
@@ -142,7 +135,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <summary>
         /// Método utilizado para definir el promedio de las valoraciones de estrellas de un registro en específico utilizando
         /// una función escalar creada en la base de datos.
-        /// <param name="currentRecords">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
+        /// <param name="currentReports">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
         /// </summary>
         private void SetAverageRatings(List<RecordStoreReportModel> currentReports)
         {
