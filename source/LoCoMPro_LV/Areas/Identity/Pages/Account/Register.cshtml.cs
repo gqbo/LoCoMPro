@@ -87,6 +87,30 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         public string ReturnUrl { get; set; }
 
         /// <summary>
+        /// Latitud de la tienda seleccionada en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public double Latitude { get; set; }
+
+        /// <summary>
+        /// Longitud de la tienda seleccionada en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public double Longitude { get; set; }
+
+        /// <summary>
+        /// Nombre del cantón de la tienda obtenido en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public string NameCanton { get; set; }
+
+        /// <summary>
+        /// Nombre de la provincia obtenido en la pantalla seleccionar ubicación.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public string NameProvince { get; set; }
+
+        /// <summary>
         /// Propiedad que almacena una lista de esquemas de autenticación externa disponibles.
         /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
@@ -158,6 +182,11 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         /// <param name="returnUrl">Define el URL a la cuál se va a retornar después de registrar un usuario. Por defecto es null</param>
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (NameCanton == "N/A" || NameProvince == "N/A")
+            {
+                ModelState.AddModelError(string.Empty, "Seleccione una ubicación correcta.");
+                return Page();
+            }
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -168,6 +197,10 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
                 user.UserName = Input.UserName;
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.Longitude = Longitude;
+                user.Latitude = Latitude;
+                user.NameCanton = NameCanton;
+                user.NameProvince = NameProvince;
 
                 await _userStore.SetUserNameAsync(user, user.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
