@@ -76,6 +76,23 @@
 </div>
 
 <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("searchButton");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
+</script>
+
+<script>
     document.addEventListener("DOMContentLoaded", function () {
         var provinceDropdown = document.getElementById("Province");
         var cantonDropdown = document.getElementById("Canton");
