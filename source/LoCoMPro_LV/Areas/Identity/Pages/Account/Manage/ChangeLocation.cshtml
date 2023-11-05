@@ -1,0 +1,134 @@
+﻿@page
+@model ChangeLocationModel
+@{
+    ViewData["Title"] = "Ubicación";
+    ViewData["ActivePage"] = ManageNavPages.ChangeLocation;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-12">
+        <form id="change-password-form" method="post">
+            <div class="row">
+                <div class="col-2">
+                </div>
+                <div class="col-4 mx-auto">
+                    <div class="form-group-store">
+                        <div id="marker-info">
+                            <label asp-for="Input.NameProvince" class="form-label gray-text">Provincia</label>
+                            <input type="text" id="NameProvince" class="form-control form-control-add" aria-required="true" asp-for="Input.NameProvince" placeholder="Provincia" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 mx-auto">
+                    <div class="form-group-store">
+                        <div id="marker-info">
+                            <label asp-for="Input.NameCanton" class="form-label gray-text">Cantón</label>
+                            <input asp-for="Input.NameCanton" id="NameCanton" type="text" class="form-control form-control-add" aria-required="true" asp-for="Input.NameCanton" placeholder="Cantón" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div class="map" id="map"></div>
+                <div id="marker-info" class="marker-info">
+                    <input type="number" display="none" step="0.0001" lang="en" id="latitude" asp-for="Input.Latitude" />
+                    <input type="number" display="none" step="0.0001" lang="en" id="longitude" asp-for="Input.Longitude" />
+                </div>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Guardar</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var initialLatitude = @Html.Raw(Json.Serialize(Model.Input.Latitude));
+            var initialLongitude = @Html.Raw(Json.Serialize(Model.Input.Longitude));
+
+            function updateLocationInfo(lat, lng) {
+
+                document.getElementById('latitude').value = lat.toFixed(4);
+                document.getElementById('longitude').value = lng.toFixed(4);
+
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var address = data.address || {};
+                        var province = address.province || 'N/A';
+                        var canton = address.county || 'N/A';
+                        if (canton == "N/A") {
+                            canton = address.region || 'N/A';
+                        }
+                        if (canton == "N/A") {
+                            canton = address.town || 'N/A';
+                        }
+                        province = cleanText(province);
+                        canton = cleanText(canton);
+
+                        document.getElementById('NameProvince').value = province;
+                        document.getElementById('NameCanton').value = canton;
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud de geocodificación inversa', error);
+                    });
+            }
+
+            var map = L.map('map', {
+                minZoom: 8,
+                maxZoom: 17,
+                dragging: true
+            }).setView([initialLatitude, initialLongitude], 12);
+
+            updateLocationInfo(initialLatitude, initialLongitude);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18
+            }).addTo(map);
+
+            var costaRicaBounds = L.latLngBounds(L.latLng(8.032, -85.950), L.latLng(11.217, -82.555));
+            map.setMaxBounds(costaRicaBounds);
+
+            map.on('drag', function () {
+                if (!costaRicaBounds.contains(map.getBounds())) {
+                    map.panInsideBounds(costaRicaBounds, { animate: true });
+                }
+            });
+
+            var marker = L.marker([initialLatitude, initialLongitude], { draggable: true }).addTo(map);
+
+            marker.on('dragend', function (e) {
+                var latlng = e.target.getLatLng();
+                updateLocationInfo(latlng.lat, latlng.lng);
+            });
+
+            function cleanText(text) {
+                var match = text.match(/Provincia(?: de)? (.+)|Cantón(?: de)? (.+)/);
+                var location;
+                if (match) {
+                    location = match[1] || match[2];
+                    return location;
+                } else {
+                    var locationName = text;
+                    var provinceIndex = text.indexOf(" Province");
+                    if (provinceIndex !== -1) {
+                        locationName = text.substring(0, provinceIndex);
+                    }
+                    if (locationName == "San Jose") {
+                        locationName = "San José";
+                    }
+                    return locationName;
+                }
+            }
+
+        });
+    </script>
+}
