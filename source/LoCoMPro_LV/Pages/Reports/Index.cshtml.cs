@@ -125,11 +125,7 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             string connectionString = _databaseUtils.GetConnectionString();
             string sqlQuery = "SELECT dbo.GetStarsAverage(@NameGenerator, @RecordDate)";
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new SqlParameter("@NameGenerator", nameGenerator),
-                new SqlParameter("@RecordDate", recordDate)
-            };
+            SqlParameter[] parameters = BuildSqlParameterArray(nameGenerator, recordDate);
             int averageRating = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
             return averageRating;
         }
@@ -161,11 +157,7 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             string connectionString = _databaseUtils.GetConnectionString();
             string sqlQuery = "SELECT dbo.GetCountReports(@NameGenerator, @RecordDate)";
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new SqlParameter("@NameGenerator", nameGenerator),
-                new SqlParameter("@RecordDate", recordDate)
-            };
+            SqlParameter[] parameters = BuildSqlParameterArray(nameGenerator, recordDate);
             int countReports = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
             return countReports;
         }
@@ -182,6 +174,21 @@ namespace LoCoMPro_LV.Pages.Reports
                 int countReports = GetCountReports(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
                 recordStoreModel.recordValoration = countReports;
             }
+        }
+
+        /// <summary>
+        /// Método utilizado para construir una matriz de objetos SqlParameter que se utilizan en consultas SQL. 
+        /// <param name="nameGenerator">Nombre del generador de un registro utilizado como parámetro en la consulta SQL.</param>
+        /// <param name="recordDate">Fecha de un registro utilizada como parámetro en la consulta SQL.</param>
+        /// </summary>
+        private SqlParameter[] BuildSqlParameterArray(string nameGenerator, DateTime recordDate)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@NameGenerator", nameGenerator),
+                new SqlParameter("@RecordDate", recordDate)
+            };
+            return parameters;
         }
     }
 }
