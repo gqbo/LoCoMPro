@@ -75,6 +75,7 @@ h2 {
 
 .register_form {
     max-width: 342px;
+    width: 342px;
 }
 
 .login_form {

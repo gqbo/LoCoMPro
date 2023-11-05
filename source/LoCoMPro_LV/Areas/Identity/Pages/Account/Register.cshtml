@@ -6,7 +6,8 @@
 }
 
 <div class="container d-flex justify-content-center align-items-center">
-    <div class="col-md-12">
+
+        <div class="row">        <div class="col-md-12">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
@@ -15,14 +16,14 @@
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger text-danger-newcolor" role="alert"></div>
             <div class="row">
-                <div class="col">
+                    <div class="col d-flex justify-content-end align-items-end">
                     <div class="mb-3 register_form">
                         <label asp-for="Input.FirstName" class="form-label">Nombre</label>
                         <input asp-for="Input.FirstName" class="form-control form-control-lg " autocomplete="nombre" aria-required="true" placeholder="Nombre">
                         <span asp-validation-for="Input.FirstName" class="text-danger text-danger-newcolor"></span>
                     </div>
                 </div>
-                <div class="col">
+                    <div class="col d-flex justify-content-start align-items-start">
                     <div class="mb-3 register_form">
                         <label asp-for="Input.LastName" class="form-label">Apellido</label>
                         <input asp-for="Input.LastName" class="form-control form-control-lg " autocomplete="apellido" aria-required="true" placeholder="Apellido">
@@ -31,14 +32,14 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col d-flex justify-content-end align-items-end">
                     <div class="mb-3 register_form">
                         <label asp-for="Input.UserName" class="form-label">Usuario</label>
                         <input asp-for="Input.UserName" class="form-control form-control-lg " autocomplete="username" aria-required="true" placeholder="Usuario">
                         <span asp-validation-for="Input.UserName" class="text-danger text-danger-newcolor"></span>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col d-flex justify-content-start align-items-start">
                     <div class="mb-3 register_form">
                         <label asp-for="Input.Email" class="form-label">Correo electrónico</label>
                         <input asp-for="Input.Email" class="form-control form-control-lg " autocomplete="email" aria-required="true" placeholder="Correo electrónico">
@@ -47,14 +48,14 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col d-flex justify-content-end align-items-end">
                     <div class="mb-3 register_form">
                         <label asp-for="Input.Password" class="form-label">Contraseña</label>
                         <input asp-for="Input.Password" class="form-control form-control-lg " autocomplete="new-password" aria-required="true" placeholder="Contraseña">
                         <span asp-validation-for="Input.Password" class="text-danger text-danger-newcolor"></span>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col d-flex justify-content-start align-items-start">
                     <div class="mb-3 register_form">
                         <label asp-for="Input.ConfirmPassword" class="form-label">Confirmar contraseña</label>
                         <input asp-for="Input.ConfirmPassword" class="form-control form-control-lg " autocomplete="new-password" aria-required="true" placeholder="Confirmar contraseña">
@@ -94,7 +95,10 @@
                 </div>
             </div>
         </form>
-    </div>
+    </div>                                                                                                                                                                                                                                                        
+        </div>
+        <!-- <div class="row">                                                                                                                    
+        </div> -->
 </div>
 
 @section scripts{
