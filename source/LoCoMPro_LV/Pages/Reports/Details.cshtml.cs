@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
-using LoCoMPro_LV.Pages.Records;
 using LoCoMPro_LV.Utils;
 using System.Data.SqlClient;
 
@@ -15,7 +10,7 @@ namespace LoCoMPro_LV.Pages.Reports
 {
     public class DetailsModel : PageModel
     {
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
 
         /// <summary>
         /// Se utiliza para acceder a las utilidades de la base de datos.
@@ -123,6 +118,11 @@ namespace LoCoMPro_LV.Pages.Reports
             return averageRating;
         }
 
+        /// <summary>
+        /// Este metodo se eutiliza para sacar la valoracion media de un usuario con base a las valoraciones de los registros del usuario.
+        /// </summary>
+        /// <param name="nameGenerator">Nombre de usuario del usuario del que se requiere la valoracion.</param>
+        /// <returns>Devuelve la valoracion del usuario deseado</returns>
         private int GetUserRating(string nameGenerator)
         {
             string connectionString = _databaseUtils.GetConnectionString();
@@ -136,46 +136,33 @@ namespace LoCoMPro_LV.Pages.Reports
         }
 
         /// <summary>
-        /// Este metodo utiliza la informacion recopilada en la vista para crear el reporte y enviarlo a la base de datos.
+        /// Este metodo recibe los datos obtenidos de la vista para poder acepar o rechazar los reportes que se estan manejando.
         /// </summary>
+        /// <param name="action">Es el dato que especifica si el dato fue aceptado o rechazado</param>
+        /// <param name="nameReporter">El nombre del usuario que realizo el reporte</param>
+        /// <param name="reportDate">La fecha en la que se realizo el reporte</param>
         public async Task<IActionResult> OnPostAsync(string action, string nameReporter, DateTime reportDate)
         {
+            var entity = await _context.Reports.FirstOrDefaultAsync(e => e.NameGenerator == NameGenerator &&
+                                                                    e.ReportDate == reportDate &&
+                                                                    e.RecordDate == RecordDate &&
+                                                                    e.NameReporter == nameReporter);
+
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
             if (action == "accept")
             {
-                var entity = await _context.Reports.FirstOrDefaultAsync(e => e.NameGenerator == NameGenerator &&
-                                                                        e.ReportDate == reportDate &&
-                                                                        e.RecordDate == RecordDate &&
-                                                                        e.NameReporter == nameReporter);
-
-                if (entity == null)
-                {
-                    return NotFound();
-                }
-
-                // 2. Realiza las modificaciones deseadas en la entidad.
                 entity.State = 1;
-
-                // 3. Guarda los cambios en la base de datos.
-                _context.SaveChanges();
             }
             else if (action == "reject")
             {
-                var entity = await _context.Reports.FirstOrDefaultAsync(e => e.NameGenerator == NameGenerator &&
-                                                                        e.ReportDate == reportDate &&
-                                                                        e.RecordDate == RecordDate &&
-                                                                        e.NameReporter == nameReporter);
-
-                if (entity == null)
-                {
-                    return NotFound();
-                }
-
-                // 2. Realiza las modificaciones deseadas en la entidad.
                 entity.State = 2;
-
-                // 3. Guarda los cambios en la base de datos.
-                _context.SaveChanges();
             }
+
+            _context.SaveChanges();
 
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
