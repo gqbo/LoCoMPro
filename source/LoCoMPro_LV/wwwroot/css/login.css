@@ -11,6 +11,26 @@ h1 {
     text-decoration-line: underline;
 }
 
+h2 {
+    padding: 30px;
+    margin-bottom: 50px;
+    color: #FFF;
+    font-weight: 800;
+    font-family: Roboto;
+    line-height: 24px;
+    font-size: 50px;
+}
+
+h3 {
+    padding: 50px;
+    color: #FFF;
+    font-weight: 800;
+    font-family: Belleza;
+    line-height: 24px;
+    font-size: 50px;
+}
+
+
 .register {
     background-color: #0A3143;
     display: flex;
@@ -65,6 +85,7 @@ h1 {
 
 .register_form {
     max-width: 342px;
+    width: 342px;
 }
 
 .login_form {
@@ -94,4 +115,17 @@ h1 {
 
 .Register_button:focus, .Register_button:hover {
     color: #dddddd !important;
+}
+
+.map {
+    width: 1000px;
+    height: 500px;
+    box-shadow: 5px 5px 5px #888;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.marker-info {
+    display: none;
 }
