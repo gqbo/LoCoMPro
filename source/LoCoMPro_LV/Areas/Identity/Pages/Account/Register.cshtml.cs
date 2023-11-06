@@ -87,25 +87,25 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         public string ReturnUrl { get; set; }
 
         /// <summary>
-        /// Latitud de la tienda seleccionada en la pantalla seleccionar ubicación.
+        /// Latitud obtenida del mapa interactivo.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public double Latitude { get; set; }
 
         /// <summary>
-        /// Longitud de la tienda seleccionada en la pantalla seleccionar ubicación.
+        /// Longitud obtenida del mapa interactivo.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public double Longitude { get; set; }
 
         /// <summary>
-        /// Nombre del cantón de la tienda obtenido en la pantalla seleccionar ubicación.
+        /// Nombre del cantón obtenido del mapa interactivo.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string NameCanton { get; set; }
 
         /// <summary>
-        /// Nombre de la provincia obtenido en la pantalla seleccionar ubicación.
+        /// Nombre de la provincia obtenido del mapa interactivo.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string NameProvince { get; set; }
