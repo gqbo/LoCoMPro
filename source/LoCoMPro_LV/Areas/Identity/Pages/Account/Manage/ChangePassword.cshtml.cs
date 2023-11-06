@@ -53,13 +53,13 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "La contraseña actual es obligatoria.")]
             [DataType(DataType.Password)]
             [Display(Name = "Contraseña actual")]
             public string OldPassword { get; set; }
 
             [PersonalData]
-            [Required(ErrorMessage = "La contraseña es obligatoria.")]
+            [Required(ErrorMessage = "La contraseña nueva es obligatoria.")]
             [StringLength(50, MinimumLength = 2, ErrorMessage = "La contraseña debe tener entre 2 y 50 caracteres.")]
             [DataType(DataType.Password)]
             [RegularExpression(@"^(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "La contraseña debe contener al menos una letra mayúscula y al menos un número.")]

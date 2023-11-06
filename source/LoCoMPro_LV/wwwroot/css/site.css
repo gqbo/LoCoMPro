@@ -41,6 +41,10 @@ body {
     color: #FFF !important;
 }
 
+.nav-link-manage {
+    color: Black !important;
+}
+
 .nav-link {
     font-family: 'Roboto' !important;
     font-size: 20px !important;
@@ -401,6 +405,14 @@ table {
     line-height: 24px;
 }
 
+.title_manage {
+    font-weight: 800;
+    font-family: Roboto;
+    line-height: 24px;
+    margin: 25px;
+    color: white
+}
+
 .map {
     width: 1000px;
     height: 500px;
@@ -419,7 +431,6 @@ table {
 
 .text-danger-map {
     margin-left: 10% !important;
-}
 }
 
 .title_add-report {

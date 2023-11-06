@@ -100,34 +100,37 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with UserName: '{AuthenticatedUserName}'.");
             }
 
-            var latitude = user.Latitude;
-            var longitude = user.Longitude;
-            var nameProvince = user.NameProvince;
-            var nameCanton = user.NameCanton;
+            var latitudeBefore = user.Latitude;
+            var longitudeBefore = user.Longitude;
+            var nameProvinceBefore = user.NameProvince;
+            var nameCantonBefore = user.NameCanton;
 
-            if (Input.Latitude != latitude)
+            if (Input.Latitude != latitudeBefore)
             {
                 user.Latitude = Input.Latitude;
             }
 
-            if (Input.Longitude != longitude)
+            if (Input.Longitude != longitudeBefore)
             {
                 user.Longitude = Input.Longitude;
             }
 
-            if (Input.NameProvince != nameProvince)
+            if (Input.NameProvince != nameProvinceBefore)
             {
                 user.NameProvince = Input.NameProvince;
             }
 
-            if (Input.NameCanton != nameCanton)
+            if (Input.NameCanton != nameCantonBefore)
             {
                 user.NameCanton = Input.NameCanton;
             }
 
-            await _userManager.UpdateAsync(user);
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Se ha actualizado la ubicación";
+            if (Input.Latitude != latitudeBefore || Input.Longitude != longitudeBefore || Input.NameProvince != nameProvinceBefore || Input.NameCanton != nameCantonBefore)
+            {
+                await _userManager.UpdateAsync(user);
+                await _signInManager.RefreshSignInAsync(user);
+                StatusMessage = "Se ha actualizado la ubicación";
+            }
 
             return RedirectToPage();
         }

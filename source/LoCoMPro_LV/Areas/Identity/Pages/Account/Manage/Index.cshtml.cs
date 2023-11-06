@@ -108,22 +108,26 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var firstName = user.FirstName;
-            var lastName = user.LastName;
+            var firstNameBefore = user.FirstName;
+            var lastNameBefore = user.LastName;
 
-            if (Input.FirstName != firstName)
+            if (Input.FirstName != firstNameBefore)
             {
                 user.FirstName = Input.FirstName;
             }
 
-            if (Input.LastName != lastName)
+            if (Input.LastName != lastNameBefore)
             {
                 user.LastName = Input.LastName;
             }
 
-            await _userManager.UpdateAsync(user);
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Se ha actualizado el perfil";
+            if (Input.FirstName != firstNameBefore || Input.LastName != lastNameBefore)
+            {
+                await _userManager.UpdateAsync(user);
+                await _signInManager.RefreshSignInAsync(user);
+                StatusMessage = "Se ha actualizado el perfil";
+            }
+
             return RedirectToPage();
         }
     }
