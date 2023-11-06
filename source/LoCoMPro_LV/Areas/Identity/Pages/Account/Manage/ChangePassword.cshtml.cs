@@ -103,7 +103,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
             {
                 foreach (var error in changePasswordResult.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description = "La contraseña es incorrecta.") ;
                 }
                 return Page();
             }

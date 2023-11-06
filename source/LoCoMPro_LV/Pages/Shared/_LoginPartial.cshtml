@@ -16,6 +16,8 @@
     }
     @if (SignInManager.IsSignedIn(User))
     {
+        var AuthenticatedUserName = User.Identity.Name;
+        var user = await UserManager.FindByNameAsync(AuthenticatedUserName);
         <li class="nav-item ml-auto">
             <button class="navbar_button">
                 <a class="form-inline nav-link" asp-area="" asp-page="/Stores/Create">
@@ -23,11 +25,26 @@
                 </a>
             </button>
         </li>
+        if (user != null && user.IsModerator)
+        {
+            <li class="nav-item ml-auto">
+                <button class="navbar_button">
+                    <a class="form-inline nav-link" asp-area="" asp-page="/Reports/Index">
+                        Ver reportes
+                    </a>
+                </button>
+            </li>
+        }
         <li>
+
             <button id="trigger" class="navbar_button form-inline nav-link">Mi Perfil</button>
                 
             <div id="popover" class="popover popover-bottom" hidden>
-                @* <h3 class="nav-link">@username</h3> *@
+                <button class="navbar_button">
+                    <a class="form-inline nav-link" asp-area="" asp-page="/Records/MyRecords">
+                        Mis Aportes
+                    </a>
+                </button>
 
                 <button class="navbar_button">
                     <a class="form-inline nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">
