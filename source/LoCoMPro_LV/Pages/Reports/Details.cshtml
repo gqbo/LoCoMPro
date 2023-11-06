@@ -29,10 +29,21 @@
                         </div>
                     </div>
                     <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col">
+                        <div class="col-12 d-flex justify-content-left">
                             <h3>
                                 Usuario: @Html.DisplayFor(model => model.recordStoreReports.Record.NameGenerator)
                             </h3>
+                            <div class="ratings-wrapper-report ratings-wrapper">
+                                <div class="ratings">
+                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                    {
+                                        <span data-rating="@starNumber"
+                                        @(starNumber <= Model.recordStoreReports.generatorValoration ? "data-clicked" : "")>
+                                            <span>★</span>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row d-flex justify-content-between align-items-center">
@@ -84,6 +95,17 @@
                                             <h3>
                                                 Usuario: @Html.DisplayFor(model => model.recordStoreReports.Reports[report].NameReporter)
                                             </h3>
+                                            <div class="ratings-wrapper-report ratings-wrapper">
+                                                <div class="ratings">
+                                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                                    {
+                                                        <span data-rating="@starNumber"
+                                                        @(starNumber <= Model.recordStoreReports.reporterValorations[report] ? "data-clicked" : "")>
+                                                            <span>★</span>
+                                                        </span>
+                                                    }
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row d-flex justify-content-center align-items-center report-item">
@@ -103,7 +125,7 @@
                                         <button class="add_confirm" type="submit" name="action" value="accept">Aceptar</button>
                                     </div>
                                     <div class="col d-flex justify-content-center align-items-center">
-                                        <button class="add_confirm" type="submit" name="action" value="reject">Rechazar</button>
+                                        <button class="add_reject" type="submit" name="action" value="reject">Rechazar</button>
                                     </div>
                                 </div>
                             </form>

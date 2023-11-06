@@ -419,6 +419,16 @@ table {
     color: white;
 }
 
+.add_reject {
+    border-radius: 25px !important;
+    border: 6px solid #125270 !important;
+    background: #276E90 !important;
+    width: 140px !important;
+    height: 70px !important;
+    margin: 20px;
+    color: white;
+}
+
 .add_cancel {
     border-radius: 25px !important;
     border: 6px solid #d0d0d0 !important;

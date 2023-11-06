@@ -162,8 +162,6 @@ namespace LoCoMPro_LV.Pages.Reports
                 entity.State = 2;
             }
 
-            _context.SaveChanges();
-
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
