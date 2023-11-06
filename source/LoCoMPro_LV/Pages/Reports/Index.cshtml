@@ -22,7 +22,11 @@
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameGenerator)</th>
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Reports[0].Comment)</th>
                 <th>Valoración</th>
-                <th>Cantidad de reportes</th>
+                <th>
+                    <div class="table-item report">
+                        Cantidad de reportes
+                    </div>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -50,7 +54,11 @@
                             </div>
                         </div>
                     </td>
-                    <td></td>
+                    <td>
+                        <div class="table-item report">
+                            <span>@reports.recordValoration</span>
+                        </div>
+                    </td>
                 </tr>
             }
         </tbody>
