@@ -29,8 +29,7 @@ namespace LoCoMPro_LV.Models
 
         [Required(ErrorMessage = "La razón del reporte es obligatoria")]
         [StringLength(500, MinimumLength = 2, ErrorMessage = "El comentario debe tener entre 2 y 512 caracteres.")]
-        [Display(Name = "Comenatario")]
-
+        [Display(Name = "Comentario")]
         public string Comment { get; set; }
 
         public Record Record { get; set; }

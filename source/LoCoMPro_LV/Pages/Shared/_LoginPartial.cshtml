@@ -7,6 +7,8 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
+        var AuthenticatedUserName = User.Identity.Name;
+        var user = await UserManager.FindByNameAsync(AuthenticatedUserName);
         <li class="nav-item ml-auto">
             <button class="navbar_button">
                 <a class="form-inline nav-link" asp-area="" asp-page="/Stores/Create">
@@ -14,6 +16,23 @@
                 </a>
             </button>
         </li>
+        <li class="nav-item ml-auto">
+            <button class="navbar_button">
+                <a class="form-inline nav-link" asp-area="" asp-page="/Records/MyRecords">
+                    Mis Aportes
+                </a>
+            </button>
+        </li>
+        if (user != null && user.IsModerator)
+        {
+            <li class="nav-item ml-auto">
+                <button class="navbar_button">
+                    <a class="form-inline nav-link" asp-area="" asp-page="/Reports/Index">
+                        Ver reportes
+                    </a>
+                </button>
+            </li>
+        }
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">      
                 <button class="navbar_button" id="logout" type="submit">
