@@ -118,6 +118,7 @@ h3 {
 }
 
 .map {
+    padding: 15px;
     width: 1000px;
     height: 500px;
     box-shadow: 5px 5px 5px #888;
@@ -128,4 +129,17 @@ h3 {
 
 .marker-info {
     display: none;
+}
+
+.form-control-add {
+    min-height: calc(1.5em + 1rem + 2px);
+    padding: .5rem 1rem;
+    font-size: 1.25rem;
+    border-radius: .3rem;
+    background: rgba(255, 255, 255, 0.40);
+    margin-bottom: 20px;
+}
+
+.form-control-add:focus {
+    box-shadow: 2px 4px 4px 2px #000 !important;
 }
