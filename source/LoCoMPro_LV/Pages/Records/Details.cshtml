@@ -61,15 +61,17 @@
         </div>
     </div>
     <div class="row">
-        <table class="table-details" id="miTabla">
+        <table class="table-details table table-striped" id="miTabla">
             <thead>
                 <tr>
                     <th>
                         <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Records[0].Record.RecordDate)</a>
+                        <span class="arrow" id="dateArrow"></span>
                     </th>
                     <th>
                         <div class="table-item precio" id="priceColumn">
                             <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Records[0].Record.Price)</a>
+                            <span class="arrow" id="priceArrow"></span>
                         </div>
                     </th>
                     <th>
@@ -354,10 +356,14 @@
         orderPriceLink.addEventListener("click", function () {
             if (sortOrderPrice === "asc") {
                 sortOrderPrice = "desc";
+                document.getElementById("priceArrow").innerHTML = " &#129095;";
+                document.getElementById("dateArrow").innerHTML = "";
             } else {
                 sortOrderPrice = "asc";
+                document.getElementById("priceArrow").innerHTML = "&#129093;";
+                document.getElementById("dateArrow").innerHTML = "";
             }
-            currentSortColumn = "precio";
+            currentSortColumn = "price";
             ordenarTablaPorPrecio();
             mostrarFilas();
             generarPaginacion();
@@ -367,10 +373,14 @@
         orderDateLink.addEventListener("click", function () {
             if (sortOrderDate === "asc") {
                 sortOrderDate = "desc";
+                document.getElementById("dateArrow").innerHTML = " &#129095;";
+                document.getElementById("priceArrow").innerHTML = "";
             } else {
                 sortOrderDate = "asc";
+                document.getElementById("dateArrow").innerHTML = " &#129093;";
+                document.getElementById("priceArrow").innerHTML = "";
             }
-            currentSortColumn = "fecha";
+            currentSortColumn = "date";
             ordenarTablaPorFecha();
             mostrarFilas();
             generarPaginacion();
@@ -380,3 +390,4 @@
         generarPaginacion();
     });
 </script>
+

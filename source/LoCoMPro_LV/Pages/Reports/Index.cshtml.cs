@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
@@ -51,6 +46,8 @@ namespace LoCoMPro_LV.Pages.Reports
             currentReports.RemoveAll(m => m.Reports.Count == 0);
 
             SetAverageRatings(currentReports);
+
+            SetCountReports(currentReports);
 
             recordStoreReports = GroupRecords(currentReports);
         }
@@ -128,11 +125,7 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             string connectionString = _databaseUtils.GetConnectionString();
             string sqlQuery = "SELECT dbo.GetStarsAverage(@NameGenerator, @RecordDate)";
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new SqlParameter("@NameGenerator", nameGenerator),
-                new SqlParameter("@RecordDate", recordDate)
-            };
+            SqlParameter[] parameters = BuildSqlParameterArray(nameGenerator, recordDate);
             int averageRating = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
             return averageRating;
         }
@@ -154,6 +147,49 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
+        /// <summary>
+        /// Método utilizado para obtener la cantidad de reportes que posee un registro en específico utilizando
+        /// una función escalar creada en la base de datos.
+        /// <param name="nameGenerator">Nombre del generador de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// <param name="recordDate">Fecha de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// </summary>
+        private int GetCountReports(string nameGenerator, DateTime recordDate)
+        {
+            string connectionString = _databaseUtils.GetConnectionString();
+            string sqlQuery = "SELECT dbo.GetCountReports(@NameGenerator, @RecordDate)";
+            SqlParameter[] parameters = BuildSqlParameterArray(nameGenerator, recordDate);
+            int countReports = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
+            return countReports;
+        }
+
+        /// <summary>
+        /// Método utilizado para definir la cantidad de reportes en específico utilizando
+        /// una función escalar creada en la base de datos.
+        /// <param name="currentReports">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
+        /// </summary>
+        private void SetCountReports(List<RecordStoreReportModel> currentReports)
+        {
+            foreach (var recordStoreModel in currentReports)
+            {
+                int countReports = GetCountReports(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
+                recordStoreModel.recordValoration = countReports;
+            }
+        }
+
+        /// <summary>
+        /// Método utilizado para construir una matriz de objetos SqlParameter que se utilizan en consultas SQL. 
+        /// <param name="nameGenerator">Nombre del generador de un registro utilizado como parámetro en la consulta SQL.</param>
+        /// <param name="recordDate">Fecha de un registro utilizada como parámetro en la consulta SQL.</param>
+        /// </summary>
+        private SqlParameter[] BuildSqlParameterArray(string nameGenerator, DateTime recordDate)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@NameGenerator", nameGenerator),
+                new SqlParameter("@RecordDate", recordDate)
+            };
+            return parameters;
+        }
     }
 }
 

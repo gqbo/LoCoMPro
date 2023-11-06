@@ -374,10 +374,14 @@
         orderPriceLink.addEventListener("click", function () {
             if (sortOrderPrice === "asc") {
                 sortOrderPrice = "desc";
+                document.getElementById("priceArrow").innerHTML = " &#129095;";
+                document.getElementById("dateArrow").innerHTML = "";
             } else {
                 sortOrderPrice = "asc";
+                document.getElementById("priceArrow").innerHTML = "&#129093;";
+                document.getElementById("dateArrow").innerHTML = "";
             }
-            currentSortColumn = "precio";
+            currentSortColumn = "price";
             ordenarTablaPorPrecio();
             mostrarFilas();
             generarPaginacion();
@@ -387,10 +391,14 @@
         orderDateLink.addEventListener("click", function () {
             if (sortOrderDate === "asc") {
                 sortOrderDate = "desc";
+                document.getElementById("dateArrow").innerHTML = " &#129095;";
+                document.getElementById("priceArrow").innerHTML = "";
             } else {
                 sortOrderDate = "asc";
+                document.getElementById("dateArrow").innerHTML = " &#129093;";
+                document.getElementById("priceArrow").innerHTML = "";
             }
-            currentSortColumn = "fecha";
+            currentSortColumn = "date";
             ordenarTablaPorFecha();
             mostrarFilas();
             generarPaginacion();

@@ -18,11 +18,16 @@
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameProduct)</th>
                 <th class="date" id="dateColumn">
                     <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.RecordDate)</a>
+                    <span class="arrow" id="dateArrow"></span>
                 </th>
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameGenerator)</th>
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Reports[0].Comment)</th>
                 <th>Valoración</th>
-                <th>Cantidad de reportes</th>
+                <th>
+                    <div class="table-item report">
+                        Cantidad de reportes
+                    </div>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -50,7 +55,11 @@
                             </div>
                         </div>
                     </td>
-                    <td></td>
+                    <td>
+                        <div class="table-item report">
+                            <span>@reports.recordValoration</span>
+                        </div>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -176,10 +185,12 @@
         orderDateLink.addEventListener("click", function () {
             if (sortOrderDate === "asc") {
                 sortOrderDate = "desc";
+                document.getElementById("dateArrow").innerHTML = " &#129095;";
             } else {
                 sortOrderDate = "asc";
+                document.getElementById("dateArrow").innerHTML = " &#129093;";
             }
-            currentSortColumn = "fecha";
+            currentSortColumn = "date";
             ordenarTablaPorFecha();
             mostrarFilas();
             generarPaginacion();
