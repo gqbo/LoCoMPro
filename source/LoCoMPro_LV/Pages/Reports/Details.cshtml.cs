@@ -97,7 +97,8 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var new_reports = from reports in _context.Reports
                               where reports.NameGenerator == nameGenerator &&
-                                    reports.RecordDate == recordDate
+                                    reports.RecordDate == recordDate &&
+                                    reports.State == 0
                               select reports;
 
             return await new_reports.ToListAsync();
@@ -137,19 +138,47 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <summary>
         /// Este metodo utiliza la informacion recopilada en la vista para crear el reporte y enviarlo a la base de datos.
         /// </summary>
-        public async Task<IActionResult> OnPostAsync(string action, int customNumber)
+        public async Task<IActionResult> OnPostAsync(string action, string nameReporter, DateTime reportDate)
         {
             if (action == "accept")
             {
-                
+                var entity = await _context.Reports.FirstOrDefaultAsync(e => e.NameGenerator == NameGenerator &&
+                                                                        e.ReportDate == reportDate &&
+                                                                        e.RecordDate == RecordDate &&
+                                                                        e.NameReporter == nameReporter);
+
+                if (entity == null)
+                {
+                    return NotFound();
+                }
+
+                // 2. Realiza las modificaciones deseadas en la entidad.
+                entity.State = 1;
+
+                // 3. Guarda los cambios en la base de datos.
+                _context.SaveChanges();
             }
             else if (action == "reject")
             {
-                
+                var entity = await _context.Reports.FirstOrDefaultAsync(e => e.NameGenerator == NameGenerator &&
+                                                                        e.ReportDate == reportDate &&
+                                                                        e.RecordDate == RecordDate &&
+                                                                        e.NameReporter == nameReporter);
+
+                if (entity == null)
+                {
+                    return NotFound();
+                }
+
+                // 2. Realiza las modificaciones deseadas en la entidad.
+                entity.State = 2;
+
+                // 3. Guarda los cambios en la base de datos.
+                _context.SaveChanges();
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToPage("../Index");
+            return RedirectToPage("./Index");
         }
     }
 }

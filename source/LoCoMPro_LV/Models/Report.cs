@@ -30,6 +30,7 @@ namespace LoCoMPro_LV.Models
         [StringLength(500, MinimumLength = 2, ErrorMessage = "El comentario debe tener entre 2 y 512 caracteres.")]
         [Display(Name = "Comentario")]
         public string Comment { get; set; }
+        public int State { get; set; }
 
         public Record Record { get; set; }
 

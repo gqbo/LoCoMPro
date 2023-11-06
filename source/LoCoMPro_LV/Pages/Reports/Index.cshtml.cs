@@ -66,6 +66,7 @@ namespace LoCoMPro_LV.Pages.Reports
             var recordsQuery = from record in _context.Records
                                join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                equals new { store.NameStore, store.Latitude, store.Longitude }
+                               where record.Hide == false
                                select new RecordStoreReportModel
                                {
                                    Record = record,
@@ -97,7 +98,8 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var new_reports = from reports in _context.Reports
                               where reports.NameGenerator == nameGenerator &&
-                                    reports.RecordDate == recordDate
+                                    reports.RecordDate == recordDate &&
+                                    reports.State == 0
                               select reports;
 
             return await new_reports.ToListAsync();

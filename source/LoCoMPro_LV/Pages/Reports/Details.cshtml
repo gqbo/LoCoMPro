@@ -1,37 +1,124 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Reports.DetailsModel
-
+@using Microsoft.AspNetCore.Authorization
+@using LoCoMPro_LV.Models
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Consulta";
 }
-
-<h1>Details</h1>
-
-<div>
-    <h4>Report</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Report.Comment)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Report.Comment)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Report.Record)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Report.Record.NameGenerator)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Report.GeneratorUser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Report.GeneratorUser.UserName)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-page="./Index">Back to List</a>
+@attribute [Authorize]
+<div class="container details-container">
+    <div class="row d-flex justify-content-center align-items-center report-item">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 class="title_add">Registro</h1>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center align-items-center report-item">
+        <div class="card">
+            <div class="bg">
+                <div class="info_detail">
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col-10">
+                            <h2>
+                                @Html.DisplayFor(model => model.recordStoreReports.Record.NameProduct)
+                            </h2>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end">
+                            <h4>
+                                ₡@Html.DisplayFor(model => model.recordStoreReports.Record.Price)
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col">
+                            <h3>
+                                Usuario: @Html.DisplayFor(model => model.recordStoreReports.Record.NameGenerator)
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col">
+                            <h6>
+                                Tienda: @Html.DisplayFor(model => model.recordStoreReports.Record.NameStore)
+                                <br>
+                                Provincia: @Html.DisplayFor(model => model.recordStoreReports.Store.NameProvince)
+                                <br>
+                                Cantón: @Html.DisplayFor(model => model.recordStoreReports.Store.NameCanton)
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col">
+                            <h7>
+                                Descripción: @Html.DisplayFor(model => model.recordStoreReports.Record.Description)
+                            </h7>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col d-flex justify-content-end">
+                            <h7>
+                                @Html.DisplayFor(model => model.recordStoreReports.Record.RecordDate)
+                            </h7>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="blob"></div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center align-items-center report-item">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 class="title_add">Reportes</h1>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center align-items-center report-item">
+        <div id="carousel" class="carousel carousel-dark carousel slide">
+            <div class="carousel-inner">
+                @for (int report = 0; report < Model.recordStoreReports.Reports.Count; report++)
+                {
+                    <div class="carousel-item @(report == 0 ? "active" : "")">
+                        <div class="container d-flex justify-content-center align-items-center report-item">
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div class="info">
+                                    <div class="row d-flex justify-content-center align-items-center report-item">
+                                        <div class="col-12 d-flex justify-content-center">
+                                            <h3>
+                                                Usuario: @Html.DisplayFor(model => model.recordStoreReports.Reports[report].NameReporter)
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <div class="row d-flex justify-content-center align-items-center report-item">
+                                        <div class="col-9 d-flex justify-content-center align-items-center report-comment">
+                                            <h6>
+                                                Comentario: @Html.DisplayFor(model => model.recordStoreReports.Reports[report].Comment)
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form method="post">
+                                <input type="hidden" name="nameReporter" value="@Model.recordStoreReports.Reports[report].NameReporter">
+                                <input type="hidden" name="reportDate" value="@Model.recordStoreReports.Reports[report].ReportDate">
+                                <div class="row d-flex justify-content-center align-items-center">
+                                    <div class="col d-flex justify-content-center align-items-center">
+                                        <button class="add_confirm" type="submit" name="action" value="accept">Aceptar</button>
+                                    </div>
+                                    <div class="col d-flex justify-content-center align-items-center">
+                                        <button class="add_confirm" type="submit" name="action" value="reject">Rechazar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                }
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+            </div>
+        </div>
+    </div>
 </div>
