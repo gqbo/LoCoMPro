@@ -360,7 +360,6 @@ table {
 
 .advanced_search {
     padding: 11px !important;
-    
     display: flex !important;
     width: 100%;
     height: 48px;
@@ -462,4 +461,29 @@ table {
 
 .marker-info {
     display: none;
+}
+
+.report-item {
+    margin: 20px;
+}
+
+.carousel {
+    max-width: 800px;
+}
+
+.carousel-item {
+    height: 300px;
+}
+
+.carousel-item .container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.report-comment {
+    min-width: 500px;
 }

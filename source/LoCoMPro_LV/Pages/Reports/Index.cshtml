@@ -27,7 +27,9 @@
             @foreach (var reports in Model.recordStoreReports)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => reports.Record.NameProduct)</td>
+                    <td>
+                        <a class="election" asp-page="./Details" asp-route-NameGenerator="@reports.Record.NameGenerator" asp-route-RecordDate="@reports.Record.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => reports.Record.NameProduct)</a>
+                    </td>
                     <td>@Html.DisplayFor(modelItem => reports.Record.RecordDate)</td>
                     <td>@Html.DisplayFor(modelItem => reports.Record.NameGenerator)</td>
                     <td>@Html.DisplayFor(modelItem => reports.Reports[0].Comment)</td>
