@@ -1,62 +1,49 @@
 ﻿@page
-@model LoCoMPro_LV.Pages.Reports.IndexModel
+@model LoCoMPro_LV.Pages.Records.MyRecordsModel
 @using Microsoft.AspNetCore.Authorization
-@using LoCoMPro_LV.Models
 @{
-    ViewData["Title"] = "Consulta";
+    ViewData["Title"] = "Mis Registros";
 }
 @attribute [Authorize]
 <div class="container container-search index align-items-center">
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
-            <h1 class="title_add">Reportes</h1>
+            <h1 class="title_add">Mis Aportes</h1>
         </div>
     </div>
-    <table class="table-reports table table-striped" id="miTabla">
+    <table class="table table-striped" id="miTabla">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameProduct)</th>
-                <th class="date" id="dateColumn">
-                    <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.RecordDate)</a>
+                <th>@Html.DisplayNameFor(model => model.Records[0].NameProduct)</th>
+                <th class="precio" id="priceColumn">
+                    <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Records[0].Price)</a>
+                    <span class="arrow" id="priceArrow"></span>
                 </th>
-                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameGenerator)</th>
-                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Reports[0].Comment)</th>
-                <th>Valoración</th>
-                <th>
-                    <div class="table-item report">
-                        Cantidad de reportes
-                    </div>
+                <th>@Html.DisplayNameFor(model => model.Records[0].NameStore)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].Store.NameProvince)</th>
+                <th>@Html.DisplayNameFor(model => model.Records[0].Store.NameCanton)</th>
+                <th class="date" id="dateColumn">
+                    <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Records[0].RecordDate)</a>
+                    <span class="arrow" id="dateArrow"></span>
                 </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var reports in Model.recordStoreReports)
+            @foreach (var record in Model.Records)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => reports.Record.NameProduct)</td>
+                    <td>@Html.DisplayFor(modelItem => record.NameProduct)</td>
+                    <td>
+                        <div class="table-item precio">
+                            ₡@Html.DisplayFor(modelItem => record.Price)
+                        </div>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameStore)</td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameProvince)</td>
+                    <td>@Html.DisplayFor(modelItem => record.Store.NameCanton)</td>
                     <td>
                         <div class="table-item fecha">
-                            @Html.DisplayFor(modelItem => reports.Record.RecordDate)
-                        </div>
-                    </td>
-                    <td>@Html.DisplayFor(modelItem => reports.Record.NameGenerator)</td>
-                    <td>@Html.DisplayFor(modelItem => reports.Reports[0].Comment)</td>
-                    <td>
-                        <div class="ratings-wrapper">
-                            <div class="ratings">
-                                @for (var starNumber = 5; starNumber >= 1; starNumber--)
-                                {
-                                    <span data-rating="@starNumber"
-                                    @(starNumber <= reports.recordValoration ? "data-clicked" : "")>
-                                        <span>★</span>
-                                    </span>
-                                }
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="table-item report">
-                            <span>@reports.recordValoration</span>
+                            @Html.DisplayFor(modelItem => record.RecordDate)
                         </div>
                     </td>
                 </tr>
@@ -64,7 +51,6 @@
         </tbody>
     </table>
 </div>
-
 
 <div id="pagination" class="pagination">
     <button id="previousPage" class="page-link">Anterior</button>
@@ -78,10 +64,11 @@
         var pagination = document.getElementById("pagination");
         var registrosPorPagina = 10;
         var currentPage = 1;
-        var sortOrderDate = "asc";
+        var sortOrderPrice = "asc";
+        var sortOrderDate = "desc";
         var currentSortColumn = null;
 
-        // Esta función se encarga de mostrar las filas de la tabla que deben estar visibles en la página actual.
+        // Esta función se encarga de mostrar las filas de la tabla que deben estar visibles en la página actual. 
         // Filtra las filas según la página actual y oculta las demás.
         function mostrarFilas() {
             var filas = tableBody.querySelectorAll("tr");
@@ -97,7 +84,32 @@
             });
         }
 
-        // Esta función se encarga de ordenar la tabla por la fecha de los registros en orden ascendente o descendente.
+        // Esta función se encarga de ordenar la tabla por el precio de los productos en orden ascendente o descendente. 
+        // Utiliza el valor de sortOrderPrice para determinar el orden y actualiza la tabla en consecuencia.
+        function ordenarTablaPorPrecio() {
+            var filas = Array.from(tableBody.querySelectorAll("tr"));
+
+            filas.sort(function (a, b) {
+                var valueA = a.querySelector(".precio").textContent.replace("₡", "").trim();
+                var valueB = b.querySelector(".precio").textContent.replace("₡", "").trim();
+
+                if (sortOrderPrice === "asc") {
+                    return parseFloat(valueA) - parseFloat(valueB);
+                } else {
+                    return parseFloat(valueB) - parseFloat(valueA);
+                }
+            });
+
+            filas.forEach(function (fila) {
+                tableBody.removeChild(fila);
+            });
+
+            filas.forEach(function (fila) {
+                tableBody.appendChild(fila);
+            });
+        }
+
+        // Esta función se encarga de ordenar la tabla por la fecha de los registros en orden ascendente o descendente. 
         // Utiliza el valor de sortOrderDate para determinar el orden y actualiza la tabla en consecuencia.
         function ordenarTablaPorFecha() {
             var filas = Array.from(tableBody.querySelectorAll("tr"));
@@ -122,7 +134,7 @@
             });
         }
 
-        // Genera la paginación en la parte inferior de la tabla. Calcula el número de páginas y muestra los botones de
+        // Genera la paginación en la parte inferior de la tabla. Calcula el número de páginas y muestra los botones de 
         // navegación para ir a páginas anteriores y siguientes. Además, muestra un número limitado de botones de página alrededor de la página actual.
         function generarPaginacion() {
             var filas = tableBody.querySelectorAll("tr");
@@ -180,19 +192,40 @@
             });
         }
 
-        var orderDateLink = document.getElementById("orderDate");
-        orderDateLink.addEventListener("click", function () {
-            if (sortOrderDate === "asc") {
-                sortOrderDate = "desc";
+        var orderPriceLink = document.getElementById("orderPrice");
+        orderPriceLink.addEventListener("click", function () {
+            if (sortOrderPrice === "asc") {
+                sortOrderPrice = "desc";
+                document.getElementById("priceArrow").innerHTML = " &#129095;";
+                document.getElementById("dateArrow").innerHTML = "";
             } else {
-                sortOrderDate = "asc";
+                sortOrderPrice = "asc";
+                document.getElementById("priceArrow").innerHTML = "&#129093;";
+                document.getElementById("dateArrow").innerHTML = "";
             }
-            currentSortColumn = "fecha";
-            ordenarTablaPorFecha();
+            currentSortColumn = "price";
+            ordenarTablaPorPrecio();
             mostrarFilas();
             generarPaginacion();
         });
 
+        var orderDateLink = document.getElementById("orderDate");
+        orderDateLink.addEventListener("click", function () {
+            if (sortOrderDate === "asc") {
+                sortOrderDate = "desc";
+                document.getElementById("dateArrow").innerHTML = " &#129095;";
+                document.getElementById("priceArrow").innerHTML = "";
+            } else {
+                sortOrderDate = "asc";
+                document.getElementById("dateArrow").innerHTML = " &#129093;";
+                document.getElementById("priceArrow").innerHTML = "";
+            }
+            currentSortColumn = "date";
+            ordenarTablaPorFecha();
+            mostrarFilas();
+            generarPaginacion();
+        });
+        ordenarTablaPorFecha();
         mostrarFilas();
         generarPaginacion();
     });
