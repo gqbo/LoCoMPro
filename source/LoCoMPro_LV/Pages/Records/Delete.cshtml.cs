@@ -24,7 +24,7 @@ namespace LoCoMPro_LV.Pages.Records
 
         public async Task<IActionResult> OnGetAsync(string NameGenerator, DateTime RecordDate)
         {
-            if (NameGenerator == null || RecordDate == null || _context.Records == null)
+            if (NameGenerator == null || _context.Records == null)
             {
                 return NotFound();
             }
@@ -44,7 +44,7 @@ namespace LoCoMPro_LV.Pages.Records
 
         public async Task<IActionResult> OnPostAsync(string NameGenerator, DateTime RecordDate)
         {
-            if (NameGenerator == null || RecordDate == null || _context.Records == null)
+            if (NameGenerator == null  || _context.Records == null)
             {
                 return NotFound();
             }

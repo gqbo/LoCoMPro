@@ -1,64 +1,77 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Records.CreateModel
-
+@using LoCoMPro_LV.Models
+@using Microsoft.AspNetCore.Authorization
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Registro";
 }
+@attribute [Authorize]
+<div class="add_product">
+    <h1 class="title_add">Agregar Producto</h1>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input asp-for="Record.NameGenerator" class="form-control form-control-add" value="@User.Identity.Name" readonly hidden />
+                    <span asp-validation-for="Record.NameGenerator" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Record.NameProduct">Producto</label>
+                    <input asp-for="Record.NameProduct" id="Products" type="text" class="form-control form-control-add" aria-required="true" placeholder="Producto" />
+                    <span asp-validation-for="Record.NameProduct" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Record.Price"></label>
+                    <input asp-for="Record.Price" id="precioInput" class="form-control form-control-add" placeholder="Precio" onblur="asignarPrecioARecord()" />
+                    <span asp-validation-for="Record.Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SelectCategory">Categoría</label>
+                    <select id="Category" asp-for="SelectCategory" asp-items="Model.Categories" class="form-control form-control-add" aria-required="true" placeholder="Categoría">
+                        <option value=""> Categoría </option>
+                    </select>
+                </div>
 
-<h1>Create</h1>
-
-<h4>Record</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label asp-for="Record.Description" class="control-label"></label>
+                            <textarea asp-for="Record.Description" class="form-control form-control-add form-control form-control-add-lg" placeholder=" Añade una descripción" rows="8"></textarea>
+                            <span asp-validation-for="Record.Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Record.NameGenerator" class="control-label"></label>
-                <select asp-for="Record.NameGenerator" class ="form-control" asp-items="ViewBag.NameGenerator"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.RecordDate" class="control-label"></label>
-                <input asp-for="Record.RecordDate" class="form-control" />
-                <span asp-validation-for="Record.RecordDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.Description" class="control-label"></label>
-                <input asp-for="Record.Description" class="form-control" />
-                <span asp-validation-for="Record.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.Price" class="control-label"></label>
-                <input asp-for="Record.Price" class="form-control" />
-                <span asp-validation-for="Record.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameStore" class="control-label"></label>
-                <select asp-for="Record.NameStore" class ="form-control" asp-items="ViewBag.NameStore"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameProvince" class="control-label"></label>
-                <select asp-for="Record.NameProvince" class ="form-control" asp-items="ViewBag.NameProvince"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameCanton" class="control-label"></label>
-                <select asp-for="Record.NameCanton" class ="form-control" asp-items="ViewBag.NameCanton"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Record.NameProduct" class="control-label"></label>
-                <select asp-for="Record.NameProduct" class ="form-control" asp-items="ViewBag.NameProduct"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" />
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
+                </div>
             </div>
         </form>
-    </div>
+    </form>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
+@section scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        type = "text/javascript" >
+            $(function () {
+                var data = @Html.Raw(Json.Serialize(Model.Product));
+                $("#Products").autocomplete({
+                    source: data,
+                    minLength: 1
+                });
+            });
+    </script>
 }

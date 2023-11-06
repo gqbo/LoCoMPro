@@ -15,14 +15,17 @@
 
 <div class="container container-index index align-items-center">
     <div class="row">
-        <form method="get" asp-page="/Records/Index" onsubmit="return validateSearchForm()">
+        <form method="get" asp-page="/Records/Index">
             <div class=" buscar-form">
                 <div class="col">
                     <div class="form-group">
                         <label class="searchString" for="SearchString">Nombre del producto</label>
                         <div class="row d-flex justify-content-center align-items-center">
                             <div class="col-10">
-                                <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                <div class="input-group mb-3 loupe-text">
+                                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                    <input class=" loupe-button btn btn-light" id="searchButton" type="submit" value="Buscar">
+                                </div>
                             </div>
                             <div class="col-2">
                                 <input type="button" value="Opciones avanzadas" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,8 +46,17 @@
                         <div class="col-md-4">
                             <div class="form-group_advanced">
                                 <label for="Canton">Cantón</label>
-                                <select id="Canton" name="SearchCanton" asp-items="Model.Cantons" class="form-control_advanced form-control">
+                                <select id="Canton" asp-for="SearchCanton" class="form-control_advanced form-control">
                                     <option value="">Todos</option>
+                                    @foreach (var province in Model.Cantons.Keys)
+                                    {
+                                        <optgroup label="@province">
+                                            @foreach (var canton in Model.Cantons[province])
+                                            {
+                                                <option value="@canton">@canton</option>
+                                            }
+                                        </optgroup>
+                                    }
                                 </select>
                             </div>
                         </div>
@@ -56,13 +68,6 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <div class="form-group">
-                    <div>
-                        <input class="search_button btn btn-primary" type="submit" value="Buscar" disabled id="searchButton" />
                     </div>
                 </div>
             </div>
@@ -91,27 +96,16 @@
     document.addEventListener("DOMContentLoaded", function () {
         var provinceDropdown = document.getElementById("Province");
         var cantonDropdown = document.getElementById("Canton");
-
-        var cantonsByProvince = {
-            "San José": ["San José", "Escazú", "Desamparados", "Puriscal", "Tarrazú", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vásquez de Coronado", "Acosta", "Tibás", "Moravia", "Montes de Oca", "Turrubares", "Dota", "Curridabat", "Pérez Zeledón", "León Cortés"],
-            "Alajuela": ["San Carlos", "Upala", "Los Chiles", "San Ramón", "Guatuso", "Alajuela", "Rio Cuarto", "Zarcero", "Orotina", "Grecia", "Atenas", "Naranjo", "San Mateo", "Sarchí", "Poás", "Palmares"],
-            "Heredia": ["Heredia", "Barva", "Santo Domingo", "Santa Bárbara", "San Rafael", "San Isidro", "Belén", "Flores", "San Pablo", "Sarapiquí"],
-            "Cartago": ["Cartago", "Paraíso", "La Unión", "Jiménez", "Turrialba", "Alvarado", "Oreamuno", "El Guarco"],
-            "Puntarenas": ["Puntarenas", "Esparza", "Buenos Aires", "Montes de Oro", "Osa", "Quepos", "Golfito", "Coto Brus", "Parrita", "Corredores", "Garabito", "Puerto Jiménez", "Monte Verde"],
-            "Guanacaste": ["Liberia", "Nicoya", "Santa Cruz", "Bagaces", "Carrillo", "Cañas", "Abangares", "Tilarán", "Nandayure", "La Cruz", "Hojancha"],
-            "Limón": ["Limón", "Pococí", "Siquirres", "Talamanca", "Matina", "Guácimo"]
-        };
+        var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
 
         function actualizarDropdownCantones() {
             var selectedProvince = provinceDropdown.value;
             cantonDropdown.innerHTML = '';
-
             var defaultOption = document.createElement("option");
             defaultOption.value = "";
             defaultOption.text = "Todos";
             cantonDropdown.appendChild(defaultOption);
-
-            if (selectedProvince && cantonsByProvince[selectedProvince]) {
+            if (selectedProvince in cantonsByProvince) {
                 cantonsByProvince[selectedProvince].forEach(function (canton) {
                     var option = document.createElement("option");
                     option.value = canton;
@@ -122,7 +116,42 @@
         }
 
         provinceDropdown.addEventListener("change", actualizarDropdownCantones);
-
         actualizarDropdownCantones();
     });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var advancedSearch = document.getElementById("advancedSearch");
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var categoryDropdown = document.getElementById("Category");
+
+        var isProvinceSelected = provinceDropdown.value !== "";
+        var isCantonSelected = cantonDropdown.value !== "";
+        var isCategorySelected = categoryDropdown.value !== "";
+
+        if (isProvinceSelected || isCantonSelected || isCategorySelected) {
+            advancedSearch.classList.add("show");
+        } else {
+            advancedSearch.classList.remove("show");
+        }
+    });
+</script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("searchButton");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
 </script>
