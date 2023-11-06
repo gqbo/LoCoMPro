@@ -91,6 +91,7 @@ namespace LoCoMPro_LV.Pages.Records
             var orderedGroupsQuery = ApplySorting(orderedRecordsQuery, sortOrder);
             var totalCount = await orderedGroupsQuery.CountAsync();
             Record = await orderedGroupsQuery
+                .Where(group => group.Any(record => record.Record.Hide == false))
                 .Select(group => group.OrderByDescending(r => r.Record.RecordDate).FirstOrDefault())
                 .ToListAsync();
         }
