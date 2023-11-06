@@ -1,59 +1,54 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace  LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
 {
     /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
+    /// Clase que proporciona métodos para gestionar las páginas relacionadas con la cuenta del usuario.
     /// </summary>
     public static class ManageNavPages
     {
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Obtiene el nombre de la página "Index".
         /// </summary>
         public static string Index => "Index";
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Obtiene el nombre de la página "Email".
         /// </summary>
         public static string Email => "Email";
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Obtiene el nombre de la página "ChangePassword".
         /// </summary>
         public static string ChangePassword => "ChangePassword";
 
+        /// <summary>
+        /// Obtiene el nombre de la página "ChangeLocation".
+        /// </summary>
         public static string ChangeLocation => "ChangeLocation";
 
+        /// <summary>
+        /// Determina si la página "Index" está activa en función de la información proporcionada en viewContext
+        /// </summary>
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Determina si la página "Email" está activa en función de la información proporcionada en viewContext
         /// </summary>
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Determina si la página "ChangePassword" está activa en función de la información proporcionada en viewContext
         /// </summary>
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 
+        /// <summary>
+        /// Determina si la página "ChangeLocation" está activa en función de la información proporcionada en viewContext
+        /// </summary>
         public static string ChangeLocationNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangeLocation);
 
-
-
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Indica si una página especificada está activa.
         /// </summary>
         public static string PageNavClass(ViewContext viewContext, string page)
         {

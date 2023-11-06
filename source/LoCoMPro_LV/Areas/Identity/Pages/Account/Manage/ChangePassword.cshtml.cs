@@ -1,58 +1,51 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
 {
+    /// <summary>
+    /// Clase que maneja la lógica relacionada el gestionamiento de una cuenta
+    /// con respecto a la contraseña.
+    /// </summary>
     public class ChangePasswordModel : PageModel
     {
+        /// <summary>
+        /// Administra a los usuarios de tipo ApplicationUser.
+        /// </summary>
         private readonly UserManager<ApplicationUser> _userManager;
+        /// <summary>
+        /// Gestiona el refresh para el inicio de sesión de los usuarios.
+        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<ChangePasswordModel> _logger;
 
         public ChangePasswordModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            ILogger<ChangePasswordModel> logger)
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
         }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Modelo que se utiliza para recopilar los datos que el usuario ingresa a la hora de gestionar su cuenta.
         /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///  Se utiliza para informar al usuario del status de sus cambios.
         /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Clase que se utiliza para definir los datos que se recopilan a la hora de gestionar una cuenta.
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required(ErrorMessage = "La contraseña actual es obligatoria.")]
             [DataType(DataType.Password)]
             [Display(Name = "Contraseña actual")]
@@ -72,6 +65,9 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
             public string ConfirmPassword { get; set; }
         }
 
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud GET que prepara la página de gestionar una cuenta relacionado con la contraseña.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
             var AuthenticatedUserName = User.Identity.Name;
@@ -84,6 +80,10 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud POST que modifica los valores actuales de un usuario con 
+        /// los valores ingresados en el formulario.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -110,7 +110,6 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
 
             await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
-            _logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Se ha actualizado la contraseña";
 
             return RedirectToPage();

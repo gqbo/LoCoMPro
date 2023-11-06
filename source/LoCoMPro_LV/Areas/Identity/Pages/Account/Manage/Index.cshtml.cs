@@ -1,11 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +6,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
 {
+    /// <summary>
+    /// Clase que maneja la lógica relacionada el gestionamiento de una cuenta
+    /// con respecto al nombre y el apellido
+    /// </summary>
     public class IndexModel : PageModel
     {
+        /// <summary>
+        /// Administra a los usuarios de tipo ApplicationUser.
+        /// </summary>
         private readonly UserManager<ApplicationUser> _userManager;
+        /// <summary>
+        /// Gestiona el refresh para el inicio de sesión de los usuarios.
+        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager;
 
         public IndexModel(
@@ -27,28 +30,24 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
         }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///  Almacena el nombre de usuario del usuario que desea gestionar su cuenta.
         /// </summary>
         public string Username { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///  Se utiliza para informar al usuario del status de sus cambios.
         /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Modelo que se utiliza para recopilar los datos que el usuario ingresa a la hora de gestionar su cuenta.
         /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        /// Clase que se utiliza para definir los datos que se recopilan a la hora de gestionar una cuenta.
         /// </summary>
         public class InputModel
         {
@@ -65,6 +64,10 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
             public string LastName { get; set; }
         }
 
+        /// <summary>
+        /// Método utilizado para cargar en el InputModel los datos actuales de un usuario.
+        /// </summary>
+        /// <param name="user">Usuario actual que desea gestionar su cuenta</param>
         private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
@@ -80,6 +83,10 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
             };
         }
 
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud GET que prepara la página de gestionar una cuenta relacionado con la información personal
+        /// del perfil.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
             var AuthenticatedUserName = User.Identity.Name;
@@ -93,6 +100,10 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
+        /// <summary>
+        /// Método invocado cuando se realiza una solicitud POST que modifica los valores actuales de un usuario con 
+        /// los valores ingresados en el formulario.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             var AuthenticatedUserName = User.Identity.Name;
