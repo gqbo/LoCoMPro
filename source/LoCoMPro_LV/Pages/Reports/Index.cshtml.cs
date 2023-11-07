@@ -47,7 +47,7 @@ namespace LoCoMPro_LV.Pages.Reports
 
             SetAverageRatings(currentReports);
 
-            SetCountReports(currentReports);
+            SetCountActiveReports(currentReports);
 
             recordStoreReports = GroupRecords(currentReports);
         }
@@ -61,6 +61,7 @@ namespace LoCoMPro_LV.Pages.Reports
             var recordsQuery = from record in _context.Records
                                join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                equals new { store.NameStore, store.Latitude, store.Longitude }
+                               where record.Hide == false
                                select new RecordStoreReportModel
                                {
                                    Record = record,
@@ -92,7 +93,8 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var new_reports = from reports in _context.Reports
                               where reports.NameGenerator == nameGenerator &&
-                                    reports.RecordDate == recordDate
+                                    reports.RecordDate == recordDate &&
+                                    reports.State == 0
                               select reports;
 
             return await new_reports.ToListAsync();
@@ -106,8 +108,8 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var groupedRecordsQuery = from record in currentReports
                                       group record by new
-                                      { record.Record.NameProduct, record.Record.NameStore, record.Record.Latitude, record.Record.Longitude } into recordGroup
-                                      orderby recordGroup.Key.NameProduct descending
+                                      { record.Record.NameGenerator, record.Record.RecordDate, record.Record.NameStore, record.Record.Latitude, record.Record.Longitude } into recordGroup
+                                      orderby recordGroup.Key.RecordDate descending
                                       select recordGroup;
 
             return groupedRecordsQuery
@@ -167,7 +169,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// una función escalar creada en la base de datos.
         /// <param name="currentReports">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
         /// </summary>
-        private void SetCountReports(List<RecordStoreReportModel> currentReports)
+        private void SetCountActiveReports(List<RecordStoreReportModel> currentReports)
         {
             foreach (var recordStoreModel in currentReports)
             {

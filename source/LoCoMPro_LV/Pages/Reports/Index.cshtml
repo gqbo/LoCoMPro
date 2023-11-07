@@ -21,7 +21,7 @@
                     <span class="arrow" id="dateArrow"></span>
                 </th>
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameGenerator)</th>
-                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Reports[0].Comment)</th>
+                <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Reports[0].Comment) del registro</th>
                 <th>Valoración</th>
                 <th>
                     <div class="table-item report">
@@ -34,14 +34,16 @@
             @foreach (var reports in Model.recordStoreReports)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => reports.Record.NameProduct)</td>
+                    <td>
+                        <a class="election" asp-page="./Details" asp-route-NameGenerator="@reports.Record.NameGenerator" asp-route-RecordDate="@reports.Record.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => reports.Record.NameProduct)</a>
+                    </td>
                     <td>
                         <div class="table-item fecha">
                             @Html.DisplayFor(modelItem => reports.Record.RecordDate)
                         </div>
                     </td>
                     <td>@Html.DisplayFor(modelItem => reports.Record.NameGenerator)</td>
-                    <td>@Html.DisplayFor(modelItem => reports.Reports[0].Comment)</td>
+                    <td>@Html.DisplayFor(modelItem => reports.Record.Description)</td>
                     <td>
                         <div class="ratings-wrapper">
                             <div class="ratings">

@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -48,16 +44,6 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         /// </summary>
         private readonly LoComproContext _context;
 
-        /// <summary>
-        /// Constructor de la clase RegisterModel.
-        /// Se encarga de inicializar los atributos de la clase para el manejo de usuarios.
-        /// </summary>
-        /// <param name="userManager">Administra a los usuarios de tipo ApplicationUser.</param>
-        /// <param name="userStore">Interfaz que proporciona una abstracción para el almacenamiento de usuarios.</param>
-        /// <param name="signInManager">Gestiona el registro de los usuarios.</param>
-        /// <param name="logger">Registra información, advertencias y errores.</param>
-        /// <param name="emailSender">Interfaz que se utiliza para enviar correos electrónicos desde la aplicación.</param>
-        /// <param name="context">Contexto de la base de datos de la aplicación.</param>
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
@@ -187,8 +173,10 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, "Seleccione una ubicación correcta.");
                 return Page();
             }
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -202,42 +190,71 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
                 user.NameCanton = NameCanton;
                 user.NameProvince = NameProvince;
 
-                await _userStore.SetUserNameAsync(user, user.UserName, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await RegisterUserAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    GeneratorUser generatorUser = new GeneratorUser { UserName = user.UserName, ApplicationUser = user };
-                    _context.GeneratorUsers.Add(generatorUser);
-                    await _context.SaveChangesAsync();
-                    return LocalRedirect(returnUrl);
+                    return await HandleSuccessfulRegistrationAsync(user, returnUrl);
+                }
 
-                }
-                foreach (var error in result.Errors)
-                {
-                    if (error.Code == "PasswordRequiresDigit")
-                    {
-                        ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un número.");
-                    }
-                    else if (error.Code == "PasswordTooShort")
-                    {
-                        ModelState.AddModelError(string.Empty, "La contraseña debe tener una longitud mínima de 6 caracteres.");
-                    }
-                    else if (error.Code == "PasswordRequiresUniqueChars")
-                    {
-                        ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un carácter único.");
-                    }
-                    else if (!Input.Password.Any(char.IsUpper))
-                    {
-                        ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un carácter en mayúscula.");
-                    }
-                }
+                HandlePasswordErrors(result);
             }
 
             return Page();
+        }
+
+
+        /// <summary>
+        /// Método invocado para registrar el nombre de usuario y correo electrónico de un usuario, además crea un nuevo usuario.
+        /// </summary>
+        /// <param name="user">Usuario utilizado para agregarle información como UserName y Email</param>
+        /// <param name="password">Contraseña utilizada para crear un nuevo usuario</param>
+        private async Task<IdentityResult> RegisterUserAsync(ApplicationUser user, string password)
+        {
+            await _userStore.SetUserNameAsync(user, user.UserName, CancellationToken.None);
+            await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
+
+            return await _userManager.CreateAsync(user, password);
+        }
+
+        /// <summary>
+        /// Método utilizado para manejar un registro de un usuario exitoso.
+        /// <param name="user">Usuario utilizado para agregarle información como UserName y Email</param>
+        /// <param name="returnUrl">URL al cuál se va a redirigir después de registrar un usuario</param>
+        private async Task<IActionResult> HandleSuccessfulRegistrationAsync(ApplicationUser user, string returnUrl)
+        {
+            _logger.LogInformation("User created a new account with password.");
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            GeneratorUser generatorUser = new GeneratorUser { UserName = user.UserName, ApplicationUser = user };
+            _context.GeneratorUsers.Add(generatorUser);
+            await _context.SaveChangesAsync();
+            return LocalRedirect(returnUrl);
+        }
+
+        /// <summary>
+        /// Método utilizado para manejar los errores relacionados con la contraseña.
+        /// <param name="result">Resultado del registro de un usuario para identificar errores relacionados con la contraseña</param>
+        private void HandlePasswordErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                if (error.Code == "PasswordRequiresDigit")
+                {
+                    ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un número.");
+                }
+                else if (error.Code == "PasswordTooShort")
+                {
+                    ModelState.AddModelError(string.Empty, "La contraseña debe tener una longitud mínima de 6 caracteres.");
+                }
+                else if (error.Code == "PasswordRequiresUniqueChars")
+                {
+                    ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un carácter único.");
+                }
+                else if (!Input.Password.Any(char.IsUpper))
+                {
+                    ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un carácter en mayúscula.");
+                }
+            }
         }
 
         /// <summary>

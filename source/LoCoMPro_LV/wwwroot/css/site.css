@@ -41,6 +41,10 @@ body {
     color: #FFF !important;
 }
 
+.nav-link-manage {
+    color: Black !important;
+}
+
 .nav-link {
     font-family: 'Roboto' !important;
     font-size: 20px !important;
@@ -313,33 +317,33 @@ td {
 }
 
 .table-reports th:nth-child(1), .table-reports td:nth-child(1) {
-    width: 18%;
-    padding: 10px;
+    width: 18% !important;
+    padding: 10px !important;
 }
 
 .table-reports th:nth-child(2), .table-reports td:nth-child(2) {
-    width: 15%;
-    padding: 10px;
+    width: 15% !important;
+    padding: 10px !important;
 }
 
 .table-reports th:nth-child(3), .table-reports td:nth-child(3) {
-    width: 17%;
-    padding: 10px;
+    width: 17% !important;
+    padding: 10px !important;
 }
 
 .table-reports th:nth-child(4), .table-reports td:nth-child(4) {
-    width: 26%;
-    padding: 10px;
+    width: 26% !important;
+    padding: 10px !important;
 }
 
 .table-reports th:nth-child(5), .table-reports td:nth-child(5) {
-    width: 5%;
-    padding: 10px;
+    width: 5% !important;
+    padding: 10px !important;
 }
 
 .table-reports th:nth-child(6), .table-reports td:nth-child(6) {
-    width: 17%;
-    padding: 10px;
+    width: 17% !important;
+    padding: 10px !important;
 }
 
 table {
@@ -360,7 +364,6 @@ table {
 
 .advanced_search {
     padding: 11px !important;
-    
     display: flex !important;
     width: 100%;
     height: 48px;
@@ -417,6 +420,17 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
+    color: white;
+}
+
+.add_reject {
+    border-radius: 25px !important;
+    border: 6px solid #125270 !important;
+    background: #276E90 !important;
+    width: 140px !important;
+    height: 70px !important;
+    margin: 20px;
+    color: white;
 }
 
 .add_cancel {
@@ -433,6 +447,14 @@ table {
     font-weight: 800;
     font-family: Roboto;
     line-height: 24px;
+}
+
+.title_manage {
+    font-weight: 800;
+    font-family: Roboto;
+    line-height: 24px;
+    margin: 25px;
+    color: white
 }
 
 .map {
@@ -461,4 +483,29 @@ table {
 
 .marker-info {
     display: none;
+}
+
+.report-item {
+    margin: 20px;
+}
+
+.carousel {
+    max-width: 800px;
+}
+
+.carousel-item {
+    height: 300px;
+}
+
+.carousel-item .container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.report-comment {
+    min-width: 500px;
 }
