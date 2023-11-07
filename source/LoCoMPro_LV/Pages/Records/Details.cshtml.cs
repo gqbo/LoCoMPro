@@ -62,7 +62,7 @@ namespace LoCoMPro_LV.Pages.Records
             if (FirstRecord != null)
             {
                 var allRecords = GetCombinedRecordsAndStores(FirstRecord).ToList();
-                List<RecordStoreModel> currentRecords = allRecords.ToList();
+                List<RecordStoreModel> currentRecords = allRecords.Where(record => !record.Record.Hide).ToList();
                 SetAverageRatings(currentRecords);
                 Records = currentRecords;
             }
