@@ -2,29 +2,34 @@
     display: inline-block;
 }
 
+.ratings-wrapper-report {
+    display: inline-block;
+    margin-left: 10px;
+}
+
 .ratings {
     display: flex;
     flex-direction: row-reverse;
 }
 
-    .ratings span {
-        cursor: pointer;
-        transition: color .2s;
-        font-size: 20px;
-    }
+.ratings span {
+    cursor: pointer;
+    transition: color .2s;
+    font-size: 23px;
+}
 
-        .ratings span:hover {
-            color: orange;
-        }
+.ratings span:hover {
+    color: orange;
+}
 
-            .ratings span:hover ~ span {
-                color: orange;
-            }
+.ratings span:hover ~ span {
+    color: orange;
+}
 
-        .ratings span[data-clicked] {
-            color: orange;
-        }
+.ratings span[data-clicked] {
+    color: orange;
+}
 
-            .ratings span[data-clicked] ~ span {
-                color: orange;
-            }
+.ratings span[data-clicked] ~ span {
+    color: orange;
+}

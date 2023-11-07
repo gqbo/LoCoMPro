@@ -47,7 +47,7 @@ namespace LoCoMPro_LV.Pages.Reports
 
             SetAverageRatings(currentReports);
 
-            SetCountReports(currentReports);
+            SetCountActiveReports(currentReports);
 
             recordStoreReports = GroupRecords(currentReports);
         }
@@ -61,6 +61,7 @@ namespace LoCoMPro_LV.Pages.Reports
             var recordsQuery = from record in _context.Records
                                join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                equals new { store.NameStore, store.Latitude, store.Longitude }
+                               where record.Hide == false
                                select new RecordStoreReportModel
                                {
                                    Record = record,
@@ -92,7 +93,8 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var new_reports = from reports in _context.Reports
                               where reports.NameGenerator == nameGenerator &&
-                                    reports.RecordDate == recordDate
+                                    reports.RecordDate == recordDate &&
+                                    reports.State == 0
                               select reports;
 
             return await new_reports.ToListAsync();
@@ -106,8 +108,8 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var groupedRecordsQuery = from record in currentReports
                                       group record by new
-                                      { record.Record.NameProduct, record.Record.NameStore, record.Record.Latitude, record.Record.Longitude } into recordGroup
-                                      orderby recordGroup.Key.NameProduct descending
+                                      { record.Record.NameGenerator, record.Record.RecordDate, record.Record.NameStore, record.Record.Latitude, record.Record.Longitude } into recordGroup
+                                      orderby recordGroup.Key.RecordDate descending
                                       select recordGroup;
 
             return groupedRecordsQuery
@@ -153,10 +155,10 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <param name="nameGenerator">Nombre del generador de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
         /// <param name="recordDate">Fecha de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
         /// </summary>
-        private int GetCountReports(string nameGenerator, DateTime recordDate)
+        private int GetCountActiveReports(string nameGenerator, DateTime recordDate)
         {
             string connectionString = _databaseUtils.GetConnectionString();
-            string sqlQuery = "SELECT dbo.GetCountReports(@NameGenerator, @RecordDate)";
+            string sqlQuery = "SELECT dbo.GetCountActiveReports(@NameGenerator, @RecordDate)";
             SqlParameter[] parameters = BuildSqlParameterArray(nameGenerator, recordDate);
             int countReports = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
             return countReports;
@@ -167,11 +169,11 @@ namespace LoCoMPro_LV.Pages.Reports
         /// una función escalar creada en la base de datos.
         /// <param name="currentReports">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
         /// </summary>
-        private void SetCountReports(List<RecordStoreReportModel> currentReports)
+        private void SetCountActiveReports(List<RecordStoreReportModel> currentReports)
         {
             foreach (var recordStoreModel in currentReports)
             {
-                int countReports = GetCountReports(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
+                int countReports = GetCountActiveReports(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
                 recordStoreModel.recordValoration = countReports;
             }
         }

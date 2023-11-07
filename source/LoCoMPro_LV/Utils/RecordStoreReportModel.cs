@@ -9,6 +9,6 @@ namespace LoCoMPro_LV.Pages.Reports
         public IList<Report> Reports { get; set;}
         public int recordValoration { get; set; }
         public int generatorValoration { get; set; }
-        public int reporterValoration { get; set; }
+        public IList<int> reporterValorations { get; set; }
     }
 }
