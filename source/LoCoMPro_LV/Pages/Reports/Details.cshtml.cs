@@ -166,6 +166,16 @@ namespace LoCoMPro_LV.Pages.Reports
 
             await _context.SaveChangesAsync();
 
+            await UpdateReportsAndHide(entities);
+            return RedirectToPage("./Index");
+        }
+
+        /// <summary>
+        /// Este método se encarga de actualizar el campo "Hide" en la entidad "Record" basado en el campo "State" de las entidades "Report".
+        /// </summary>
+        /// <param name="entities">La lista de entidades de tipo "Report" que se utilizan para determinar el valor de "Hide"</param>
+        private async Task UpdateReportsAndHide(List<Report> entities)
+        {
             // Actualiza el campo Hide en la entidad Record si State es 1
             var recordsToUpdate = await _context.Records
                 .Where(r => r.NameGenerator == NameGenerator && r.RecordDate == RecordDate)
@@ -186,8 +196,7 @@ namespace LoCoMPro_LV.Pages.Reports
                 }
                 await _context.SaveChangesAsync();
             }
-
-            return RedirectToPage("./Index");
         }
+
     }
 }
