@@ -12,7 +12,7 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
 [TestFixture]
-public class PruebaTest
+public class FuntionaltestreportsTest
 {
     private IWebDriver driver;
     public IDictionary<string, object> vars { get; private set; }
@@ -30,17 +30,23 @@ public class PruebaTest
         driver.Quit();
     }
     [Test]
-    public void prueba()
+    public void funtionaltestreports()
     {
         driver.Navigate().GoToUrl("http://localhost:5064/");
-        driver.Manage().Window.Size = new System.Drawing.Size(796, 824);
+        driver.Manage().Window.Size = new System.Drawing.Size(814, 824);
+        driver.FindElement(By.LinkText("Iniciar Sesión")).Click();
+        driver.FindElement(By.Id("Input_UserName")).Click();
+        driver.FindElement(By.Id("Input_UserName")).SendKeys("anne");
+        driver.FindElement(By.Id("Input_Password")).SendKeys("Anne1.");
+        driver.FindElement(By.CssSelector(".register_submit")).Click();
         driver.FindElement(By.Id("SearchString")).Click();
-        driver.FindElement(By.Id("SearchString")).SendKeys("a");
+        driver.FindElement(By.Id("SearchString")).SendKeys("Pan");
         driver.FindElement(By.Id("searchButton")).Click();
-        driver.FindElement(By.LinkText("Colgate Pasta Total 12 Clean Mint 75ml")).Click();
-        driver.FindElement(By.CssSelector("tr:nth-child(1) img")).Click();
+        driver.FindElement(By.CssSelector("tr:nth-child(2) .election")).Click();
+        driver.FindElement(By.CssSelector("img")).Click();
         driver.FindElement(By.Id("Report_Comment")).Click();
-        driver.FindElement(By.Id("Report_Comment")).SendKeys("El precio no es correcto");
-        driver.FindElement(By.CssSelector(".add_confirm")).Click();
+        driver.FindElement(By.Id("Report_Comment")).SendKeys("El pantalon esta mas caro");
+        driver.FindElement(By.CssSelector(".add_confirm"));
+        driver.FindElement(By.LinkText("Ver reportes")).Click();
     }
 }
