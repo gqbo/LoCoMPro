@@ -143,27 +143,60 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <param name="reportDate">La fecha en la que se realizo el reporte</param>
         public async Task<IActionResult> OnPostAsync(string action, string nameReporter, DateTime reportDate)
         {
-            var entity = await _context.Reports.FirstOrDefaultAsync(e => e.NameGenerator == NameGenerator &&
-                                                                    e.ReportDate == reportDate &&
-                                                                    e.RecordDate == RecordDate &&
-                                                                    e.NameReporter == nameReporter);
+            var entities = await _context.Reports
+                .Where(e => e.NameGenerator == NameGenerator && e.ReportDate == reportDate && e.RecordDate == RecordDate)
+                .ToListAsync();
 
-            if (entity == null)
+            if (entities == null || entities.Count == 0)
             {
                 return NotFound();
             }
 
-            if (action == "accept")
+            foreach (var entity in entities)
             {
-                entity.State = 1;
-            }
-            else if (action == "reject")
-            {
-                entity.State = 2;
+                if (action == "accept")
+                {
+                    entity.State = 1;
+                }
+                else if (action == "reject")
+                {
+                    entity.State = 2;
+                }
             }
 
             await _context.SaveChangesAsync();
+
+            await UpdateReportsAndHide(entities);
             return RedirectToPage("./Index");
         }
+
+        /// <summary>
+        /// Este método se encarga de actualizar el campo "Hide" en la entidad "Record" basado en el campo "State" de las entidades "Report".
+        /// </summary>
+        /// <param name="entities">La lista de entidades de tipo "Report" que se utilizan para determinar el valor de "Hide"</param>
+        private async Task UpdateReportsAndHide(List<Report> entities)
+        {
+            // Actualiza el campo Hide en la entidad Record si State es 1
+            var recordsToUpdate = await _context.Records
+                .Where(r => r.NameGenerator == NameGenerator && r.RecordDate == RecordDate)
+                .ToListAsync();
+
+            if (recordsToUpdate != null && recordsToUpdate.Count > 0)
+            {
+                foreach (var record in recordsToUpdate)
+                {
+                    if (entities.Any(e => e.State == 1))
+                    {
+                        record.Hide = true;
+                    }
+                    else
+                    {
+                        record.Hide = false;
+                    }
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }

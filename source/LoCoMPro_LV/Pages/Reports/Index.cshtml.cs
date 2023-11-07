@@ -195,4 +195,3 @@ namespace LoCoMPro_LV.Pages.Reports
     }
 }
 
-
