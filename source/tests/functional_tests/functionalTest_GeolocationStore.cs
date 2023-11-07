@@ -24,7 +24,6 @@ namespace functional_tests
         public void GeolocationFunctionalTest()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
-            driver.Manage().Window.Size = new System.Drawing.Size(974, 1032);
             driver.FindElement(By.LinkText("Iniciar Sesión")).Click();
             driver.FindElement(By.Id("Input_UserName")).SendKeys("yordi");
             driver.FindElement(By.Id("Input_Password")).SendKeys("Yordi1.");
