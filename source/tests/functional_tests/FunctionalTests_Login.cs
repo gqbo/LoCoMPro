@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace functional_tests
 {
 
-    public class Tests
+    public class FunctionalTest_Login
     {
         IWebDriver driver;
         [SetUp]
@@ -20,8 +20,9 @@ namespace functional_tests
             driver.Quit();
         }
 
+        // Test Funcional: Gabriel González Flores.
         [Test]
-        public void Login()
+        public void LoginFunctionalTest()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
             driver.FindElement(By.LinkText("Iniciar Sesión")).Click();

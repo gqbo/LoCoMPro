@@ -20,6 +20,8 @@ namespace functional_tests
         {
             driver.Quit();
         }
+
+        // Test Funcional: Yordi Robles Siles.
         [Test]
         public void GeolocationFunctionalTest()
         {

@@ -3,7 +3,7 @@ using OpenQA.Selenium.Chrome;
 
 namespace functional_tests
 {
-    public class SearchTests
+    public class FunctionalTest_Search
     {
         IWebDriver driver;
         [SetUp]
@@ -20,7 +20,7 @@ namespace functional_tests
 
         // Test Funcional: Sebastián Rodríguez Tencio.
         [Test]
-        public void Search()
+        public void SearchFunctionalTest()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
             driver.FindElement(By.Id("SearchString")).Click();

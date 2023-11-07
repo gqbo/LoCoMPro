@@ -3,7 +3,7 @@ using OpenQA.Selenium.Chrome;
 
 namespace functional_tests
 {
-    public class functionalTests_ReportDetails
+    public class FunctionalTest_ReportDetails
     {
         private IWebDriver driver;
         private IJavaScriptExecutor js;
@@ -18,8 +18,10 @@ namespace functional_tests
         {
             driver.Quit();
         }
+
+        // Test Funcional: Cristopher Hernández Calderón.
         [Test]
-        public void ReportDetailsTest()
+        public void ReportDetailsFunctionalTest()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
             driver.Manage().Window.Size = new System.Drawing.Size(974, 1032);

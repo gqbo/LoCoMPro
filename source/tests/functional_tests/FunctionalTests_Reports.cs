@@ -17,8 +17,10 @@ namespace functional_tests
         {
             driver.Quit();
         }
+
+        // Test Funcional: James Araya Rodríguez.
         [Test]
-        public void funtionalTestReports()
+        public void ReportsFunctionalTest()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
             driver.FindElement(By.LinkText("Iniciar Sesión")).Click();
