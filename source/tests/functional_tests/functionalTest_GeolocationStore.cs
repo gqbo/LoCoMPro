@@ -1,8 +1,9 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
+
 [TestFixture]
-public class PruebaTest
+public class FunctionalTest_GeolocationStore
 {
     private IWebDriver driver;
     public IDictionary<string, object> vars { get; private set; }
@@ -20,7 +21,7 @@ public class PruebaTest
         driver.Quit();
     }
     [Test]
-    public void prueba()
+    public void GeolocationFunctionalTest()
     {
         driver.Navigate().GoToUrl("http://localhost:5064/");
         driver.Manage().Window.Size = new System.Drawing.Size(974, 1032);
@@ -66,11 +67,7 @@ public class PruebaTest
         driver.FindElement(By.Id("Store")).SendKeys("Pan Suavecito");
         driver.FindElement(By.CssSelector(".add_confirm")).Click();
         string currentUrl = driver.Url;
-
-        // Define la URL de inicio.
         string expectedUrl = "http://localhost:5064/Records/Create?latitude=9.9281&longitude=-84.0907&nameStore=Pan%20Suavecito&nameProvince=San%20Jos%C3%A9&nameCanton=San%20Jos%C3%A9";
-
-        // Compara la URL actual con la URL de inicio usando Assert.
         Assert.That(currentUrl, Is.EqualTo(expectedUrl));
     }
 }
