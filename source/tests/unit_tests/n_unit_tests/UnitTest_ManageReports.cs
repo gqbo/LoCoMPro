@@ -8,7 +8,7 @@ using LoCoMPro_LV.Utils;
 using LoCoMPro_LV.Pages.Reports;
 using Microsoft.AspNetCore.Mvc;
 
-namespace nunit_tests
+namespace n_unit_tests
 {
     [TestFixture]
     public class UnitTest_ManageReports

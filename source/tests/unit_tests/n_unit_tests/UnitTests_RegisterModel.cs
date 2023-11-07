@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace nunit_tests
-{
+namespace n_unit_tests {
     [TestFixture]
     public class UnitTests_RegisterModel: TestUtils
     {
