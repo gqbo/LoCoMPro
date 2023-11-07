@@ -18,7 +18,7 @@ namespace functional_tests
             driver.Quit();
         }
 
-        // Test Funcional: Sebastián Rodríguez Tencio.
+        // Test Funcional: Sebastián Rodríguez Tencio. Sprint 2
         [Test]
         public void SearchFunctionalTest()
         {

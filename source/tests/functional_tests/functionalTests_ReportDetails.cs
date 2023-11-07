@@ -19,7 +19,7 @@ namespace functional_tests
             driver.Quit();
         }
 
-        // Test Funcional: Cristopher Hernández Calderón.
+        // Test Funcional: Cristopher Hernández Calderón. Sprint 2
         [Test]
         public void ReportDetailsFunctionalTest()
         {

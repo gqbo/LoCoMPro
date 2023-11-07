@@ -21,7 +21,7 @@ namespace functional_tests
             driver.Quit();
         }
 
-        // Test Funcional: Yordi Robles Siles.
+        // Test Funcional: Yordi Robles Siles. Sprint 2
         [Test]
         public void GeolocationFunctionalTest()
         {

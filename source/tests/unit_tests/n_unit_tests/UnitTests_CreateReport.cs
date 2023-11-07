@@ -13,7 +13,7 @@ namespace n_unit_tests
     [TestFixture]
     public class UnitTests_CreateReport
     {
-        // Test by Cristopher Hernandez Calderon - C13632
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 2
         [Test]
         public async Task OnPostAsync_ValidFormat()
         {
@@ -47,7 +47,7 @@ namespace n_unit_tests
             Assert.IsInstanceOf<PageResult>(result);
         }
 
-        // Test by Cristopher Hernandez Calderon - C13632
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 2
         [Test]
         public async Task OnPostAsync_InvalidFormat()
         {

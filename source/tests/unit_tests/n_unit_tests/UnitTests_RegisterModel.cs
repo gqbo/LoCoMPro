@@ -8,7 +8,7 @@ namespace n_unit_tests {
     [TestFixture]
     public class UnitTests_RegisterModel: TestUtils
     {
-        // Test by Gabriel González Flores - C03376
+        // Test by Gabriel González Flores - C03376. Sprint 2
         [Test]
         public void OnPostAsync_InvalidLocation_ReturnsViewResult()
         {
@@ -24,7 +24,7 @@ namespace n_unit_tests {
             Assert.IsInstanceOf<PageResult>(result);
         }
 
-        // Test by Gabriel González Flores - C03376
+        // Test by Gabriel González Flores - C03376. Sprint 2
         [Test]
         public void HandlePasswordErrors_PasswordRequiresDigit()
         {
@@ -43,7 +43,7 @@ namespace n_unit_tests {
             Assert.IsTrue(model.ModelState[""].Errors.Any(error => error.ErrorMessage == "La contraseña debe contener al menos un número."));
         }
 
-        // Test by Gabriel González Flores - C03376
+        // Test by Gabriel González Flores - C03376. Sprint 2
         [Test]
         public void HandlePasswordErrors_PasswordTooShort()
         {
@@ -61,7 +61,7 @@ namespace n_unit_tests {
             Assert.IsTrue(model.ModelState[""].Errors.Any(error => error.ErrorMessage == "La contraseña debe tener una longitud mínima de 6 caracteres."));
         }
 
-        // Test by Gabriel González Flores - C03376
+        // Test by Gabriel González Flores - C03376. Sprint 2
         [Test]
         public void HandlePasswordErrors_PasswordRequiresUniqueChars()
         {
@@ -79,7 +79,7 @@ namespace n_unit_tests {
             Assert.IsTrue(model.ModelState[""].Errors.Any(error => error.ErrorMessage == "La contraseña debe contener al menos un carácter único."));
         }
 
-        // Test by Gabriel González Flores - C03376
+        // Test by Gabriel González Flores - C03376. Sprint 2
         [Test]
         public void HandlePasswordErrors_PasswordRequiresUpper()
         {
@@ -97,7 +97,7 @@ namespace n_unit_tests {
             Assert.IsTrue(model.ModelState[""].Errors.Any(error => error.ErrorMessage == "La contraseña debe contener al menos un carácter en mayúscula."));
         }
 
-        // Test by Gabriel González Flores - C03376
+        // Test by Gabriel González Flores - C03376. Sprint 2
         [Test]
         public void CreateUser_IsNotNull()
         {
@@ -111,7 +111,7 @@ namespace n_unit_tests {
             Assert.IsNotNull(user);
         }
 
-        // Test by Gabriel González Flores - C03376
+        // Test by Gabriel González Flores - C03376. Sprint 2
         [Test]
         public void CreateUser_IsInstanceOf()
         {

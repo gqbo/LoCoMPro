@@ -18,7 +18,7 @@ namespace functional_tests
             driver.Quit();
         }
 
-        // Test Funcional: James Araya Rodríguez.
+        // Test Funcional: James Araya Rodríguez. Sprint 2
         [Test]
         public void ReportsFunctionalTest()
         {

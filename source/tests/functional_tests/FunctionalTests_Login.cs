@@ -20,7 +20,7 @@ namespace functional_tests
             driver.Quit();
         }
 
-        // Test Funcional: Gabriel González Flores.
+        // Test Funcional: Gabriel González Flores. Sprint 2
         [Test]
         public void LoginFunctionalTest()
         {

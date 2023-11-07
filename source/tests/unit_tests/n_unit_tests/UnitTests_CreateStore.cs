@@ -9,7 +9,7 @@ namespace n_unit_tests
     [TestFixture]
     public class UnitTests_CreateStore : TestUtils
     {
-        // Test by Yordi Robles Siles - C06557
+        // Test by Yordi Robles Siles - C06557. Sprint 2
         [Test]
         public void OnPostAsyncInvalidLocationNameCanton()
         {
@@ -27,7 +27,7 @@ namespace n_unit_tests
             Assert.That(result, Is.InstanceOf<PageResult>());
         }
 
-        // Test by Yordi Robles Siles - C06557
+        // Test by Yordi Robles Siles - C06557. Sprint 2
         [Test]
         public void OnPostAsyncInvalidLocationNameProvince()
         {
@@ -45,7 +45,7 @@ namespace n_unit_tests
             Assert.That(result, Is.InstanceOf<PageResult>());
         }
 
-        // Test by Yordi Robles Siles - C06557
+        // Test by Yordi Robles Siles - C06557. Sprint 2
         [Test]
         public void OnPostAsyncInvalidLocationNameProvinceAndCanton()
         {
@@ -63,7 +63,7 @@ namespace n_unit_tests
             Assert.That(result, Is.InstanceOf<PageResult>());
         }
 
-        // Test by Yordi Robles Siles - C06557
+        // Test by Yordi Robles Siles - C06557. Sprint 2
         [Test]
         public void OnPostAsyncValidLocation()
         {
@@ -81,7 +81,7 @@ namespace n_unit_tests
             Assert.That(result, Is.InstanceOf<RedirectToPageResult>());
         }
 
-        // Test by Yordi Robles Siles - C06557
+        // Test by Yordi Robles Siles - C06557. Sprint 2
         [Test]
         public void  CalculateDistanceLessThan()
         {
@@ -93,7 +93,7 @@ namespace n_unit_tests
             Assert.That(distance <= 2000, Is.True);
         }
 
-        // Test by Yordi Robles Siles - C06557
+        // Test by Yordi Robles Siles - C06557. Sprint 2
         [Test]
         public void CalculateDistanceMoreThan()
         {
@@ -105,7 +105,7 @@ namespace n_unit_tests
             Assert.That(distance >= 2000, Is.True);
         }
 
-        // Test by Yordi Robles Siles - C06557
+        // Test by Yordi Robles Siles - C06557. Sprint 2
         [Test]
         public void DegreeToRadiansIncorrectValue()
         {

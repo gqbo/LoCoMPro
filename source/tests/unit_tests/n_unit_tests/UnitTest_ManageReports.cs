@@ -13,7 +13,7 @@ namespace n_unit_tests
     [TestFixture]
     public class UnitTest_ManageReports
     {
-        // Test by Cristopher Hernandez Calderon - C13632
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 2
         [Test]
         public async Task OnPostAsync_ValidFormat()
         {
@@ -47,7 +47,7 @@ namespace n_unit_tests
             Assert.That(redirectToPageResult.PageName, Is.EqualTo("./Index"));
         }
 
-        // Test by Cristopher Hernandez Calderon - C13632
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 2
         [Test]
         public async Task OnPostAsync_InvalidFormat()
         {
@@ -78,7 +78,7 @@ namespace n_unit_tests
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
 
-        // Test by Cristopher Hernandez Calderon - C13632
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 2
         [Test]
         public async Task OnPostAsync_ValidFormat_SetAccept()
         {
@@ -110,7 +110,7 @@ namespace n_unit_tests
             Assert.That(report.State, Is.EqualTo(1));
         }
 
-        // Test by Cristopher Hernandez Calderon - C13632
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 2
         [Test]
         public async Task OnPostAsync_InvalidForma_SetReject()
         {
@@ -142,7 +142,7 @@ namespace n_unit_tests
             Assert.That(report.State, Is.EqualTo(2));
         }
 
-        // Test by Cristopher Hernandez Calderon - C13632
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 2
         [Test]
         public async Task GetReportsForRecordAsync_ReportsFound_ReturnsReportsList()
         {
@@ -175,7 +175,7 @@ namespace n_unit_tests
             Assert.That(result.Count(), Is.EqualTo(2));
         }
 
-        // Test by Cristopher Hernandez Calderon - C13632
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 2
         [Test]
         public async Task GetReportsForRecordAsync_NoReportsFound_ReturnsEmptyList()
         {
