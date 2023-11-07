@@ -48,7 +48,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterModel> logger,
+            ILogger<RegisterModel> logger, 
             LoComproContext context)
         {
             _userManager = userManager;
@@ -206,7 +206,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         /// </summary>
         /// <param name="user">Usuario utilizado para agregarle información como UserName y Email</param>
         /// <param name="password">Contraseña utilizada para crear un nuevo usuario</param>
-        private async Task<IdentityResult> RegisterUserAsync(ApplicationUser user, string password)
+        public async Task<IdentityResult> RegisterUserAsync(ApplicationUser user, string password)
         {
             await _userStore.SetUserNameAsync(user, user.UserName, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
@@ -218,7 +218,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         /// Método utilizado para manejar un registro de un usuario exitoso.
         /// <param name="user">Usuario utilizado para agregarle información como UserName y Email</param>
         /// <param name="returnUrl">URL al cuál se va a redirigir después de registrar un usuario</param>
-        private async Task<IActionResult> HandleSuccessfulRegistrationAsync(ApplicationUser user, string returnUrl)
+        public async Task<IActionResult> HandleSuccessfulRegistrationAsync(ApplicationUser user, string returnUrl)
         {
             _logger.LogInformation("User created a new account with password.");
             await _signInManager.SignInAsync(user, isPersistent: false);
@@ -231,7 +231,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         /// <summary>
         /// Método utilizado para manejar los errores relacionados con la contraseña.
         /// <param name="result">Resultado del registro de un usuario para identificar errores relacionados con la contraseña</param>
-        private void HandlePasswordErrors(IdentityResult result)
+        public void HandlePasswordErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
             {
@@ -247,7 +247,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un carácter único.");
                 }
-                else if (!Input.Password.Any(char.IsUpper))
+                else if (error.Code == "PasswordRequiresUpper")
                 {
                     ModelState.AddModelError(string.Empty, "La contraseña debe contener al menos un carácter en mayúscula.");
                 }
@@ -257,7 +257,7 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         /// <summary>
         /// Método que crea y devuelve una instancia de ApplicationUser con los atributos necesarios para su creación.
         /// </summary>
-        private ApplicationUser CreateUser()
+        public ApplicationUser CreateUser()
         {
             try
             {
