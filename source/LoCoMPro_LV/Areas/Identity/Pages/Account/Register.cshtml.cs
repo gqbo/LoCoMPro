@@ -209,7 +209,6 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
         private async Task<IdentityResult> RegisterUserAsync(ApplicationUser user, string password)
         {
             await _userStore.SetUserNameAsync(user, user.UserName, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
 
             return await _userManager.CreateAsync(user, password);
         }
