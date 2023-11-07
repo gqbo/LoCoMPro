@@ -134,6 +134,7 @@ namespace LoCoMPro_LV.Pages.Records
             IQueryable<RecordStoreModel> orderedRecordsQuery = from record in _context.Records
                                                                join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                                                equals new { store.NameStore, store.Latitude, store.Longitude }
+                                                               where record.Hide == false
                                                                select new RecordStoreModel
                                                                {
                                                                    Record = record,
