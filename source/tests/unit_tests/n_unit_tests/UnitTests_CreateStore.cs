@@ -24,7 +24,24 @@ namespace n_unit_tests
             };
 
             var result = model.OnPostAsync();
+            Assert.That(result, Is.InstanceOf<PageResult>());
+        }
 
+        // Test by Yordi Robles Siles - C06557
+        [Test]
+        public void OnPostAsyncInvalidLocationNameProvince()
+        {
+            var model = ConfigurePageModel("createStore_page") as CreateStoreModel;
+            model.Store = new Store
+            {
+                NameStore = "Walmart",
+                NameCanton = "Goicoechea",
+                NameProvince = "N/A",
+                Latitude = 9.5032,
+                Longitude = -82.4084
+            };
+
+            var result = model.OnPostAsync();
             Assert.That(result, Is.InstanceOf<PageResult>());
         }
 
@@ -43,7 +60,6 @@ namespace n_unit_tests
             };
 
             var result = model.OnPostAsync();
-
             Assert.That(result, Is.InstanceOf<PageResult>());
         }
 
@@ -62,7 +78,6 @@ namespace n_unit_tests
             };
 
             var result = model.OnPostAsync();
-
             Assert.That(result, Is.InstanceOf<RedirectToPageResult>());
         }
 
