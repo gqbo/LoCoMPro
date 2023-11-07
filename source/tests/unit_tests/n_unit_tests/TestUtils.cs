@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using LoCoMPro_LV.Areas.Identity.Pages.Account;
+using LoCoMPro_LV.Pages.Stores;
+
+using Microsoft.Extensions.Logging;
+
 public class TestUtils
 {
     protected UserManager<ApplicationUser> UserManager { get; set; }
-
     public TestUtils()
     {
         var userStore = new Mock<IUserStore<ApplicationUser>>();
@@ -26,46 +28,48 @@ public class TestUtils
 
         var dbContext = new LoComproContext(options);
 
-        var mockLogger = new Mock<ILogger<RegisterModel>>();
+        var LoggerRegister = new Mock<ILogger<RegisterModel>>();
 
-        var mockUserStore = new Mock<IUserStore<ApplicationUser>>();
+        var UserStore = new Mock<IUserStore<ApplicationUser>>();
 
-        var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        var HttpContextAccessor = new Mock<IHttpContextAccessor>();
 
-        mockUserStore.Setup(s => s.FindByNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+        UserStore.Setup(s => s.FindByNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((string userName, CancellationToken cancellationToken) =>
             {
                 return new ApplicationUser { UserName = userName };
             });
 
-        var mockUserManager = new Mock<UserManager<ApplicationUser>>(mockUserStore.Object, null, null
+        var UserManager = new Mock<UserManager<ApplicationUser>>(UserStore.Object, null, null
             , null, null, null, null, null, null);
-        mockUserManager.Object.UserValidators.Add(new UserValidator<ApplicationUser>());
-        mockUserManager.Object.PasswordValidators.Add(new PasswordValidator<ApplicationUser>());
+        UserManager.Object.UserValidators.Add(new UserValidator<ApplicationUser>());
+        UserManager.Object.PasswordValidators.Add(new PasswordValidator<ApplicationUser>());
+        UserManager.Setup(u => u.SupportsUserEmail).Returns(true);
 
-        var mockUserClaimsPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        var UserClaimsPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>();
 
-        var mockSignInManager = new Mock<SignInManager<ApplicationUser>>(
-            mockUserManager.Object,
-            mockHttpContextAccessor.Object,
-            mockUserClaimsPrincipalFactory.Object, null, null, null, null
+        var SignInManager = new Mock<SignInManager<ApplicationUser>>(
+            UserManager.Object,
+            HttpContextAccessor.Object,
+            UserClaimsPrincipalFactory.Object, null, null, null, null
         );
 
-        return ConfigurePageModel(dbContext, mockUserManager, mockSignInManager
-            , mockUserStore, mockLogger, namePage);
+        return GetPageModel(dbContext, UserManager, SignInManager,
+          UserStore , LoggerRegister, namePage);
     }
 
-    protected PageModel ConfigurePageModel(LoComproContext dbContext
-        , Mock<UserManager<ApplicationUser>> mockUserManager
-        , Mock<SignInManager<ApplicationUser>> mockSignInManager
-        , Mock<IUserStore<ApplicationUser>> mockUserStore, Mock<ILogger<RegisterModel>> mockLogger
+    protected PageModel GetPageModel(LoComproContext dbContext
+        , Mock<UserManager<ApplicationUser>> UserManager
+        , Mock<SignInManager<ApplicationUser>> SignInManager
+        , Mock<IUserStore<ApplicationUser>> UserStore, Mock<ILogger<RegisterModel>> LoggerRegister
         , string namePage)
     {
         switch (namePage)
         {
             case "register_page":
-                return new RegisterModel(mockUserManager.Object, mockUserStore.Object, mockSignInManager.Object, mockLogger.Object, dbContext);
-
+                return new RegisterModel(UserManager.Object, UserStore.Object, SignInManager.Object, LoggerRegister.Object, dbContext);
+            case "createStore_page":
+                return new CreateStoreModel(dbContext);
             default:
                 return new LoCoMPro_LV.Pages.IndexModel(dbContext);
         }
