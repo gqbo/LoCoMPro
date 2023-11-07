@@ -88,7 +88,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// </summary>
         /// <param name="nameGenerator">Es el nombre del usuario que genero el registro al cual se le busca los reportes</param>
         /// <param name="recordDate">Es la fecha en la cual se genero el registro al cual se le busca los reportes</param>
-        private async Task<List<Report>> GetReportsForRecordAsync(string nameGenerator, DateTime recordDate)
+        public async Task<List<Report>> GetReportsForRecordAsync(string nameGenerator, DateTime recordDate)
         {
             var new_reports = from reports in _context.Reports
                               where reports.NameGenerator == nameGenerator &&
