@@ -58,6 +58,11 @@ namespace LoCoMPro_LV.Pages.Reports
                                                               equals new { store.NameStore, store.Latitude, store.Longitude }
                                    select new RecordStoreModel { Record = record, Store = store };
 
+            if (firstRecordQuery.Count() == 0)
+            {
+                return NotFound();
+            }
+
             Records = await firstRecordQuery.ToListAsync();
 
             return Page();

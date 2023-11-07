@@ -14,6 +14,8 @@ if (string.IsNullOrEmpty(connectionStringName))
     throw new InvalidOperationException("Connection string name not found in the configuration.");
 }
 
+builder.Services.AddDataProtection();
+
 builder.Services.AddDbContext<LoComproContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString(connectionStringName) ?? throw new InvalidOperationException($"Connection string '{connectionStringName}' not found.")));
 builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
