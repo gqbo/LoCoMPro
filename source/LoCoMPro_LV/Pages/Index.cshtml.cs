@@ -1,4 +1,5 @@
 ﻿using LoCoMPro_LV.Models;
+using LoCoMPro_LV.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +15,9 @@ namespace LoCoMPro_LV.Pages
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
 
-        /// <summary>
-        /// Constructor de la clase IndexModel.
-        /// </summary>
-        /// <param name="context">Contexto de la base de datos de LoCoMPro.</param>
-        public IndexModel(LoCoMPro_LV.Data.LoComproContext context)
+        public IndexModel(LoComproContext context)
         {
             _context = context;
         }
@@ -54,9 +51,9 @@ namespace LoCoMPro_LV.Pages
         public string SearchCanton { get; set; }
 
         /// <summary>
-        /// Lista de cantones para la selección.
+        /// Diccionario de cantones para la selección.
         /// </summary>
-        public SelectList Cantons { get; set; }
+        public Dictionary<string, List<string>> Cantons { get; set; }
 
         /// <summary>
         /// Categoría utilizada como filtro de búsqueda.
@@ -76,14 +73,22 @@ namespace LoCoMPro_LV.Pages
         public async Task OnGetAsync()
         {
             var provinces = await _context.Provinces.ToListAsync();
-            /*var cantons = await _context.Cantons.ToListAsync();*/
+            var cantons = await _context.Cantons.ToListAsync();
             var categories = await _context.Associated
                                     .Select(a => a.NameCategory)
                                     .Distinct()
                                     .ToListAsync();
 
             Provinces = new SelectList(provinces, "NameProvince", "NameProvince");
-            /*Cantons = new SelectList(cantons, "NameCanton", "NameCanton");*/
+            Cantons = new Dictionary<string, List<string>>();
+            foreach (var canton in cantons)
+            {
+                if (!Cantons.ContainsKey(canton.NameProvince))
+                {
+                    Cantons[canton.NameProvince] = new List<string>();
+                }
+                Cantons[canton.NameProvince].Add(canton.NameCanton);
+            }
             Categories = new SelectList(categories);
 
             var recordsQuery = from m in _context.Records
@@ -96,12 +101,12 @@ namespace LoCoMPro_LV.Pages
 
             if (!string.IsNullOrEmpty(SearchProvince))
             {
-                recordsQuery = recordsQuery.Where(s => s.NameProvince == SearchProvince);
+                recordsQuery = recordsQuery.Where(s => s.Store.NameProvince == SearchProvince);
             }
 
             if (!string.IsNullOrEmpty(SearchCanton))
             {
-                recordsQuery = recordsQuery.Where(s => s.NameCanton == SearchCanton);
+                recordsQuery = recordsQuery.Where(s => s.Store.NameCanton == SearchCanton);
             }
 
             if (!string.IsNullOrEmpty(SearchCategory))

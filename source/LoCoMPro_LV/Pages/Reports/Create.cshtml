@@ -1,0 +1,88 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Reports.CreateModel
+@using Microsoft.AspNetCore.Authorization
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@attribute [Authorize]
+
+<div class="container details-container">
+    <div class="row">
+        <div class="col d-flex justify-content-center align-items-center">
+            <h1 class="title_add-report">Información del registro</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center align-items-center">
+        <div class="card">
+            <div class="bg">
+                <div class="info_detail">
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col-10">
+                            <h2>
+                                @Html.DisplayFor(model => model.Records[0].Record.NameProduct)
+                            </h2>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end">
+                            <h4>
+                                ₡@Html.DisplayFor(model => model.Records[0].Record.Price)
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col">
+                            <h3>
+                                Usuario: @Html.DisplayFor(model => model.Records[0].Record.NameGenerator)
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col">
+                            <h6>
+                                Tienda: @Html.DisplayFor(model => model.Records[0].Record.NameStore)
+                                <br>
+                                Provincia: @Html.DisplayFor(model => model.Records[0].Store.NameProvince)
+                                <br>
+                                Cantón: @Html.DisplayFor(model => model.Records[0].Store.NameCanton)
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col">
+                            <h7>
+                                Descripción: @Html.DisplayFor(model => model.Records[0].Record.Description)
+                            </h7>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col d-flex justify-content-end">
+                            <h7>
+                                @Html.DisplayFor(model => model.Records[0].Record.RecordDate)
+                            </h7>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="blob"></div>
+        </div>
+    </div>
+    <form method="post" id="formRegistro">
+        <div class="row">
+            <div class="col d-flex justify-content-center align-items-center">
+                <h1 class="title_add-report">Razón del reporte</h1>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="form-group">
+                <textarea asp-for="Report.Comment" class="form-control form-control-add form-control form-control-add-lg" placeholder=" Añade una descripción" rows="8"></textarea>
+                <span asp-validation-for="Report.Comment" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col d-flex justify-content-center align-items-center">
+                <input type="submit" value="Reportar" id ="ReportButton" class="add_confirm btn btn-primary btn-sm" />
+            </div>
+        </div>
+    </form>
+</div>

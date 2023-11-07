@@ -23,6 +23,10 @@ namespace LoCoMPro_LV.Models
         [Display(Name = "Apellido")]
         public string LastName { get; set; }
 
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
+
         [StringLength(50, MinimumLength = 2)]
         public string NameProvince { get; set; }
 
@@ -31,6 +35,10 @@ namespace LoCoMPro_LV.Models
 
         public Canton Canton { get; set; }
 
+        public bool IsModerator { get; set; }
+
         public ICollection<GeneratorUser> GeneratorUser { get; set; }
+
+        public ICollection<ModeratorUser> ModeratorUsers { get; set; }
     }
 }
