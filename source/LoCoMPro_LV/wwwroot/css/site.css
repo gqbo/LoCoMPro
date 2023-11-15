@@ -257,7 +257,7 @@ td {
 }
 
 .table-details th:nth-child(1), .table-details td:nth-child(1) {
-    width: 15% !important;
+    width: 17% !important;
     padding: 10px !important;
 }
 
@@ -272,7 +272,7 @@ td {
 }
 
 .table-details th:nth-child(4), .table-details td:nth-child(4) {
-    width: 37% !important;
+    width: 35% !important;
     padding: 10px !important;
 }
 
@@ -307,12 +307,12 @@ td {
 }
 
 .table th:nth-child(5), .table td:nth-child(5) {
-    width: 15%;
+    width: 12%;
     padding: 10px;
 }
 
 .table th:nth-child(6), .table td:nth-child(6) {
-    width: 15%;
+    width: 18%;
     padding: 10px;
 }
 
@@ -322,7 +322,7 @@ td {
 }
 
 .table-reports th:nth-child(2), .table-reports td:nth-child(2) {
-    width: 15% !important;
+    width: 17% !important;
     padding: 10px !important;
 }
 
@@ -337,12 +337,12 @@ td {
 }
 
 .table-reports th:nth-child(5), .table-reports td:nth-child(5) {
-    width: 5% !important;
+    width: 4% !important;
     padding: 10px !important;
 }
 
 .table-reports th:nth-child(6), .table-reports td:nth-child(6) {
-    width: 17% !important;
+    width: 18% !important;
     padding: 10px !important;
 }
 
@@ -486,7 +486,7 @@ table {
 }
 
 .report-item {
-    margin: 20px;
+    margin: 15px;
 }
 
 .carousel {
@@ -494,7 +494,7 @@ table {
 }
 
 .carousel-item {
-    height: 300px;
+    max-height: 300px;
 }
 
 .carousel-item .container {

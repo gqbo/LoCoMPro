@@ -9,7 +9,7 @@
 <div class="container details-container">
     <div class="row d-flex justify-content-center align-items-center report-item">
         <div class="col-12 d-flex justify-content-center">
-            <h1 class="title_add">Registro</h1>
+            <h2 class="title_add">Registro</h2>
         </div>
     </div>
     <div class="row d-flex justify-content-center align-items-center report-item">
@@ -76,13 +76,13 @@
             <div class="blob"></div>
         </div>
     </div>
-    <div class="row d-flex justify-content-center align-items-center report-item">
+    <div class="row d-flex justify-content-center align-items-center">
         <div class="col-12 d-flex justify-content-center">
-            <h1 class="title_add">Reportes</h1>
+            <h2 class="title_add">Reportes</h2>
         </div>
     </div>
     <div class="row d-flex justify-content-center align-items-center report-item">
-        <div id="carousel" class="carousel carousel-dark carousel slide">
+        <div id="carousel" class="carousel carousel-dark slide" data-bs-interval="25000">
             <div class="carousel-inner">
                 @for (int report = 0; report < Model.recordStoreReports.Reports.Count; report++)
                 {
@@ -111,7 +111,7 @@
                                     <div class="row d-flex justify-content-center align-items-center report-item">
                                         <div class="col-9 d-flex justify-content-center align-items-center report-comment">
                                             <h6>
-                                                Comentario: @Html.DisplayFor(model => model.recordStoreReports.Reports[report].Comment)
+                                                Comentario: @Html.DisplayFor(model => model.recordStoreReports.Reports[report].Comment) Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.
                                             </h6>
                                         </div>
                                     </div>

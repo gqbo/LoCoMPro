@@ -25,6 +25,7 @@ namespace LoCoMPro_LV.Models
         [Display(Name = "Precio")]
         [Required(ErrorMessage = "El precio es obligatorio.")]
         [RegularExpression(@"^[1-9]\d*$", ErrorMessage = "El precio debe ser un número entero mayor que 0.")]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public double? Price { get; set; }
 
         [Display(Name = "Establecimiento")]
