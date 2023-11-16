@@ -165,7 +165,7 @@ body {
 .card {
     position: relative !important;
     width: 87% !important;
-    height: 300px !important;
+    height: 290px !important;
     border-radius: 14px !important;
     z-index: 1111;
     overflow: hidden !important;
