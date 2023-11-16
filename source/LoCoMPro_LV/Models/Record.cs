@@ -18,7 +18,7 @@ namespace LoCoMPro_LV.Models
         [Required(ErrorMessage = "La fecha es obligatorio.")]
         public DateTime RecordDate { get; set; }
 
-        [StringLength(512, MinimumLength = 2, ErrorMessage = "La descripción tener entre 2 y 512 caracteres.")]
+        [StringLength(256, MinimumLength = 2, ErrorMessage = "La descripción tener entre 2 y 256 caracteres.")]
         [Display(Name = "Descripción")]
         public string Description { get; set; }
 
@@ -30,7 +30,7 @@ namespace LoCoMPro_LV.Models
 
         [Display(Name = "Establecimiento")]
         [Required(ErrorMessage = "El nombre del establecimiento es obligatorio.")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "El nombre del establecimiento debe tener entre 2 y 100 caracteres.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre del establecimiento debe tener entre 2 y 50 caracteres.")]
         [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
             ErrorMessage = "El nombre del establecimiento no es un nombre valido.")]
         public string NameStore { get; set; }
