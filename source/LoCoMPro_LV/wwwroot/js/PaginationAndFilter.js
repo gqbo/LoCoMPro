@@ -5,26 +5,23 @@ let currentPage = 1;
 let totalPages = 1;
 
 let selectedOrdering = "";
-let orderingState = 0; // 0: Sin orden, 1: Ascendente, -1: Descendente
+let orderingState = 0;
 let clearFilter = 0;
 
 const tableBody = document.querySelector('#miTabla tbody');
-
 const priceOrdering = document.getElementById('orderPrice');
 const dateOrdering = document.getElementById('orderDate');
-
+const clearFilters = document.getElementById('clear-filters');
 const pageButtonsContainer = document.getElementById("pageButtonsContainer");
 const previousButton = document.getElementById('pagination-button-previous');
 const nextButton = document.getElementById('pagination-button-next');
 
-// Inicialización de eventos y paginación al cargar la página
 function initialize() {
     allRows = Array.from(document.querySelectorAll('#miTabla tbody tr'));
     filteredRows = allRows.slice();
     totalPages = Math.ceil(filteredRows.length / pageSize);
     clearFilter = 0;
 
-    // Configurar eventos de los botones de paginación
     previousButton.addEventListener('click', handlePreviousButtonClick);
     nextButton.addEventListener('click', handleNextButtonClick);
 
@@ -32,11 +29,11 @@ function initialize() {
         checkbox.addEventListener('change', applyFilters);
     });
 
-    // Configurar eventos de los ordenamientos
+    clearFilters.addEventListener('click', handleClearFilterClick);
+
     priceOrdering.addEventListener('click', () => handleOrderingClick("Price"));
     dateOrdering.addEventListener('click', () => handleOrderingClick("Date"));
-    
-    // Mostrar la primera página y actualizar los botones de navegación
+
     showPageRows(currentPage);
     updateNavigationButtons();
 }
@@ -136,6 +133,15 @@ function handleOrderingClick(orderType) {
     applyFilters();
 }
 
+function handleClearFilterClick() {
+    document.querySelectorAll('.store-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Volver a aplicar los filtros y reinicializar la tabla
+    applyFilters();
+}
+
 function sortTableByDate() {
     var filas = filteredRows;
 
@@ -182,6 +188,28 @@ function sortTableByPrice() {
     });
 }
 
+function updateOrderingButtonAppearance() {
+    const orderPriceButton = document.getElementById('orderPrice');
+    const orderDateButton = document.getElementById('orderDate');
+
+    orderPriceButton.innerHTML = orderPriceButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
+    orderDateButton.innerHTML = orderDateButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
+
+    if (selectedOrdering === "Price") {
+        if (orderingState === 1) {
+            orderPriceButton.innerHTML += ' 🡅';
+        } else if (orderingState === -1) {
+            orderPriceButton.innerHTML += ' 🡇';
+        }
+    } else if (selectedOrdering === "Date") {
+        if (orderingState === 1) {
+            orderDateButton.innerHTML += ' 🡅';
+        } else if (orderingState === -1) {
+            orderDateButton.innerHTML += ' 🡇';
+        }
+    }
+}
+
 function applyFilters() {
     var selectedStores = Array.from(document.querySelectorAll('.store-checkbox:checked')).map(checkbox => checkbox.value);
 
@@ -191,10 +219,25 @@ function applyFilters() {
         (selectedStores.length === 0 || selectedStores.includes(row.dataset.store))
     );
 
+    // Desmarcar todos los checkboxes antes de aplicar los filtros
+    document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Marcar los checkboxes según los filtros aplicados
+    selectedStores.forEach(store => {
+        const checkbox = document.querySelector('.store-checkbox[value="' + store + '"]');
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+    });
+
     if (selectedOrdering === "Price") {
         sortTableByPrice();
+        updateOrderingButtonAppearance();
     } else if (selectedOrdering === "Date") {
         sortTableByDate();
+        updateOrderingButtonAppearance();
     }
 
     totalPages = Math.ceil(filteredRows.length / pageSize);
