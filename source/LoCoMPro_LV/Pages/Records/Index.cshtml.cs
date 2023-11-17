@@ -95,6 +95,7 @@ namespace LoCoMPro_LV.Pages.Records
             var orderedGroupsQuery = ApplySorting(orderedRecordsQuery);
             var totalCount = await orderedGroupsQuery.CountAsync();
             Record = await orderedGroupsQuery
+                .Where(group => group.Any(record => record.Record.Hide == false))
                 .Select(group => group.OrderByDescending(r => r.Record.RecordDate).FirstOrDefault())
                 .ToListAsync();
         }
@@ -137,6 +138,7 @@ namespace LoCoMPro_LV.Pages.Records
             IQueryable<RecordStoreModel> orderedRecordsQuery = from record in _context.Records
                                                                join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                                                equals new { store.NameStore, store.Latitude, store.Longitude }
+                                                               where record.Hide == false
                                                                select new RecordStoreModel
                                                                {
                                                                    Record = record,

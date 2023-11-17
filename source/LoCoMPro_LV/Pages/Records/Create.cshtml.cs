@@ -171,12 +171,25 @@ namespace LoCoMPro_LV.Pages.Records
         {
             var existingStore = await _context.Stores.FirstOrDefaultAsync(s =>
             s.NameStore == NameStore);
-            if (existingStore != null)
+
+            var existingEqualStore = await _context.Stores.FirstOrDefaultAsync(s =>
+            s.NameStore == NameStore && s.Latitude == Latitude && s.Longitude == Longitude);
+            if (existingEqualStore != null)
+            {
+                Record.Store = existingStore;
+                Record.NameStore = NameStore;
+                Record.Longitude = Longitude;
+                Record.Latitude = Latitude;
+            }
+            else if (existingStore != null)
             {
                 var distance = Geolocation.CalculateDistance(existingStore.Latitude, existingStore.Longitude, Latitude, Longitude);
                 if (distance <= 2000)
                 {
                     Record.Store = existingStore;
+                    Record.NameStore = NameStore;
+                    Record.Longitude = Longitude;
+                    Record.Latitude = Latitude;
                 }
                 else
                 {

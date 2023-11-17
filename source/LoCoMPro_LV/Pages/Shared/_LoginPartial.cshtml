@@ -4,24 +4,62 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+<link rel="stylesheet" href="~/css/manage.css" asp-append-version="true" />
+
 <ul class="navbar-nav">
+    @{
+        string username = "";
+        if (SignInManager.IsSignedIn(User))
+        {
+            username = User.Identity.Name;
+        }
+    }
     @if (SignInManager.IsSignedIn(User))
     {
+        var AuthenticatedUserName = User.Identity.Name;
+        var user = await UserManager.FindByNameAsync(AuthenticatedUserName);
         <li class="nav-item ml-auto">
             <button class="navbar_button">
-                <a class="form-inline nav-link" asp-area="" asp-page="/Stores/Create">
+                <a class="form-inline nav-link" id = "AgregarProducto" asp-area="" asp-page="/Stores/Create">
                     + Agregar Producto
                 </a>
             </button>
         </li>
-        <li class="nav-item">
-            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">      
-                <button class="navbar_button" id="logout" type="submit">
-                    <a class="nav-link">Cerrar sesión </a>
+        if (user != null && user.IsModerator)
+        {
+            <li class="nav-item ml-auto">
+                <button class="navbar_button">
+                    <a class="form-inline nav-link" asp-area="" asp-page="/Reports/Index">
+                        Ver reportes
+                    </a>
                 </button>
-            </form>
-        </li>
+            </li>
+        }
+        <li>
 
+            <button id="trigger" class="navbar_button form-inline nav-link">Mi Perfil</button>
+                
+            <div id="popover" class="popover popover-bottom" hidden>
+                <button class="navbar_button">
+                    <a class="form-inline nav-link" asp-area="" asp-page="/Records/MyRecords">
+                        Mis Aportes
+                    </a>
+                </button>
+
+                <button class="navbar_button">
+                    <a class="form-inline nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">
+                        Gestionar cuenta
+                    </a>
+                </button>
+
+                <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                    <button class="navbar_button" id="logout" type="submit">
+                        <a class ="form-inline nav-link">Cerrar sesión </a>
+                    </button>
+                </form>
+
+            </div>
+        </li>
     }
     else
     {
@@ -37,4 +75,35 @@
         </li>
     }
 </ul>
+
+<script>
+
+    var trigger = document.getElementById("trigger");
+    var popover = document.getElementById("popover");
+
+    // Show or hide the popover when the trigger is clicked
+    trigger.addEventListener("click", function () {
+        popover.hidden = !popover.hidden;
+        // Position the popover relative to the trigger
+        var triggerRect = trigger.getBoundingClientRect();
+        var popoverRect = popover.getBoundingClientRect();
+        popover.style.left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2 + "px";
+        popover.style.top = triggerRect.bottom + "px";
+    });
+
+    // Hide the popover when the document is clicked outside of it
+    document.addEventListener("click", function (event) {
+        if (!popover.contains(event.target) && !trigger.contains(event.target)) {
+            popover.hidden = true;
+        }
+    });
+
+    // Hide the popover when the escape key is pressed
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            popover.hidden = true;
+        }
+    });
+
+</script>
 

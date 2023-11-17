@@ -1,12 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
@@ -70,7 +62,7 @@ namespace LoCoMPro_LV.Pages.Records
             if (FirstRecord != null)
             {
                 var allRecords = GetCombinedRecordsAndStores(FirstRecord).ToList();
-                List<RecordStoreModel> currentRecords = allRecords.ToList();
+                List<RecordStoreModel> currentRecords = allRecords.Where(record => !record.Record.Hide).ToList();
                 SetAverageRatings(currentRecords);
                 Records = currentRecords;
             }
