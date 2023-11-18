@@ -423,6 +423,18 @@ table {
     color: white;
 }
 
+.add_list {
+    padding: 30px;
+    border-radius: 25px !important;
+    border: 2px solid #276E90 !important;
+    background: #0A3143 !important;
+    width: 50% !important;
+    height: 70px !important;
+    margin: 20px;
+    color: white;
+    align-items: center;
+}
+
 .add_reject {
     border-radius: 25px !important;
     border: 6px solid #125270 !important;

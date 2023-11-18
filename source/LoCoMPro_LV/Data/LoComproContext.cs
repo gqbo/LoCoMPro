@@ -169,5 +169,7 @@ namespace LoCoMPro_LV.Data
             builder.Entity<ApplicationUser>().Ignore(e => e.PhoneNumberConfirmed);
             builder.Entity<ApplicationUser>().Ignore(e => e.TwoFactorEnabled);
         }
+
+        public DbSet<LoCoMPro_LV.Models.List> List { get; set; }
     }
 }
