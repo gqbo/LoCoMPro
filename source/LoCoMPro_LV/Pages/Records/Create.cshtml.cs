@@ -116,7 +116,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             _context.Records.Add(Record);
             await _context.SaveChangesAsync();
-            return RedirectToPage("../Index");
+            return RedirectToPage("../Records/Index");
         }
 
         /// <summary>
