@@ -509,3 +509,32 @@ table {
 .report-comment {
     min-width: 500px;
 }
+
+
+.img-preview-container {
+    position: relative;
+    display: inline-block;
+}
+
+.img-preview {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 60%;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+
+}
+
+.delete-button:hover {
+        background-color: #cc0000;
+}

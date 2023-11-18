@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using LoCoMPro_LV.Utils;
+using System.ComponentModel.DataAnnotations;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -102,6 +103,10 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string NameProvince { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        //[FileExtensions(Extensions = ".jpg,.png,.jpeg", ErrorMessage = "Solo se permiten archivos con extensiones .jpg, .png o .jpeg.")]
+        public List<IFormFile> ImageFiles { get; set; }
 
         /// <summary>
         /// Método que carga los datos ingresados por el usuario a los registros y a las diferentes tablas de la base de datos. 
