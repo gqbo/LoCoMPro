@@ -165,6 +165,15 @@
     }
 </script>
 
+<script>
+    // Manejar el evento onpageshow para recargar la página al volver
+    window.onpageshow = function (event) {
+        if (event.persisted || (typeof window.performance != "undefined" && window.performance.navigation.type == 2)) {
+            location.reload();
+        }
+    };
+</script>
+
 <div class="container container-search index align-items-center">
     <div class="row">
         <div class="col-md-3">
