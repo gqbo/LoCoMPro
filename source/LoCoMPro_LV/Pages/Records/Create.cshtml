@@ -8,7 +8,7 @@
 @attribute [Authorize]
 <div class="add_product">
     <h1 class="title_add">Agregar Producto</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
@@ -30,6 +30,7 @@
                     <select id="Category" asp-for="SelectCategory" asp-items="Model.Categories" class="form-control form-control-add" aria-required="true" placeholder="Categoría">
                         <option value=""> Categoría </option>
                     </select>
+                    <span asp-validation-for="SelectCategory" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-2"></div>
@@ -43,24 +44,25 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="ImageFiles">Seleccionar Imágenes</label>
-                            <input type="file" asp-for="ImageFiles" class="form-control form-control-add form-control form-control-add-lg" multiple id="fileInput" onchange="previewImages(event)" />
+                            <input type="file" asp-for="ImageFiles"
+                                class="form-control form-control-add form-control form-control-add-lg"
+                                accept=".jpg, .jpeg, .png" multiple id="fileInput" onchange="previewImages(event)" />
                             <span asp-validation-for="ImageFiles" class="text-danger"></span>
                             <div id="imagePreviewContainer"></div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <form method="post">
-            <div class="row">
-                <div class="col d-flex justify-content-start align-items-center">
-                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" />
-                </div>
-                <div class="col d-flex justify-content-end align-items-center">
-                    <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
-                </div>
+        <div class="row">
+            <div class="col d-flex justify-content-start align-items-center">
+                <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" />
             </div>
-        </form>
+            <div class="col d-flex justify-content-end align-items-center">
+                <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -79,59 +81,6 @@
                 });
             });
     </script>
-
-    <script>
-        function handleImageDelete(index) {
-            var container = document.getElementById("imagePreviewContainer");
-            var images = container.getElementsByClassName("img-preview-container");
-
-            container.removeChild(images[index]);
-
-            var input = document.getElementById("fileInput");
-            var files = input.files;
-            var newFiles = Array.from(files);
-            newFiles.splice(index, 1);
-            input.files = newFiles;
-        }
-
-        function previewImages(event) {
-            var input = event.target;
-            var container = document.getElementById("imagePreviewContainer");
-
-            //container.innerHTML = "";
-
-            var files = input.files;
-
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                if (file.type.startsWith("image/")) {
-                    var reader = new FileReader();
-
-                    reader.onload = (function (file, index) {
-                        return function (e) {
-                            // Crear contenedor para la imagen y el botón "x"
-                            var containerItem = document.createElement("div");
-                            containerItem.className = "img-preview-container";
-
-                            var img = document.createElement("img");
-                            img.src = e.target.result;
-                            img.className = "img-preview";
-                            containerItem.appendChild(img);
-
-                            var deleteButton = document.createElement("button");
-                            deleteButton.innerHTML = "x";
-                            deleteButton.className = "delete-button";
-                            deleteButton.onclick = function () {
-                                handleImageDelete(index);
-                            };
-                            containerItem.appendChild(deleteButton);
-                            container.appendChild(containerItem);
-                        };
-                    })(file, i);
-                    reader.readAsDataURL(file);
-                }
-            }
-        }
-    </script>
+    <script src="~/js/CreateRecordScripts.js" ></script>
 
 }
