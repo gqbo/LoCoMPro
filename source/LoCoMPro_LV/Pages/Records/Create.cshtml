@@ -31,12 +31,6 @@
                         <option value=""> Categoría </option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label asp-for="ImageFiles">Seleccionar Imágenes</label>
-                    <input type="file" asp-for="ImageFiles" class="form-control-file" multiple id="fileInput" onchange="previewImages(event)" />
-                    <span asp-validation-for="ImageFiles" class="text-danger"></span>
-                    <div id="imagePreviewContainer"></div>
-                </div>
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-6">
@@ -46,6 +40,12 @@
                             <label asp-for="Record.Description" class="control-label"></label>
                             <textarea asp-for="Record.Description" class="form-control form-control-add form-control form-control-add-lg" placeholder=" Añade una descripción" rows="8"></textarea>
                             <span asp-validation-for="Record.Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ImageFiles">Seleccionar Imágenes</label>
+                            <input type="file" asp-for="ImageFiles" class="form-control form-control-add form-control form-control-add-lg" multiple id="fileInput" onchange="previewImages(event)" />
+                            <span asp-validation-for="ImageFiles" class="text-danger"></span>
+                            <div id="imagePreviewContainer"></div>
                         </div>
                     </div>
                 </div>
