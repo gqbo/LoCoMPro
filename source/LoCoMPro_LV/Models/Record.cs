@@ -56,6 +56,8 @@ namespace LoCoMPro_LV.Models
 
         public ICollection<Report> Reports { get; set; }
 
+        public ICollection<Anomalie> Anomalies { get; set; }
+
         public ICollection<Evaluate> Valorations { get; set; }
     }
 }
