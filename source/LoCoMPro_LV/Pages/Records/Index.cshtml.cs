@@ -107,7 +107,7 @@ namespace LoCoMPro_LV.Pages.Records
         public List<string> FilteredStores { get; set; }
 
         /// <summary>
-        /// Método que se ejecuta cuando se carga la página y se realiza la búsqueda y paginación de registros.
+        /// Método que se ejecuta cuando se carga la página, se realiza la búsqueda y paginación de registros.
         /// </summary>
         /// <param name="sortOrder">El orden en el que se deben mostrar los registros.</param>
         public async Task OnGetAsync(string sortOrder)
@@ -159,6 +159,7 @@ namespace LoCoMPro_LV.Pages.Records
 
         /// <summary>
         /// Construye la consulta de registros ordenados basada en las opciones de búsqueda.
+        /// <param name="LocationUser"> Contiene las coordenadas del usuario.</param>
         /// </summary>
         /// <returns>Consulta de registros ordenados.</returns>
         private IQueryable<RecordStoreModel> BuildOrderedRecordsQuery(double[] LocationUser)
@@ -204,7 +205,6 @@ namespace LoCoMPro_LV.Pages.Records
         /// Aplica el ordenamiento a la consulta de registros.
         /// </summary>
         /// <param name="orderedRecordsQuery">Consulta de registros ordenados.</param>
-        /// <param name="sortOrder">El orden en el que se deben mostrar los registros.</param>
         /// <returns>Consulta de registros ordenados con el orden especificado.</returns>
         private IOrderedQueryable<IGrouping<object, RecordStoreModel>> ApplySorting(IQueryable<RecordStoreModel> orderedRecordsQuery)
         {
@@ -225,6 +225,11 @@ namespace LoCoMPro_LV.Pages.Records
 
             return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
         }
+
+        /// <summary>
+        /// Obtiene las coordenadas del usuario que está realizando la consulta.
+        /// </summary>
+        /// <returns></returns>
         private async Task<double[]> GetLocationUserAsync()
         {
             var authenticatedUserName = User.Identity.Name;
