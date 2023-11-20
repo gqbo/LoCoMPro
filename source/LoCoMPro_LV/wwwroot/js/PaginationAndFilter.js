@@ -25,6 +25,14 @@ function initialize() {
     previousButton.addEventListener('click', handlePreviousButtonClick);
     nextButton.addEventListener('click', handleNextButtonClick);
 
+    document.querySelectorAll('.province-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', handleProvinceCheckboxChange);
+    });
+
+    document.querySelectorAll('.canton-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', applyFilters);
+    });
+
     document.querySelectorAll('.store-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', applyFilters);
     });
@@ -122,6 +130,66 @@ function handleNextButtonClick() {
     }
 }
 
+function handleProvinceCheckboxChange() {
+    var selectedProvinces = Array.from(document.querySelectorAll('.province-checkbox:checked')).map(checkbox => checkbox.value);
+
+    if (selectedProvinces.length === 0) {
+        document.querySelectorAll('.canton-checkbox:checked').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    } else {
+        document.querySelectorAll('.canton-checkbox').forEach(checkbox => {
+            var province = checkbox.closest('.cantones-list').id.replace('cantones-', '');
+
+            if (!selectedProvinces.includes(province)) {
+                checkbox.checked = false;
+            }
+        });
+    }
+
+    // Ocultar los desplegables de cantones
+    document.querySelectorAll('.cantones-list').forEach(cantonesList => {
+        cantonesList.style.display = 'none';
+    });
+
+    selectedProvinces.forEach(province => {
+        document.getElementById('cantones-' + province).style.display = 'block';
+    });
+
+    updateCantonsFilter(selectedProvinces);
+    applyFilters();
+}
+
+function updateCantonsFilter(selectedProvinces) {
+    var cantonCheckboxes = document.querySelectorAll('.canton-checkbox');
+
+    cantonCheckboxes.forEach(checkbox => {
+        var province = checkbox.closest('.cantones-list').id.replace('cantones-', '');
+
+        checkbox.disabled = selectedProvinces.length > 0 && !selectedProvinces.includes(province);
+        checkbox.checked = checkbox.checked && !checkbox.disabled;
+    });
+}
+
+function handleClearFilterClick() {
+    document.querySelectorAll('.province-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+        // Oculta el desplegable de cantones asociado
+        const province = checkbox.value;
+        document.getElementById('cantones-' + province).style.display = 'none';
+    });
+
+    document.querySelectorAll('.canton-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    document.querySelectorAll('.store-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    applyFilters();
+}
+
 function handleOrderingClick(orderType) {
     if (selectedOrdering === orderType) {
         orderingState *= -1; // Alternar entre ascendente y descendente
@@ -130,15 +198,6 @@ function handleOrderingClick(orderType) {
     }
 
     selectedOrdering = orderType;
-    applyFilters();
-}
-
-function handleClearFilterClick() {
-    document.querySelectorAll('.store-checkbox:checked').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-
-    // Volver a aplicar los filtros y reinicializar la tabla
     applyFilters();
 }
 
@@ -211,26 +270,17 @@ function updateOrderingButtonAppearance() {
 }
 
 function applyFilters() {
+    var selectedProvinces = Array.from(document.querySelectorAll('.province-checkbox:checked')).map(checkbox => checkbox.value);
+    var selectedCantons = Array.from(document.querySelectorAll('.canton-checkbox:checked')).map(checkbox => checkbox.value);
     var selectedStores = Array.from(document.querySelectorAll('.store-checkbox:checked')).map(checkbox => checkbox.value);
 
     currentPage = 1;
 
     filteredRows = allRows.filter(row =>
+        (selectedProvinces.length === 0 || selectedProvinces.includes(row.dataset.province)) &&
+        (selectedCantons.length === 0 || selectedCantons.includes(row.dataset.canton)) &&
         (selectedStores.length === 0 || selectedStores.includes(row.dataset.store))
     );
-
-    // Desmarcar todos los checkboxes antes de aplicar los filtros
-    document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-
-    // Marcar los checkboxes según los filtros aplicados
-    selectedStores.forEach(store => {
-        const checkbox = document.querySelector('.store-checkbox[value="' + store + '"]');
-        if (checkbox) {
-            checkbox.checked = true;
-        }
-    });
 
     if (selectedOrdering === "Price") {
         sortTableByPrice();
