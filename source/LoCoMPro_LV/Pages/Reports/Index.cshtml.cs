@@ -174,7 +174,7 @@ namespace LoCoMPro_LV.Pages.Reports
             foreach (var recordStoreModel in currentReports)
             {
                 int countReports = GetCountActiveReports(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
-                recordStoreModel.recordValoration = countReports;
+                recordStoreModel.reportCount = countReports;
             }
         }
 

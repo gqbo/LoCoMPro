@@ -92,6 +92,21 @@ namespace LoCoMPro_LV.Pages.Records
         public string CurrentFilter { get; set; }
 
         /// <summary>
+        /// Lista de provincias filtradas después de aplicar la búsqueda.
+        /// </summary>
+        public List<string> FilteredProvinces { get; set; }
+
+        /// <summary>
+        /// Lista de cantones filtradas después de aplicar la búsqueda.
+        /// </summary>
+        public List<string> FilteredCantons { get; set; }
+
+        /// <summary>
+        /// Lista de establecimientos filtradas después de aplicar la búsqueda.
+        /// </summary>
+        public List<string> FilteredStores { get; set; }
+
+        /// <summary>
         /// Método que se ejecuta cuando se carga la página y se realiza la búsqueda y paginación de registros.
         /// </summary>
         /// <param name="sortOrder">El orden en el que se deben mostrar los registros.</param>
@@ -104,7 +119,7 @@ namespace LoCoMPro_LV.Pages.Records
                 userLocation = await GetLocationUserAsync();
             }
             var orderedRecordsQuery = BuildOrderedRecordsQuery(userLocation);
-            var orderedGroupsQuery = ApplySorting(orderedRecordsQuery, sortOrder);
+            var orderedGroupsQuery = ApplySorting(orderedRecordsQuery);
             var totalCount = await orderedGroupsQuery.CountAsync();
 
             Record = await orderedGroupsQuery
@@ -191,7 +206,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <param name="orderedRecordsQuery">Consulta de registros ordenados.</param>
         /// <param name="sortOrder">El orden en el que se deben mostrar los registros.</param>
         /// <returns>Consulta de registros ordenados con el orden especificado.</returns>
-        private IOrderedQueryable<IGrouping<object, RecordStoreModel>> ApplySorting(IQueryable<RecordStoreModel> orderedRecordsQuery, string sortOrder)
+        private IOrderedQueryable<IGrouping<object, RecordStoreModel>> ApplySorting(IQueryable<RecordStoreModel> orderedRecordsQuery)
         {
             var groupedRecordsQuery = from record in orderedRecordsQuery
                                       group record by new
@@ -203,18 +218,12 @@ namespace LoCoMPro_LV.Pages.Records
                                       } into recordGroup
                                       orderby recordGroup.Key.NameProduct descending
                                       select recordGroup;
+            
+            FilteredProvinces = groupedRecordsQuery.Select(group => group.Key.NameProvince).Distinct().ToList();
+            FilteredCantons = groupedRecordsQuery.Select(group => group.Key.NameCanton).Distinct().ToList();
+            FilteredStores = groupedRecordsQuery.Select(group => group.Key.NameStore).Distinct().ToList();
 
-            switch (sortOrder)
-            {
-                case "Date":
-                    return groupedRecordsQuery.OrderBy(group => group.Max(record => record.Record.RecordDate));
-                case "Price":
-                    return groupedRecordsQuery.OrderBy(group => group.Max(record => record.Record.Price));
-                case "price_desc":
-                    return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.Price));
-                default:
-                    return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
-            }
+            return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
         }
         private async Task<double[]> GetLocationUserAsync()
         {
@@ -238,3 +247,4 @@ namespace LoCoMPro_LV.Pages.Records
         }
     }
 }
+
