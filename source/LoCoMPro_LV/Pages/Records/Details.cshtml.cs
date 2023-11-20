@@ -6,6 +6,8 @@ using LoCoMPro_LV.Models;
 using System.Data.SqlClient;
 using System.Data;
 using LoCoMPro_LV.Utils;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -47,6 +49,12 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty(SupportsGet = true)]
         public DateTime RecordDate { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string NameProduct { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int InList { get; set; }
+
         /// <summary>
         /// Método utilizado cuando en la pantalla de resultados de la búsqueda se selecciona un producto para abrir el detalle. Este método
         /// utiliza el nombre del generador y la fecha de realización del registro más reciente del producto para realizar la consulta por todos
@@ -69,6 +77,18 @@ namespace LoCoMPro_LV.Pages.Records
             else
             {
                 Records = new List<RecordStoreModel>();
+            }
+
+            var listed = await _context.Listed
+                .FirstOrDefaultAsync(m => m.NameProduct == Records.First().Record.NameProduct && m.NameList == User.Identity.Name);
+
+            if (listed != null)
+            {
+                InList = 1;
+            } 
+            else
+            {
+                InList = 0;
             }
 
             return Page();
@@ -194,6 +214,37 @@ namespace LoCoMPro_LV.Pages.Records
                 averageRatings.Add(averageRating);
                 recordStoreModel.AverageRating = averageRatings.Last();
             }
+        }
+
+        public async Task<IActionResult> OnPostAgregarAListaAsync()
+        {
+            if (InList == 3)
+            {
+                Listed item = new Listed
+                {
+                    NameList = User.Identity.Name,
+                    NameProduct = NameProduct,
+                    UserName = User.Identity.Name,
+                };
+
+                _context.Listed.Add(item);
+            } 
+            else if (InList == 4) 
+            {
+                var listed = await _context.Listed
+                    .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == User.Identity.Name);
+
+                if (listed != null)
+                {
+                    _context.Listed.Remove(listed);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            string formattedDate = RecordDate.ToString("yyyy-MM-dd HH:mm:ss");
+            string url = $"/Records/Details?NameGenerator={NameGenerator}&RecordDate={formattedDate}";
+            return Redirect(url);
         }
     }
 }
