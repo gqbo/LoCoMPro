@@ -420,7 +420,7 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
-    color: white;
+    color: white !important;
 }
 
 .add_reject {
@@ -430,7 +430,7 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
-    color: white;
+    color: white !important;
 }
 
 .add_cancel {
