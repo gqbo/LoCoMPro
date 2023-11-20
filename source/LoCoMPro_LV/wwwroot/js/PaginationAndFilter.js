@@ -1,36 +1,45 @@
-﻿let allRows = [];
+﻿// Variables para el manejo de datos y paginación
+let allRows = [];
 let filteredRows = [];
 let pageSize = 10;
 let currentPage = 1;
 let totalPages = 1;
 
+// Variables para el manejo de ordenamiento
 let selectedOrdering = "";
 let orderingState = 0;
 let clearFilter = 0;
 
-const tableBody = document.querySelector('#miTabla tbody');
-const priceOrdering = document.getElementById('orderPrice');
-const dateOrdering = document.getElementById('orderDate');
-const clearFilters = document.getElementById('clear-filters');
-const pageButtonsContainer = document.getElementById("pageButtonsContainer");
-const previousButton = document.getElementById('pagination-button-previous');
-const nextButton = document.getElementById('pagination-button-next');
+// Elementos del DOM
+const tableBody = document.querySelector('#miTabla tbody'); // Cuerpo de la tabla
+const priceOrdering = document.getElementById('orderPrice'); // Botón de ordenamiento por precio
+const dateOrdering = document.getElementById('orderDate'); // Botón de ordenamiento por fecha
+const clearFilters = document.getElementById('clear-filters'); // Botón de limpieza de filtros
+const pageButtonsContainer = document.getElementById("pageButtonsContainer"); // Contenedor de botones de paginación
+const previousButton = document.getElementById('pagination-button-previous'); // Botón de página anterior
+const nextButton = document.getElementById('pagination-button-next'); // Botón de página siguiente
 
+// Inicialización de eventos y paginación al cargar la página
 function initialize() {
+    // Obtener todas las filas y copiarlas para filtrar
     allRows = Array.from(document.querySelectorAll('#miTabla tbody tr'));
     filteredRows = allRows.slice();
     totalPages = Math.ceil(filteredRows.length / pageSize);
     clearFilter = 0;
 
+    // Eventos para la paginación
     previousButton.addEventListener('click', handlePreviousButtonClick);
     nextButton.addEventListener('click', handleNextButtonClick);
 
+    // Eventos para los checkboxes de y establecimientos
     document.querySelectorAll('.store-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', applyFilters);
     });
 
+    // Evento para limpiar filtros
     clearFilters.addEventListener('click', handleClearFilterClick);
 
+    // Mostrar las filas de la página actual y actualizar botones de navegación
     priceOrdering.addEventListener('click', () => handleOrderingClick("Price"));
     dateOrdering.addEventListener('click', () => handleOrderingClick("Date"));
 
@@ -44,10 +53,12 @@ function showPageRows(page) {
     const endIndex = startIndex + pageSize;
     const rowsToDisplay = filteredRows.slice(startIndex, endIndex);
 
+    // Oculta todas las filas y muestra las seleccionadas
     allRows.forEach(row => row.style.display = 'none');
     rowsToDisplay.forEach(row => row.style.display = 'table-row');
 }
 
+// Función para crear los botones de la paginación
 function createPageButtons(index) {
     const button = document.createElement("button");
     button.className = index === currentPage ? "pagination-current-page" : "pagination-pages";
@@ -60,6 +71,7 @@ function createPageButtons(index) {
     return button;
 }
 
+// Función para actualizar la apariencia de los botones de navegación
 function updateNavigationButtons() {
     previousButton.hidden = currentPage === 1;
     pageButtonsContainer.innerHTML = "";
@@ -106,6 +118,7 @@ function updateNavigationButtons() {
     nextButton.hidden = currentPage === totalPages;
 }
 
+// Manejador de eventos para el botón siguiente de la paginación.
 function handlePreviousButtonClick() {
     if (currentPage > 1) {
         currentPage--;
@@ -114,6 +127,7 @@ function handlePreviousButtonClick() {
     }
 }
 
+// Manejador de eventos para el botón anterior de la paginación.
 function handleNextButtonClick() {
     if (currentPage < totalPages) {
         currentPage++;
@@ -122,6 +136,7 @@ function handleNextButtonClick() {
     }
 }
 
+// Manejador de eventos para los botones de ordenamiento.
 function handleOrderingClick(orderType) {
     if (selectedOrdering === orderType) {
         orderingState *= -1; // Alternar entre ascendente y descendente
@@ -133,6 +148,7 @@ function handleOrderingClick(orderType) {
     applyFilters();
 }
 
+// Manejador de eventos para limpiar los filtros
 function handleClearFilterClick() {
     document.querySelectorAll('.store-checkbox:checked').forEach(checkbox => {
         checkbox.checked = false;
@@ -142,6 +158,7 @@ function handleClearFilterClick() {
     applyFilters();
 }
 
+// Función de ordenamiento de la tabla por fecha
 function sortTableByDate() {
     var filas = filteredRows;
 
@@ -165,6 +182,7 @@ function sortTableByDate() {
     });
 }
 
+// Función de ordenamiento de la tabla por precio
 function sortTableByPrice() {
     var filas = filteredRows;
 
@@ -188,6 +206,8 @@ function sortTableByPrice() {
     });
 }
 
+// Función para actualizar la apariencia de los botones de ordenamiento
+
 function updateOrderingButtonAppearance() {
     const orderPriceButton = document.getElementById('orderPrice');
     const orderDateButton = document.getElementById('orderDate');
@@ -210,11 +230,14 @@ function updateOrderingButtonAppearance() {
     }
 }
 
+// Función para aplicar filtros
 function applyFilters() {
+    // Obtener establecimientos seleccionados
     var selectedStores = Array.from(document.querySelectorAll('.store-checkbox:checked')).map(checkbox => checkbox.value);
 
     currentPage = 1;
 
+    // Filtrar las filas según los establecimientos seleccionados
     filteredRows = allRows.filter(row =>
         (selectedStores.length === 0 || selectedStores.includes(row.dataset.store))
     );
@@ -232,6 +255,7 @@ function applyFilters() {
         }
     });
 
+    // Ordenar la tabla y actualizar la apariencia de los botones de ordenamiento
     if (selectedOrdering === "Price") {
         sortTableByPrice();
         updateOrderingButtonAppearance();
@@ -240,10 +264,12 @@ function applyFilters() {
         updateOrderingButtonAppearance();
     }
 
+    // Actualizar el número total de páginas y mostrar la página actual
     totalPages = Math.ceil(filteredRows.length / pageSize);
 
     showPageRows(currentPage);
     updateNavigationButtons();
 }
 
+// Inicializar la funcionalidad al cargar la página
 initialize();

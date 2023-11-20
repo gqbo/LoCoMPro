@@ -80,8 +80,19 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         public string CurrentFilter { get; set; }
 
+        /// <summary>
+        /// Lista de provincias filtradas después de aplicar la búsqueda.
+        /// </summary>
         public List<string> FilteredProvinces { get; set; }
+
+        /// <summary>
+        /// Lista de cantones filtradas después de aplicar la búsqueda.
+        /// </summary>
         public List<string> FilteredCantons { get; set; }
+
+        /// <summary>
+        /// Lista de establecimientos filtradas después de aplicar la búsqueda.
+        /// </summary>
         public List<string> FilteredStores { get; set; }
 
         /// <summary>
