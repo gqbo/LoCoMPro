@@ -6,8 +6,6 @@ using LoCoMPro_LV.Models;
 using System.Data.SqlClient;
 using System.Data;
 using LoCoMPro_LV.Utils;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.AspNetCore.Authorization;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -49,9 +47,15 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty(SupportsGet = true)]
         public DateTime RecordDate { get; set; }
 
+        /// <summary>
+        /// Nombre del producto al cual se le presentan los registros.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public string NameProduct { get; set; }
 
+        /// <summary>
+        /// Dice si el producto esta en la lista del usuario o si no esta.
+        /// </summary>
         [BindProperty(SupportsGet = true)]
         public int InList { get; set; }
 
@@ -216,6 +220,10 @@ namespace LoCoMPro_LV.Pages.Records
             }
         }
 
+        /// <summary>
+        /// Este metodo se utiliza al presionar el boton de agaregar a lista o de eliminar de lista y dependiendo la opcion seleccionada va a agregar el 
+        /// producto a la lista del usuario o la va eliminar de la lista.
+        /// </summary>
         public async Task<IActionResult> OnPostAgregarAListaAsync()
         {
             if (InList == 3)
