@@ -37,7 +37,7 @@ Con respecto a los mockups, los avances se representan de la misma manera que el
 
 ### Sprint 1
 
-En relación al Sprint 1, se crearon diferentes carpertas donde se contempla todo lo relacionado al Sprint 1.
+En relación al Sprint 1, se crearon diferentes carpetas donde se contempla todo lo relacionado al Sprint 1.
 
 La carpeta principal corresponde a `source` que contiene el proyecto con el código fuente del Sprint 1.
 
@@ -51,39 +51,85 @@ La carpeta para la documentación corresponde a `doc` que contiene un archivo Do
 
 [Documentación del Sprint 1](source/doc)
 
+### Sprint 2
+
+Con respecto al Sprint 2, se crearon diferentes carpetas donde se contempla todo lo relacionado al Sprint 2.
+
+La carpeta principal corresponde a `source` que contiene el proyecto con el código fuente del Sprint 2.
+
+[Proyecto de código fuente del Sprint 2](source/LoCoMPro_LV)
+
+La carpeta para las pruebas unitarias corresponde a `tests/unit_tests` que contiene el proyecto con las pruebas unitarias del Sprint 2.
+
+[Proyecto de pruebas unitarias del Sprint 2](source/tests/unit_tests)
+
+La carpeta para las pruebas funcionales corresponde a `tests/functional_tests` que contiene el proyecto con las pruebas funcionales realizadas durante el Sprint 2.
+
+[Proyecto de pruebas unitarias del Sprint 2](source/tests/functional_tests)
+
+La carpeta para la documentación corresponde a `doc` que contiene un archivo Doxyfile que autogenera la documentación Doxygen del código fuente para el Sprint 2.
+
+[Documentación del Sprint 2](source/doc)
+
 ## Manual de usuario de la aplicación
 
-Cuando se ingresa a la página principal de la aplicación web se muestra diferentes funcionalidades como buscar productos, registrarse e iniciar sesión.
+Cuando se ingresa a la página principal de la aplicación web se muestran diferentes funcionalidades como buscar productos, registrarse e iniciar sesión.
 
-1. Puedes buscar productos ingresando el nombre del producto de la siguiente manera:
+#### 1. Puedes buscar productos ingresando el nombre del producto de la siguiente manera:
 
 ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/89c77c10-7688-4961-aa76-7af93e5aeb80)
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/16ed51fb-3ecf-4601-9e2a-1e830c1d7683)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/bfb54dba-373a-4a95-ab91-afbe4299db40)
 
-2. Puedes realizar búsquedas de productos utilizando las opciones avanzadas de la siguiente manera:
+#### 2. Puedes realizar búsquedas de productos utilizando las opciones avanzadas de la siguiente manera:
 
 ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/5456a2ca-b28c-46ab-8169-e6f3a521f7cf)
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/78cc9ed9-26d9-499d-8cfc-e4b392a6bf10)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/4603c7f4-8c86-4eac-ac9b-5d7a522e197a)
 
-3. Cuando efectúas una búsqueda de un producto, ya sea utilizando únicamente su nombre o haciendo uso de las opciones avanzadas, tienes la posibilidad de acceder a los registros asociados a dicho producto simplemente presionando el nombre del mismo.
+#### 3. Cuando efectúas una búsqueda de un producto, ya sea utilizando únicamente su nombre o haciendo uso de las opciones avanzadas, tienes la posibilidad de acceder a los registros asociados a dicho producto simplemente presionando el nombre del mismo.
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/ceef4545-62bc-4bd8-9c42-2c9fd949d7d4)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/aaf4ea93-c0ac-4afa-a4ea-96505e37e282)
 
-4. Si deseas crear una cuenta en la aplicación web, puedes hacerlo presionando la opción "Registrarse" en la parte superior y completando los datos requeridos.
+Como se observa en la imagen en esta vista se pueden realizar valoraciones de un registro a la hora de presionar las estrellas. Por otro lado, se pueden realizar reportes a la hora de presionar el rectangulo rojo.
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/139385b0-7671-4166-8050-66814387b324)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/d0c15287-1626-4fba-9a6a-6e92e87cf9cb)
 
-5. Si un usuario registrado desea acceder a la aplicación, puede hacerlo presionando la opción "Iniciar Sesión" en la parte superior e ingresando sus credenciales.
+#### 4. Si deseas crear una cuenta en la aplicación web, puedes hacerlo presionando la opción "Registrarse" en la parte superior y completando los datos requeridos.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/a4de7391-7414-46f1-a36f-a3c9c46152a4)
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/c773b1b1-3cdb-4b43-bfe9-2adbdbd26157)
+
+#### 5. Si un usuario registrado desea acceder a la aplicación, puede hacerlo presionando la opción "Iniciar Sesión" en la parte superior e ingresando sus credenciales.
    
 ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/cd90e389-b5c8-468f-91fe-cb3f33a32fcf)
 
-6. Una vez que un usuario inicia sesión, se habilita la funcionalidad de "Agregar Producto". Esto permite al usuario crear un registro de un producto existente o crear un producto completamente nuevo.
+#### 6. Una vez que un usuario inicia sesión, se habilita la funcionalidad de "Agregar Producto". Esto permite al usuario crear un registro de un producto existente o crear un producto completamente nuevo.
    
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/75f9de59-5614-467f-912f-f2729c586a2a)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/17a074d3-c1bb-430e-8186-2ef75a9a46d8)
 
-7. Después de iniciar sesión, el usuario tiene la opción de cerrar su sesión en cualquier momento.
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/36dc1b86-f93e-4fa9-bffb-15eaba2fe934)
 
- ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/338b4848-04b1-4a9c-a462-6633b8d3a9b1)
+#### 7. Después de iniciar sesión, el usuario también tiene la opción de Mi Perfil en el que se dan a elegir 3 opciones distintas.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/927bffa8-06fc-4fe0-8bb3-59167b7b5e0e)
+
+La opción 1 - Mis Aportes: Muestra todos los registros agregados por el usuario registrado.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/cfe4dae0-430d-4572-aa51-fd362fcd5ad3)
+
+La opción 2 - Gestionar Cuenta: Permite al usuario personalizar y controlar diversos aspectos de su perfil.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/3edaac78-7e9b-495f-997c-d1aaf584f856)
+
+La opción 3 - Cerrar Sesión: Permite a un usuario finalizar la sesión activa en una plataforma.
+
+#### 8. Un usuario moderador tiene habilitada la opción de Ver Reportes, donde se muestra una tabla con todos los reportes realizados por diferentes usuarios.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/830d0500-5d50-46ff-b477-c66efd33623f)
+
+Al presionar un reporte se muestra una pantalla con información del registro y usuario reportado. Además en la parte inferior se muestra el usuario que reporta y la razón del reporte con dos botones el de aceptar que indica que la razón del reporte es válida y el de recahazar que indicaría lo contrario.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/7dde59a5-6071-4ccd-93b6-97cbf23b938e)
 
 ## Manual técnico de la aplicación
 
@@ -97,22 +143,15 @@ Cuando se ingresa a la página principal de la aplicación web se muestra difere
 
 4. Instalar los siguientes paquetes.
 
-  ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/a82d8ba5-da72-4ae1-967f-34cb528bd5cc)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/a82d8ba5-da72-4ae1-967f-34cb528bd5cc)
 
-### Preparación de la base de datos
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/7ca3757d-2a89-4c29-a032-ebc353832f8f)
 
-1. Abrir la consola `Package Manager`.
-
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/f82c37de-0951-419b-8f6e-6b87bceb8f20)
-
-2. Dentro de la consola escribir el comando `Update-Database`.
-
-3. Verificar la creación de las tablas dentro de la base de datos especificada en el archivo `appsettings.json` en el apartado `View`, seguido de `SQL Server Object Explorer`.
 
 ### Manual de instalación o ejecución del sistema
 
 1. Construir la solución en el apartado `Build`, seguido de `Build Solution`.
-2. Selecionar el botón `Start Without Debugging`.
+2. Seleccionar el botón `Start Without Debugging`.
 
 ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/7e9f5c49-544c-4dd1-9810-d2d57afc11eb)
 
