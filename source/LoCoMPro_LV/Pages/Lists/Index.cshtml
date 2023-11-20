@@ -8,13 +8,44 @@
 <div class="container container-search index align-items-center">
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
-            <h1 class="title_add">Mis Listas</h1>
+            <h1 class="title_add">Mi Lista</h1>
         </div>
     </div>
-    <div class="row d-flex justify-content-center">
-        <div class="col-12 d-flex justify-content-center add_list">
-            <h3>+ Nueva lista</h3>
-        </div>
+    <div class="row">
+        <table class="table-list table table-striped" id="miTabla">
+            <thead>
+                <tr>
+                    <th>
+                        <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Listed[0].NameProduct)</a>
+                        <span class="arrow" id="dateArrow"></span>
+                    </th>
+                    <th class="report">
+                        Eliminar
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var firstItem in Model.Listed)
+                {
+                    <tr>
+                        <td>
+                            <div class="table-item fecha">
+                                @Html.DisplayFor(modelItem => firstItem.NameProduct)
+                            </div>
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="EliminarItem" class="ml-auto">
+                                <input type="hidden" id="nameProduct" value="@firstItem.NameProduct" name="NameProduct" asp-for="NameProduct">
+                                <div class="table-item report">
+                                    <input type="image" src="~/Images/borrar.png" alt="Eliminar" style="cursor: pointer;">
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
     </div>
 </div>
 
@@ -93,4 +124,7 @@
             });
         }
     });
+
 </script>
+
+

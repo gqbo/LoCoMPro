@@ -23,8 +23,8 @@ namespace LoCoMPro_LV.Data
         public DbSet<Associated> Associated { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Evaluate> Valorations { get; set; }
-        public DbSet<Evaluate> Lists { get; set; }
-        public DbSet<Evaluate> Listed { get; set; }
+        public DbSet<List> Lists { get; set; }
+        public DbSet<Listed> Listed { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

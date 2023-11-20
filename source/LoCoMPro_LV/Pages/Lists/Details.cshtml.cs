@@ -19,7 +19,9 @@ namespace LoCoMPro_LV.Pages.Lists
             _context = context;
         }
 
-      public List List { get; set; }
+        public List List { get; set; }
+
+
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
