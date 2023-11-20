@@ -14,6 +14,7 @@ let clearFilter = 0;
 const tableBody = document.querySelector('#miTabla tbody'); // Cuerpo de la tabla
 const priceOrdering = document.getElementById('orderPrice'); // Botón de ordenamiento por precio
 const dateOrdering = document.getElementById('orderDate'); // Botón de ordenamiento por fecha
+const distanceOrdering = document.getElementById('orderDistance'); // Botón de ordenamiento por distancia
 const clearFilters = document.getElementById('clear-filters'); // Botón de limpieza de filtros
 const pageButtonsContainer = document.getElementById("pageButtonsContainer"); // Contenedor de botones de paginación
 const previousButton = document.getElementById('pagination-button-previous'); // Botón de página anterior
@@ -42,6 +43,7 @@ function initialize() {
     // Mostrar las filas de la página actual y actualizar botones de navegación
     priceOrdering.addEventListener('click', () => handleOrderingClick("Price"));
     dateOrdering.addEventListener('click', () => handleOrderingClick("Date"));
+    distanceOrdering.addEventListener('click', () => handleOrderingClick("Distance"));
 
     showPageRows(currentPage);
     updateNavigationButtons();
@@ -206,14 +208,40 @@ function sortTableByPrice() {
     });
 }
 
+// Función de ordenamiento de la tabla por distancia
+function sortTableByDistance() {
+    var filas = filteredRows;
+
+    filas.sort(function (a, b) {
+        var valueA = parseFloat(a.querySelector(".distancia").innerText.replace(' km', '')) || 0;
+        var valueB = parseFloat(b.querySelector(".distancia").innerText.replace(' km', '')) || 0;
+
+        if (orderingState === 1) {
+            return valueA - valueB;
+        } else {
+            return valueB - valueA;
+        }
+    });
+
+    filas.forEach(function (fila) {
+        tableBody.removeChild(fila);
+    });
+
+    filas.forEach(function (fila) {
+        tableBody.appendChild(fila);
+    });
+}
+
 // Función para actualizar la apariencia de los botones de ordenamiento
 
 function updateOrderingButtonAppearance() {
     const orderPriceButton = document.getElementById('orderPrice');
     const orderDateButton = document.getElementById('orderDate');
+    const orderDistanceButton = document.getElementById('orderDistance');
 
     orderPriceButton.innerHTML = orderPriceButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
     orderDateButton.innerHTML = orderDateButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
+    orderDistanceButton.innerHTML = orderDistanceButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
 
     if (selectedOrdering === "Price") {
         if (orderingState === 1) {
@@ -226,6 +254,13 @@ function updateOrderingButtonAppearance() {
             orderDateButton.innerHTML += ' 🡅';
         } else if (orderingState === -1) {
             orderDateButton.innerHTML += ' 🡇';
+        }
+    }
+    if (selectedOrdering == "Distance") {
+        if (orderingState === 1) {
+            orderDistanceButton.innerHTML += ' 🡅';
+        } else if (orderingState === -1) {
+            orderDistanceButton.innerHTML += ' 🡇';
         }
     }
 }
@@ -261,6 +296,10 @@ function applyFilters() {
         updateOrderingButtonAppearance();
     } else if (selectedOrdering === "Date") {
         sortTableByDate();
+        updateOrderingButtonAppearance();
+    }
+    if (selectedOrdering === "Distance") {
+        sortTableByDistance();
         updateOrderingButtonAppearance();
     }
 
