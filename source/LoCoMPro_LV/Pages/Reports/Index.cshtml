@@ -12,7 +12,7 @@
             <h1 class="title_add">Reportes</h1>
         </div>
     </div>
-    <table class="table-reports table table-striped" id="miTabla">
+    <table class="table-reports table" id="miTabla">
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameProduct)</th>
@@ -59,7 +59,7 @@
                     </td>
                     <td>
                         <div class="table-item report">
-                            <span>@reports.recordValoration</span>
+                            <span>@reports.reportCount</span>
                         </div>
                     </td>
                 </tr>

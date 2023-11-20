@@ -420,7 +420,7 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
-    color: white;
+    color: white !important;
 }
 
 .add_reject {
@@ -430,7 +430,7 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
-    color: white;
+    color: white !important;
 }
 
 .add_cancel {
@@ -508,4 +508,11 @@ table {
 
 .report-comment {
     min-width: 500px;
+}
+
+.filter-box {
+    padding: 1rem !important;
+    border-radius: 20px !important;
+    border: 1px solid #000 !important;
+    background: white !important;
 }
