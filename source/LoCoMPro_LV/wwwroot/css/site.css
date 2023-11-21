@@ -287,7 +287,7 @@ td {
 }
 
 .table th:nth-child(1), .table td:nth-child(1) {
-    width: 30%;
+    width: 25%;
     padding: 10px;
 }
 
@@ -302,17 +302,21 @@ td {
 }
 
 .table th:nth-child(4), .table td:nth-child(4) {
-    width: 15%;
+    width: 11%;
     padding: 10px;
 }
 
 .table th:nth-child(5), .table td:nth-child(5) {
-    width: 15%;
+    width: 13%;
     padding: 10px;
 }
 
 .table th:nth-child(6), .table td:nth-child(6) {
-    width: 15%;
+    width: 13%;
+    padding: 10px;
+}
+.table th:nth-child(7), .table td:nth-child(7) {
+    width: 13%;
     padding: 10px;
 }
 
@@ -420,7 +424,7 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
-    color: white;
+    color: white !important;
 }
 
 .add_reject {
@@ -430,7 +434,7 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
-    color: white;
+    color: white !important;
 }
 
 .add_cancel {
@@ -508,6 +512,13 @@ table {
 
 .report-comment {
     min-width: 500px;
+}
+
+.filter-box {
+    padding: 1rem !important;
+    border-radius: 20px !important;
+    border: 1px solid #000 !important;
+    background: white !important;
 }
 
 .ratings-container {
