@@ -45,12 +45,12 @@
                         <div class="form-group">
                             <label asp-for="ImageFiles">Seleccionar Imágenes</label>
                             <input type="file" asp-for="ImageFiles"
-                                class="form-control form-control-add form-control form-control-add-lg"
-                                accept=".jpg, .jpeg, .png" multiple id="fileInput" onchange="previewImages(event)" />
+                                   class="form-control form-control-add form-control form-control-add-lg"
+                                   accept=".jpg, .jpeg, .png" multiple id="fileInput" onchange="handleFileSelection(event)" />
                             <span asp-validation-for="ImageFiles" class="text-danger"></span>
                             <div id="imagePreviewContainer"></div>
+                            <div id="fileCountError"></div>
                         </div>
-
                     </div>
                 </div>
             </div>
