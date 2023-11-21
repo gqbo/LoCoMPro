@@ -21,16 +21,21 @@ namespace LoCoMPro_LV.Pages.Lists
 
         public List List { get; set; }
 
+        /// <summary>
+        /// Es el nombre de la lista del ususrio que se esta presentando
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public string NameList { get; set; }
 
-
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync()
         {
-            if (id == null || _context.List == null)
+            if (_context.List == null)
             {
                 return NotFound();
             }
 
-            var list = await _context.List.FirstOrDefaultAsync(m => m.NameList == id);
+            var list = await _context.List.FirstOrDefaultAsync(m => m.NameList == User.Identity.Name);
+
             if (list == null)
             {
                 return NotFound();

@@ -47,11 +47,19 @@
 
         </table>
     </div>
-</div>
 
-<div id="pagination" class="pagination">
-    <button id="previousPage" class="page-link">Anterior</button>
-    <button id="nextPage" class="page-link">Siguiente</button>
+    <div class="row d-flex justify-content-center">
+        @if (Model.Listed.Count != 0)
+        {
+            <a asp-page="./Details" class="search_list btn btn-danger d-flex justify-content-center align-items-center">Realizar busqueda</a>
+        }
+    </div>
+    <div class="row">
+        <div id="pagination" class="pagination">
+            <button id="previousPage" class="page-link">Anterior</button>
+            <button id="nextPage" class="page-link">Siguiente</button>
+        </div>
+    </div>
 </div>
 
 <script>
