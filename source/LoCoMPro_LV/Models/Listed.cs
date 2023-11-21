@@ -14,6 +14,8 @@ namespace LoCoMPro_LV.Models
         [StringLength(50, MinimumLength = 2)]
         public string UserName { get; set; }
 
+
+        [Display(Name = "Producto")]
         [Required(ErrorMessage = "El nombre del producto es obligatorio.")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre del producto debe tener entre 2 y 50 caracteres.")]
         [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
