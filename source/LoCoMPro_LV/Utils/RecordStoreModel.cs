@@ -11,5 +11,7 @@ namespace LoCoMPro_LV.Pages.Records
         public Record Record { get; set; }
         public Store Store { get; set; }
         public int AverageRating { get; set; }
+
+        public int CountRating { get; set; }
     }
 }

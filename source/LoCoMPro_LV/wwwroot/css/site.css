@@ -509,3 +509,17 @@ table {
 .report-comment {
     min-width: 500px;
 }
+
+.ratings-container {
+    display: flex;
+    align-items: center;
+}
+
+.count-rating {
+    font-size: 11px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: normal !important;
+    color: gray;
+    margin-left: 10px;
+}
