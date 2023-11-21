@@ -43,7 +43,10 @@ function initialize() {
     // Mostrar las filas de la página actual y actualizar botones de navegación
     priceOrdering.addEventListener('click', () => handleOrderingClick("Price"));
     dateOrdering.addEventListener('click', () => handleOrderingClick("Date"));
-    distanceOrdering.addEventListener('click', () => handleOrderingClick("Distance"));
+
+    if (distanceOrdering != null) {
+        distanceOrdering.addEventListener('click', () => handleOrderingClick("Distance"));
+    }
 
     showPageRows(currentPage);
     updateNavigationButtons();
@@ -241,7 +244,9 @@ function updateOrderingButtonAppearance() {
 
     orderPriceButton.innerHTML = orderPriceButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
     orderDateButton.innerHTML = orderDateButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
-    orderDistanceButton.innerHTML = orderDistanceButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
+    if (orderDistanceButton != null) {
+        orderDistanceButton.innerHTML = orderDistanceButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
+    }
 
     if (selectedOrdering === "Price") {
         if (orderingState === 1) {
@@ -255,8 +260,7 @@ function updateOrderingButtonAppearance() {
         } else if (orderingState === -1) {
             orderDateButton.innerHTML += ' 🡇';
         }
-    }
-    if (selectedOrdering == "Distance") {
+    } else if (selectedOrdering == "Distance") {
         if (orderingState === 1) {
             orderDistanceButton.innerHTML += ' 🡅';
         } else if (orderingState === -1) {
@@ -297,8 +301,7 @@ function applyFilters() {
     } else if (selectedOrdering === "Date") {
         sortTableByDate();
         updateOrderingButtonAppearance();
-    }
-    if (selectedOrdering === "Distance") {
+    } else if (selectedOrdering === "Distance") {
         sortTableByDistance();
         updateOrderingButtonAppearance();
     }
