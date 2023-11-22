@@ -10,6 +10,7 @@ using LoCoMPro_LV.Models;
 using LoCoMPro_LV.Pages.Records;
 using LoCoMPro_LV.Utils;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Identity;
 
 namespace LoCoMPro_LV.Pages.Lists
 {
@@ -24,11 +25,16 @@ namespace LoCoMPro_LV.Pages.Lists
         /// Se utiliza para acceder a las utilidades de la base de datos.
         /// </summary>
         private readonly DatabaseUtils _databaseUtils;
+        /// <summary>
+        /// Administra a los usuarios de tipo ApplicationUser.
+        /// </summary>
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public DetailsModel(LoComproContext context, DatabaseUtils databaseUtils)
+        public DetailsModel(LoComproContext context, DatabaseUtils databaseUtils, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _databaseUtils = databaseUtils;
+            _userManager = userManager;
         }
 
         public List List { get; set; }
@@ -44,6 +50,10 @@ namespace LoCoMPro_LV.Pages.Lists
 
         public async Task<IActionResult> OnGetAsync()
         {
+            var count = _context.Listed
+                .Where(listed => listed.NameList == User.Identity.Name)
+                .Count();
+
             string connectionString = _databaseUtils.GetConnectionString();
             string sqlQuery = "SELECT * FROM dbo.GetStoresWithProducts(@NameList)";
             SqlParameter[] parameters = new SqlParameter[]
@@ -72,8 +82,19 @@ namespace LoCoMPro_LV.Pages.Lists
 
                             result.productCount = productCount;
 
+                            result.percentageInList = 100 * productCount / count;
+
                             result.Store = await _context.Stores
                                 .FirstOrDefaultAsync(m => m.Latitude == latitude && m.Longitude == longitude && m.NameStore == nameStore);
+
+                            var userLocation = new double[] { 0, 0 };
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                userLocation = await GetLocationUserAsync();
+                            }
+
+                            result.Distance = (userLocation[0] != 0 && userLocation[1] != 0) ?
+                                              Geolocation.CalculateDistance(userLocation[0], userLocation[1], latitude, longitude) / 1000 : 0;
 
                             var query = from record in _context.Records
                                         join listed in _context.Listed
@@ -101,6 +122,31 @@ namespace LoCoMPro_LV.Pages.Lists
             Results = Results.OrderByDescending(r => r.productCount).ToList();
 
             return Page();
+        }
+
+        /// <summary>
+        /// Obtiene las coordenadas del usuario que está realizando la consulta.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<double[]> GetLocationUserAsync()
+        {
+            var authenticatedUserName = User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(authenticatedUserName);
+
+            if (user != null)
+            {
+                var latitude = user.Latitude;
+                var longitude = user.Longitude;
+                var location = new double[] { latitude, longitude };
+                return location;
+            }
+            else
+            {
+                var latitude = 0;
+                var longitude = 0;
+                var location = new double[] { latitude, longitude };
+                return location;
+            }
         }
     }
 }

@@ -10,10 +10,10 @@
             <h2 class="title_add">Establecimientos para mi compra</h2>
         </div>
     </div>
-    <table class="table-reports table table-striped" id="miTabla">
+    <table class="table-list-results table table-striped" id="miTabla">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(model => model.Results[0].Store.NameStore)</th>
+                <th>@Html.DisplayNameFor(model => model.Results[0].Records[0].NameStore)</th>
                 <th>
                     <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Results[0].Store.NameCanton)</a>
                 </th>
@@ -22,7 +22,9 @@
                     Cantidad de productos
                 </th>
                 <th>
-                    Precio total
+                    <div class="table-item precio">
+                        Precio total
+                    </div>
                 </th>
                 <th>
                     Distancia
@@ -43,13 +45,17 @@
                         @Html.DisplayFor(modelItem => result.Store.NameProvince)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => result.productCount)
+                        @Html.DisplayFor(modelItem => result.productCount) (@Html.DisplayFor(modelItem => result.percentageInList)%)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => result.totalPrice)
+                        <div class="table-item precio">
+                            @Html.DisplayFor(modelItem => result.totalPrice)
+                        </div>
                     </td>
                     <td>
-                        
+                        <div class="table-item distancia">
+                            @(result.Distance != 0 ? string.Format("{0:0.0} km", result.Distance) : "N/A")
+                        </div>
                     </td>
                 </tr>
             }
