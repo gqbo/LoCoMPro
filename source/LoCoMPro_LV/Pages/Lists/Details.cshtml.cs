@@ -127,7 +127,6 @@ namespace LoCoMPro_LV.Pages.Lists
         /// <summary>
         /// Obtiene las coordenadas del usuario que está realizando la consulta.
         /// </summary>
-        /// <returns></returns>
         private async Task<double[]> GetLocationUserAsync()
         {
             var authenticatedUserName = User.Identity.Name;

@@ -36,7 +36,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => result.Store.NameStore)
+                        <a class="election" asp-page="./ResultList" asp-route-NameGenerator="@result.Records[0].NameGenerator" asp-route-RecordDate="@result.Records[0].RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => result.Store.NameStore)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => result.Store.NameCanton)
