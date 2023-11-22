@@ -262,6 +262,30 @@ namespace LoCoMPro_LV.Pages.Reports
                 _context.Anomalies.Add(anomalie);
                 await _context.SaveChangesAsync();
             }
+            selectedRecordsSubset.Clear();
+            endIndex = 0;
+            sortedRecords.Clear();
+            selectedRecords.Clear();
+        }
+
+        private async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
+        {
+            List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
+
+            foreach (var indice in selectedRecords)
+            {
+                Anomalie anomalie = new Anomalie
+                {
+                    NameGenerator = indice.Record.NameGenerator,
+                    RecordDate = indice.Record.RecordDate,
+                    Type = "Price",
+                    Comment = "El precio es anomalo",
+                    State = 0
+                };
+                _context.Anomalies.Add(anomalie);
+                await _context.SaveChangesAsync();
+            }
+            selectedRecords.Clear();
         }
     }
 }
