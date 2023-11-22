@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LoCoMPro_LV.Pages.Records;
+using LoCoMPro_LV.Models;
+using System.Collections.Generic;
 
 namespace LoCoMPro_LV.Pages.Reports
 {
@@ -90,26 +92,8 @@ namespace LoCoMPro_LV.Pages.Reports
             await InitializeSortingAndSearching(sortOrder);
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
-            List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
-            // Recorre todos los grupos
-            foreach (var group in groupedRecords)
-            {
-                // Accede a la clave del grupo
-                GroupingKey groupKey = group.Key;
+            await ProcessGroupedRecords(groupedRecords);
 
-                // Itera a través de los elementos dentro del grupo
-                foreach (var record in group)
-                {
-                    // Accede a los datos de cada elemento dentro del grupo y los añade a una lista
-                    recordsGroupContainer.Add(record);
-                }
-
-                //anomolias =-> lista (seleccionados)
-
-                //borrar lista
-                recordsGroupContainer.Clear();
-
-            }
             var orderedGroupsQuery = ApplySorting(orderedRecordsQuery, sortOrder);
             var totalCount = await orderedGroupsQuery.CountAsync();
             Record = await orderedGroupsQuery
@@ -156,7 +140,7 @@ namespace LoCoMPro_LV.Pages.Reports
             IQueryable<RecordStoreModel> orderedRecordsQuery = from record in _context.Records
                                                                join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                                                equals new { store.NameStore, store.Latitude, store.Longitude }
-                                                               where record.Hide == false
+                                                            //   where record.Hide == false
                                                                select new RecordStoreModel
                                                                {
                                                                    Record = record,
@@ -237,6 +221,71 @@ namespace LoCoMPro_LV.Pages.Reports
                     NameProvince = record.Store.NameProvince
                 }
             ).ToList();
+        }
+
+        private async Task ProcessGroupedRecords(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
+        {
+            List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
+            
+            foreach (var group in groupedRecords)
+            {
+                GroupingKey groupKey = group.Key;
+
+                foreach (var record in group)
+                {
+                    recordsGroupContainer.Add(record);
+                }
+                AnomaliesDate(recordsGroupContainer);
+                recordsGroupContainer.Clear();
+            }
+        }
+
+        private async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
+        {
+            List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
+            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
+            int endIndex = (int)(sortedRecords.Count * 0.2);
+            var selectedRecordsSubset = sortedRecords.Take(endIndex).ToList();
+
+            selectedRecords.AddRange(selectedRecordsSubset.Where(r => r.Record.Hide == false));
+
+            foreach (var indice in selectedRecords)
+            {
+                Anomalie anomalie = new Anomalie
+                {
+                    NameGenerator = indice.Record.NameGenerator,
+                    RecordDate = indice.Record.RecordDate,
+                    Type = "Date",
+                    Comment = "La fecha es muy antigua",
+                    State = 0
+                };
+                _context.Anomalies.Add(anomalie);
+                await _context.SaveChangesAsync();
+            }
+            selectedRecordsSubset.Clear();
+            endIndex = 0;
+            sortedRecords.Clear();
+            selectedRecords.Clear();
+        }
+
+        private async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
+        {
+            List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
+
+            foreach (var indice in selectedRecords)
+            {
+                Anomalie anomalie = new Anomalie
+                {
+                    NameGenerator = indice.Record.NameGenerator,
+                    RecordDate = indice.Record.RecordDate,
+                    Type = "Price",
+                    Comment = "El precio es anomalo",
+                    State = 0
+                };
+                _context.Anomalies.Add(anomalie);
+                await _context.SaveChangesAsync();
+            }
+            selectedRecords.Clear();
         }
     }
 }
