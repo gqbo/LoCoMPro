@@ -91,58 +91,8 @@ namespace LoCoMPro_LV.Pages.Reports
             await InitializeSortingAndSearching(sortOrder);
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
-            List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
-            List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
-            // Recorre todos los grupos
-            foreach (var group in groupedRecords)
-            {
-                // Accede a la clave del grupo
-                GroupingKey groupKey = group.Key;
+            await ProcessGroupedRecords(groupedRecords);
 
-                // Itera a través de los elementos dentro del grupo
-                foreach (var record in group)
-                {
-                    // Accede a los datos de cada elemento dentro del grupo y los añade a una lista
-                    recordsGroupContainer.Add(record);
-                }
-
-                // Ordena los registros por fecha de forma ascendente
-                var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
-
-                // Calcula el índice hasta el cual seleccionar el 40% de los registros más antiguos
-                int endIndex = (int)(sortedRecords.Count * 0.2);
-
-                // Selecciona el 40% de los registros más antiguos
-                var selectedRecordsSubset = sortedRecords.Take(endIndex).ToList();
-
-                // Filtra solo los registros con Hide en false y agrégalos a selectedRecords
-                selectedRecords.AddRange(selectedRecordsSubset.Where(r => r.Record.Hide == false));
-
-                foreach (var indice in selectedRecords)
-                {
-                    Anomalie anomalie = new Anomalie
-                    {
-                        NameGenerator = indice.Record.NameGenerator,
-                        RecordDate = indice.Record.RecordDate,
-                        Type = "Date",
-                        Comment = "La fecha es muy antigua",
-                        State = 0
-                    };
-                    _context.Anomalies.Add(anomalie);
-                    await _context.SaveChangesAsync();
-                }
-
-
-                //borrar lista
-                selectedRecordsSubset.Clear();
-                sortedRecords.Clear();
-                endIndex = 0;
-
-
-                recordsGroupContainer.Clear();
-                selectedRecords.Clear();
-
-            }
             var orderedGroupsQuery = ApplySorting(orderedRecordsQuery, sortOrder);
             var totalCount = await orderedGroupsQuery.CountAsync();
             Record = await orderedGroupsQuery
@@ -270,6 +220,48 @@ namespace LoCoMPro_LV.Pages.Reports
                     NameProvince = record.Store.NameProvince
                 }
             ).ToList();
+        }
+
+        private async Task ProcessGroupedRecords(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
+        {
+            List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
+            List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
+            foreach (var group in groupedRecords)
+            {
+                GroupingKey groupKey = group.Key;
+
+                foreach (var record in group)
+                {
+                    recordsGroupContainer.Add(record);
+                }
+
+                var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
+                int endIndex = (int)(sortedRecords.Count * 0.2);
+                var selectedRecordsSubset = sortedRecords.Take(endIndex).ToList();
+
+                selectedRecords.AddRange(selectedRecordsSubset.Where(r => r.Record.Hide == false));
+
+                foreach (var indice in selectedRecords)
+                {
+                    Anomalie anomalie = new Anomalie
+                    {
+                        NameGenerator = indice.Record.NameGenerator,
+                        RecordDate = indice.Record.RecordDate,
+                        Type = "Date",
+                        Comment = "La fecha es muy antigua",
+                        State = 0
+                    };
+                    _context.Anomalies.Add(anomalie);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Limpiar variables creadas
+                selectedRecordsSubset.Clear();
+                sortedRecords.Clear();
+                endIndex = 0;
+                recordsGroupContainer.Clear();
+                selectedRecords.Clear();
+            }
         }
     }
 }
