@@ -5,6 +5,7 @@ using LoCoMPro_LV.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LoCoMPro_LV.Pages.Records;
 using LoCoMPro_LV.Models;
+using System.Collections.Generic;
 
 namespace LoCoMPro_LV.Pages.Reports
 {
@@ -225,7 +226,7 @@ namespace LoCoMPro_LV.Pages.Reports
         private async Task ProcessGroupedRecords(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
-            List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
+            
             foreach (var group in groupedRecords)
             {
                 GroupingKey groupKey = group.Key;
@@ -234,33 +235,32 @@ namespace LoCoMPro_LV.Pages.Reports
                 {
                     recordsGroupContainer.Add(record);
                 }
-
-                var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
-                int endIndex = (int)(sortedRecords.Count * 0.2);
-                var selectedRecordsSubset = sortedRecords.Take(endIndex).ToList();
-
-                selectedRecords.AddRange(selectedRecordsSubset.Where(r => r.Record.Hide == false));
-
-                foreach (var indice in selectedRecords)
-                {
-                    Anomalie anomalie = new Anomalie
-                    {
-                        NameGenerator = indice.Record.NameGenerator,
-                        RecordDate = indice.Record.RecordDate,
-                        Type = "Date",
-                        Comment = "La fecha es muy antigua",
-                        State = 0
-                    };
-                    _context.Anomalies.Add(anomalie);
-                    await _context.SaveChangesAsync();
-                }
-
-                // Limpiar variables creadas
-                selectedRecordsSubset.Clear();
-                sortedRecords.Clear();
-                endIndex = 0;
+                AnomaliesDate(recordsGroupContainer);
                 recordsGroupContainer.Clear();
-                selectedRecords.Clear();
+            }
+        }
+
+        private async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
+        {
+            List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
+            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
+            int endIndex = (int)(sortedRecords.Count * 0.2);
+            var selectedRecordsSubset = sortedRecords.Take(endIndex).ToList();
+
+            selectedRecords.AddRange(selectedRecordsSubset.Where(r => r.Record.Hide == false));
+
+            foreach (var indice in selectedRecords)
+            {
+                Anomalie anomalie = new Anomalie
+                {
+                    NameGenerator = indice.Record.NameGenerator,
+                    RecordDate = indice.Record.RecordDate,
+                    Type = "Date",
+                    Comment = "La fecha es muy antigua",
+                    State = 0
+                };
+                _context.Anomalies.Add(anomalie);
+                await _context.SaveChangesAsync();
             }
         }
     }
