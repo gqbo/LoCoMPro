@@ -89,6 +89,27 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             await InitializeSortingAndSearching(sortOrder);
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
+            List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
+            List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
+            // Recorre todos los grupos
+            foreach (var group in groupedRecords)
+            {
+                // Accede a la clave del grupo
+                GroupingKey groupKey = group.Key;
+
+                // Itera a través de los elementos dentro del grupo
+                foreach (var record in group)
+                {
+                    // Accede a los datos de cada elemento dentro del grupo y los añade a una lista
+                    recordsGroupContainer.Add(record);
+                }
+
+                //anomolias =-> lista (seleccionados)
+
+                //borrar lista
+                recordsGroupContainer.Clear();
+
+            }
             var orderedGroupsQuery = ApplySorting(orderedRecordsQuery, sortOrder);
             var totalCount = await orderedGroupsQuery.CountAsync();
             Record = await orderedGroupsQuery
@@ -196,7 +217,26 @@ namespace LoCoMPro_LV.Pages.Reports
                     return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
             }
         }
+
+        public class GroupingKey
+        {
+            public string NameProduct { get; set; }
+            public string NameStore { get; set; }
+            public string NameCanton { get; set; }
+            public string NameProvince { get; set; }
+        }
+
+        private List<IGrouping<GroupingKey, RecordStoreModel>> GroupRecords(IQueryable<RecordStoreModel> orderedRecordsQuery)
+        {
+            return orderedRecordsQuery.GroupBy(
+                record => new GroupingKey
+                {
+                    NameProduct = record.Record.NameProduct,
+                    NameStore = record.Record.NameStore,
+                    NameCanton = record.Store.NameCanton,
+                    NameProvince = record.Store.NameProvince
+                }
+            ).ToList();
+        }
     }
 }
-
-
