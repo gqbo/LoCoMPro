@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LoCoMPro_LV.Pages.Records;
+using LoCoMPro_LV.Models;
 
 namespace LoCoMPro_LV.Pages.Reports
 {
@@ -117,7 +118,19 @@ namespace LoCoMPro_LV.Pages.Reports
                 // Filtra solo los registros con Hide en false y agrégalos a selectedRecords
                 selectedRecords.AddRange(selectedRecordsSubset.Where(r => r.Record.Hide == false));
 
-                // selectedRecords = sortedRecords.Take(endIndex).ToList();
+                foreach (var indice in selectedRecords)
+                {
+                    Anomalie anomalie = new Anomalie
+                    {
+                        NameGenerator = indice.Record.NameGenerator,
+                        RecordDate = indice.Record.RecordDate,
+                        Type = "Date",
+                        Comment = "La fecha es muy antigua",
+                        State = 0
+                    };
+                    _context.Anomalies.Add(anomalie);
+                    await _context.SaveChangesAsync();
+                }
 
 
                 //borrar lista
