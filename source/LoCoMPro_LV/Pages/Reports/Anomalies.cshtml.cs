@@ -91,6 +91,7 @@ namespace LoCoMPro_LV.Pages.Reports
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
+            List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
             // Recorre todos los grupos
             foreach (var group in groupedRecords)
             {
@@ -104,10 +105,29 @@ namespace LoCoMPro_LV.Pages.Reports
                     recordsGroupContainer.Add(record);
                 }
 
-                //anomolias =-> lista (seleccionados)
+                // Ordena los registros por fecha de forma ascendente
+                var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
+
+                // Calcula el índice hasta el cual seleccionar el 40% de los registros más antiguos
+                int endIndex = (int)(sortedRecords.Count * 0.2);
+
+                // Selecciona el 40% de los registros más antiguos
+                var selectedRecordsSubset = sortedRecords.Take(endIndex).ToList();
+
+                // Filtra solo los registros con Hide en false y agrégalos a selectedRecords
+                selectedRecords.AddRange(selectedRecordsSubset.Where(r => r.Record.Hide == false));
+
+                // selectedRecords = sortedRecords.Take(endIndex).ToList();
+
 
                 //borrar lista
+                selectedRecordsSubset.Clear();
+                sortedRecords.Clear();
+                endIndex = 0;
+
+
                 recordsGroupContainer.Clear();
+                selectedRecords.Clear();
 
             }
             var orderedGroupsQuery = ApplySorting(orderedRecordsQuery, sortOrder);
@@ -156,7 +176,7 @@ namespace LoCoMPro_LV.Pages.Reports
             IQueryable<RecordStoreModel> orderedRecordsQuery = from record in _context.Records
                                                                join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                                                equals new { store.NameStore, store.Latitude, store.Longitude }
-                                                               where record.Hide == false
+                                                            //   where record.Hide == false
                                                                select new RecordStoreModel
                                                                {
                                                                    Record = record,
