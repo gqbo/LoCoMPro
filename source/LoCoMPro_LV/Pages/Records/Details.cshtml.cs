@@ -181,7 +181,7 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Método utilizado para obtener el promedio de las valoraciones de estrellas de un registro en específico utilizando
+        /// Método utilizado para obtener la cantidad de valoraciones de un registro en específico utilizando
         /// una función escalar creada en la base de datos.
         /// <param name="nameGenerator">Nombre del generador de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
         /// <param name="recordDate">Fecha de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
