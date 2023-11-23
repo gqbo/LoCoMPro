@@ -7,8 +7,7 @@
 <div class="container container-search index align-items-center">
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
-            <button type="button" class="clear-filter-button btn btn-primary" id="clear-filters-date" onclick="loadAnomaliesDate()">Anomalias Fecha</button>
-            <button type="button" class="clear-filter-button btn btn-primary" id="clear-filters">Anomalias Precio</button>
+            <h1 class="title_add">Anomalias</h1>
         </div>
     </div>
 </div>
@@ -16,12 +15,14 @@
 <div class="container container-search index align-items-center">
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
-            <h1 class="title_add">Anomalias</h1>
+            <button type="button" class="clear-filter-button btn btn-primary" id="filters-date" data-filter="fecha">Anomalias Fecha</button>
+            <button type="button" class="clear-filter-button btn btn-primary" id="filters-price" data-filter="precio">Anomalias Precio</button>
+            <button type="button" class="clear-filter-button btn btn-primary" id="clear-filters" data-filter="todos">Ver Todas</button>
         </div>
     </div>
 </div>
 
-<table class="table table-striped" id="miTabla">
+<table class="table" id="miTabla">
     <thead>
         <tr>
             <th>
@@ -75,3 +76,58 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // Función para filtrar y mostrar solo las anomalías de tipo "Precio"
+            function filterAnomaliesPrecio() {
+                // Oculta todas las filas de la tabla
+                $('#miTabla tbody tr').hide();
+
+                // Muestra solo las filas con tipo "Precio"
+                $('#miTabla tbody tr').filter(':contains("Precio")').show();
+            }
+
+            // Función para mostrar todas las anomalías
+            function showAllAnomalies() {
+                // Muestra todas las filas de la tabla
+                $('#miTabla tbody tr').show();
+            }
+
+            // Asocia la función de filtrado al evento de clic en el botón
+            $('#filters-price').click(function () {
+                filterAnomaliesPrecio();
+            });
+
+            // Asocia la función de mostrar todas las anomalías al evento de clic en el botón de fecha
+            $('#clear-filters').click(function () {
+                showAllAnomalies();
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Función para filtrar y mostrar solo las anomalías de tipo "Precio"
+            function filterAnomaliesFecha() {
+                // Oculta todas las filas de la tabla
+                $('#miTabla tbody tr').hide();
+
+                // Muestra solo las filas con tipo "Precio"
+                $('#miTabla tbody tr').filter(':contains("Fecha")').show();
+            }
+
+            // Función para mostrar todas las anomalías
+            function showAllAnomalies() {
+                // Muestra todas las filas de la tabla
+                $('#miTabla tbody tr').show();
+            }
+
+            // Asocia la función de filtrado al evento de clic en el botón
+            $('#filters-date').click(function () {
+                filterAnomaliesFecha();
+            });
+        });
+    </script>
+}
