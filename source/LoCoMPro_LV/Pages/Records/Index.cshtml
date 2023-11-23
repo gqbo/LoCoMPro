@@ -171,9 +171,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].Record.NameProduct)
             </th>
-            <th class="precio" id="priceColumn">
-                <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Record[0].Record.Price)</a>
-                <span class="arrow" id="priceArrow"></span>
+            <th id="priceColumn">
+                <div class="precio">
+                    <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Record[0].Record.Price)</a>
+                    <span class="arrow" id="priceArrow"></span>
+                </div>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Record[0].Record.NameStore)

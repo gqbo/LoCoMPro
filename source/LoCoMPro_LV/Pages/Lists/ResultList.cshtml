@@ -5,58 +5,136 @@
     ViewData["Title"] = "ResultList";
 }
 
-<h1>ResultList</h1>
+<div class="container details-container">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="list_result card">
+            <div class="list_result_bg bg">
+                <div class="info_detail">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-12">
+                                    <h2>
+                                        @Html.DisplayFor(model => model.Result.Store.NameStore)
+                                    </h2>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h5>
+                                        Cantón: @Html.DisplayFor(model => model.Result.Store.NameCanton)
+                                        <br>
+                                        Provincia: @Html.DisplayFor(model => model.Result.Store.NameProvince)
+                                        <br>
+                                        <br>
+                                        Precio total: ₡@Html.DisplayFor(model => model.Result.totalPrice)
+                                        <br>
+                                        Distancia: @(Model.Result.Distance != 0 ? string.Format("{0:0.0} km", Model.Result.Distance) : "N/A")
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="col-12 d-flex justify-content-center">
+                                <div class="map-list" id="map"></div>
+                                <div id="marker-info" class="marker-info">
+                                    <input type="number" display="none" step="0.0001" lang="en" id="latitude" asp-for="@Model.Result.Store.Latitude" />
+                                    <input type="number" display="none" step="0.0001" lang="en" id="longitude" asp-for="@Model.Result.Store.Longitude" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="blob"></div>
+        </div>
+    </div>
 
-<div>
-    <h4>List</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.List.User)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.List.User.UserName)
-        </dd>
-    </dl>
+    <table class="table_listProduct table table-striped" id="miTabla">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Result.Records[0].NameProduct)
+                </th>
+                <th id="priceColumn">
+                    <div class="precio_listed">
+                        <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Result.Records[0].Price)</a>
+                        <span class="arrow" id="priceArrow"></span>
+                    </div>
+                </th>
+                <th class="date" id="dateColumn">
+                    <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Result.Records[0].RecordDate)</a>
+                    <span class="arrow" id="dateArrow"></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var firstItem in Model.Result.Records)
+            {
+
+                <tr>
+                    <td>
+                        <div class="table-item">
+                            <a class="election" asp-page="../Records/Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="table-item precio_listed">
+                            ₡@Html.DisplayFor(modelItem => firstItem.Price)
+                        </div>
+                    </td>
+                    <td class="table-item fecha">
+                        <div>
+                            @Html.DisplayFor(modelItem => firstItem.RecordDate)
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
-<table class="table table-striped" id="miTabla">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Result.Records[0].NameProduct)
-            </th>
-            <th class="precio" id="priceColumn">
-                <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Result.Records[0].Price)</a>
-                <span class="arrow" id="priceArrow"></span>
-            </th>
-            <th class="date" id="dateColumn">
-                <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Result.Records[0].RecordDate)</a>
-                <span class="arrow" id="dateArrow"></span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var firstItem in Model.Result.Records)
-        {
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
 
-            <tr>
-                <td>
-                    <div class="table-item">
-                        <a class="election" asp-page="../Records/Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
-                    </div>
-                </td>
-                <td>
-                    <div class="table-item precio">
-                        ₡@Html.DisplayFor(modelItem => firstItem.Price)
-                    </div>
-                </td>
-                <td>
-                    <div class="table-item fecha">
-                        @Html.DisplayFor(modelItem => firstItem.RecordDate)
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var initialLatitude = @Html.Raw(Json.Serialize(@Model.Result.Store.Latitude));
+            var initialLongitude = @Html.Raw(Json.Serialize(@Model.Result.Store.Longitude));
+
+
+
+            var map = L.map('map', {
+                minZoom: 8,
+                maxZoom: 17,
+                dragging: true
+            }).setView([initialLatitude, initialLongitude], 12);
+
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18
+            }).addTo(map);
+
+            var costaRicaBounds = L.latLngBounds(L.latLng(8.032, -85.950), L.latLng(11.217, -82.555));
+            map.setMaxBounds(costaRicaBounds);
+
+            map.on('drag', function () {
+                if (!costaRicaBounds.contains(map.getBounds())) {
+                    map.panInsideBounds(costaRicaBounds, { animate: true });
+                }
+            });
+
+            var marker = L.marker([initialLatitude, initialLongitude], { draggable: false }).addTo(map);
+
+            marker.on('dragend', function (e) {
+                var latlng = e.target.getLatLng();
+                updateLocationInfo(latlng.lat, latlng.lng);
+            });
+
+
+        });
+    </script>
+}

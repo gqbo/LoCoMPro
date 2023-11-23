@@ -176,6 +176,13 @@ body {
     margin: 15px;
 }
 
+.list_result {
+    width: 90% !important;
+}
+
+.list_result_bg {
+    width: 99% !important;
+}
 
 .bg {
     position: absolute;
@@ -250,6 +257,11 @@ td {
 .precio {
     text-align: right !important;
     margin-right: 20px !important;
+}
+
+.precio_listed {
+    text-align: right !important;
+    margin-right: 100px !important;
 }
 
 .report {
@@ -373,6 +385,21 @@ td {
 
 .table-list-results th:nth-child(6), .table-list-results td:nth-child(6) {
     width: 17% !important;
+    padding: 10px !important;
+}
+
+.table_listProduct th:nth-child(1), .table_listProduct td:nth-child(1) {
+    width: 40% !important;
+    padding: 10px !important;
+}
+
+.table_listProduct th:nth-child(2), .table_listProduct td:nth-child(2) {
+    width: 25% !important;
+    padding: 10px !important;
+}
+
+.table_listProduct th:nth-child(3), .table_listProduct td:nth-child(3) {
+    width: 35% !important;
     padding: 10px !important;
 }
 
@@ -524,6 +551,15 @@ table {
     height: 500px;
     box-shadow: 5px 5px 5px #888;
     margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.map-list {
+    width: 520px;
+    height: 260px;
+    margin: 5px;
+    box-shadow: 5px 5px 5px #888;
     position: relative;
     z-index: 1;
 }
