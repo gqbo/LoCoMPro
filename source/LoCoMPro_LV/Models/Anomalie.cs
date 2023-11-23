@@ -13,17 +13,18 @@ namespace LoCoMPro_LV.Models
         [Display(Name = "Nombre de usuario")]
         public string NameGenerator { get; set; }
 
-        [Display(Name = "Fecha de Registro")]
+        [Display(Name = "Fecha")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "La fecha es obligatorio.")]
         public DateTime RecordDate { get; set; }
 
+        [Display(Name = "Tipo")]
         [Required(ErrorMessage = "El tipo es obligatorio.")]
         [StringLength(10, MinimumLength = 2)]
         public string Type { get; set; }
 
-        [StringLength(256, MinimumLength = 2, ErrorMessage = "El comentario debe tener entre 2 y 256 caracteres.")]
         [Display(Name = "Comentario")]
+        [StringLength(256, MinimumLength = 2, ErrorMessage = "El comentario debe tener entre 2 y 256 caracteres.")]
         public string Comment { get; set; }
         public int State { get; set; }
 
