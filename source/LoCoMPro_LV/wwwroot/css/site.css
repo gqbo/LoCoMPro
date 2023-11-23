@@ -256,6 +256,13 @@ td {
     text-align: center !important;
 }
 
+.delete {
+    text-align: center !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .table-details th:nth-child(1), .table-details td:nth-child(1) {
     width: 15% !important;
     padding: 10px !important;
@@ -287,7 +294,7 @@ td {
 }
 
 .table th:nth-child(1), .table td:nth-child(1) {
-    width: 30%;
+    width: 25%;
     padding: 10px;
 }
 
@@ -302,17 +309,21 @@ td {
 }
 
 .table th:nth-child(4), .table td:nth-child(4) {
-    width: 15%;
+    width: 11%;
     padding: 10px;
 }
 
 .table th:nth-child(5), .table td:nth-child(5) {
-    width: 15%;
+    width: 13%;
     padding: 10px;
 }
 
 .table th:nth-child(6), .table td:nth-child(6) {
-    width: 15%;
+    width: 13%;
+    padding: 10px;
+}
+.table th:nth-child(7), .table td:nth-child(7) {
+    width: 13%;
     padding: 10px;
 }
 
@@ -343,6 +354,16 @@ td {
 
 .table-reports th:nth-child(6), .table-reports td:nth-child(6) {
     width: 17% !important;
+    padding: 10px !important;
+}
+
+.table-list th:nth-child(1), .table-list td:nth-child(1) {
+    width: 60% !important;
+    padding: 10px !important;
+}
+
+.table-list th:nth-child(2), .table-list td:nth-child(2) {
+    width: 40% !important;
     padding: 10px !important;
 }
 
@@ -420,7 +441,7 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
-    color: white;
+    color: white !important;
 }
 
 .add_reject {
@@ -430,7 +451,7 @@ table {
     width: 140px !important;
     height: 70px !important;
     margin: 20px;
-    color: white;
+    color: white !important;
 }
 
 .add_cancel {
@@ -657,3 +678,67 @@ table {
         transform: translate(3px, 3px);
         box-shadow: 0px 0px var(#121212);
     }
+
+.button_delete {
+    width: 50px;
+    height: 50px;
+    margin: auto;
+    border-radius: 50% !important;
+    background-color: rgb(20, 20, 20);
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center !important;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+    cursor: pointer !important;
+    transition-duration: .3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.svgIcon {
+    width: 12px;
+    transition-duration: .3s;
+}
+
+    .svgIcon path {
+        fill: white;
+    }
+
+.button_delete:hover {
+    width: 140px;
+    border-radius: 50px !important;
+    transition-duration: .3s;
+    background-color: rgb(255, 69, 69);
+    align-items: center;
+}
+
+    .button_delete:hover .svgIcon {
+        width: 50px;
+        transition-duration: .3s;
+        transform: translateY(60%);
+    }
+
+.button_delete::before {
+    position: absolute;
+    top: -20px;
+    content: "Delete";
+    color: white;
+    transition-duration: .3s;
+    font-size: 2px;
+}
+
+.button_delete:hover::before {
+    font-size: 13px;
+    opacity: 1;
+    transform: translateY(30px);
+    transition-duration: .3s;
+}
+
+.filter-box {
+    padding: 1rem !important;
+    border-radius: 20px !important;
+    border: 1px solid #000 !important;
+    background: white !important;
+}
