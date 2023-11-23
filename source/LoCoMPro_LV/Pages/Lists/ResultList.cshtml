@@ -19,7 +19,44 @@
         </dd>
     </dl>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-page="./Index">Back to List</a>
-</div>
+
+<table class="table table-striped" id="miTabla">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Result.Records[0].NameProduct)
+            </th>
+            <th class="precio" id="priceColumn">
+                <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Result.Records[0].Price)</a>
+                <span class="arrow" id="priceArrow"></span>
+            </th>
+            <th class="date" id="dateColumn">
+                <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Result.Records[0].RecordDate)</a>
+                <span class="arrow" id="dateArrow"></span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var firstItem in Model.Result.Records)
+        {
+
+            <tr>
+                <td>
+                    <div class="table-item">
+                        <a class="election" asp-page="../Records/Details" asp-route-NameGenerator="@firstItem.NameGenerator" asp-route-RecordDate="@firstItem.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.NameProduct)</a>
+                    </div>
+                </td>
+                <td>
+                    <div class="table-item precio">
+                        ₡@Html.DisplayFor(modelItem => firstItem.Price)
+                    </div>
+                </td>
+                <td>
+                    <div class="table-item fecha">
+                        @Html.DisplayFor(modelItem => firstItem.RecordDate)
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
