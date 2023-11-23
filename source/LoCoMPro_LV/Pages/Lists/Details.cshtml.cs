@@ -14,6 +14,14 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LoCoMPro_LV.Pages.Lists
 {
+    public class StoreWithProductsModel
+    {
+        public string NameStore { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
+        public int ProductCount { get; set; }
+    }
+
     public class DetailsModel : PageModel
     {
         /// <summary>
@@ -50,10 +58,30 @@ namespace LoCoMPro_LV.Pages.Lists
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var count = _context.Listed
-                .Where(listed => listed.NameList == User.Identity.Name)
-                .Count();
+            var count = GetListedCount(User.Identity.Name);
 
+            var storesWithProducts = GetStoresWithProducts();
+
+            foreach (var storeWithProducts in storesWithProducts)
+            {
+                var result = await CreateListSearchResult(storeWithProducts, count);
+                Results.Add(result);
+            }
+
+            Results = Results.OrderByDescending(r => r.productCount).ToList();
+
+            return Page();
+        }
+
+        private int GetListedCount( string UserName)
+        {
+            return _context.Listed
+                .Where(listed => listed.NameList == UserName)
+                .Count();
+        }
+
+        private IEnumerable<StoreWithProductsModel> GetStoresWithProducts()
+        {
             string connectionString = _databaseUtils.GetConnectionString();
             string sqlQuery = "SELECT * FROM dbo.GetStoresWithProducts(@NameList)";
             SqlParameter[] parameters = new SqlParameter[]
@@ -73,56 +101,66 @@ namespace LoCoMPro_LV.Pages.Lists
                     {
                         while (reader.Read())
                         {
-                            string nameStore = reader.GetString(reader.GetOrdinal("NameStore"));
-                            double longitude = reader.GetDouble(reader.GetOrdinal("Longitude"));
-                            double latitude = reader.GetDouble(reader.GetOrdinal("Latitude"));
-                            int productCount = reader.GetInt32(reader.GetOrdinal("cantidad_productos"));
-
-                            ListSearchResults result = new ListSearchResults();
-
-                            result.productCount = productCount;
-
-                            result.percentageInList = 100 * productCount / count;
-
-                            result.Store = await _context.Stores
-                                .FirstOrDefaultAsync(m => m.Latitude == latitude && m.Longitude == longitude && m.NameStore == nameStore);
-
-                            var userLocation = new double[] { 0, 0 };
-                            if (User.Identity.IsAuthenticated)
+                            yield return new StoreWithProductsModel
                             {
-                                userLocation = await GetLocationUserAsync();
-                            }
-
-                            result.Distance = (userLocation[0] != 0 && userLocation[1] != 0) ?
-                                              Geolocation.CalculateDistance(userLocation[0], userLocation[1], latitude, longitude) / 1000 : 0;
-
-                            var query = from record in _context.Records
-                                        join listed in _context.Listed
-                                        on record.NameProduct equals listed.NameProduct
-                                        where record.NameStore == nameStore
-                                        && record.Latitude == latitude
-                                        && record.Longitude == longitude
-                                        orderby record.RecordDate descending
-                                        group record by record.NameProduct into grouped
-                                        select grouped.First();
-
-                            result.Records = await query.ToListAsync();
-
-                            foreach(var record in result.Records)
-                            {
-                                result.totalPrice += record.Price;
-                            }
-
-                            Results.Add(result);
+                                NameStore = reader.GetString(reader.GetOrdinal("NameStore")),
+                                Longitude = reader.GetDouble(reader.GetOrdinal("Longitude")),
+                                Latitude = reader.GetDouble(reader.GetOrdinal("Latitude")),
+                                ProductCount = reader.GetInt32(reader.GetOrdinal("cantidad_productos"))
+                            };
                         }
                     }
                 }
             }
-
-            Results = Results.OrderByDescending(r => r.productCount).ToList();
-
-            return Page();
         }
+
+        private async Task<ListSearchResults> CreateListSearchResult(StoreWithProductsModel storeWithProducts, int count)
+        {
+            ListSearchResults result = new ListSearchResults
+            {
+                productCount = storeWithProducts.ProductCount,
+                percentageInList = 100 * storeWithProducts.ProductCount / count,
+                Store = await GetStoreAsync(storeWithProducts),
+                Distance = await CalculateDistanceAsync(storeWithProducts),
+                Records = await GetRecordsAsync(storeWithProducts)
+            };
+
+            result.totalPrice = result.Records.Sum(record => record.Price);
+
+            return result;
+        }
+
+        private async Task<Store> GetStoreAsync(StoreWithProductsModel storeWithProducts)
+        {
+            return await _context.Stores
+                .FirstOrDefaultAsync(m => m.Latitude == storeWithProducts.Latitude &&
+                                            m.Longitude == storeWithProducts.Longitude &&
+                                            m.NameStore == storeWithProducts.NameStore);
+        }
+
+        private async Task<double> CalculateDistanceAsync(StoreWithProductsModel storeWithProducts)
+        {
+            var userLocation = User.Identity.IsAuthenticated ? await GetLocationUserAsync() : new double[] { 0, 0 };
+
+            return (userLocation[0] != 0 && userLocation[1] != 0) ?
+                   Geolocation.CalculateDistance(userLocation[0], userLocation[1], storeWithProducts.Latitude, storeWithProducts.Longitude) / 1000 : 0;
+        }
+
+        private async Task<List<Record>> GetRecordsAsync(StoreWithProductsModel storeWithProducts)
+        {
+            var query = from record in _context.Records
+                        join listed in _context.Listed
+                        on record.NameProduct equals listed.NameProduct
+                        where record.NameStore == storeWithProducts.NameStore
+                              && record.Latitude == storeWithProducts.Latitude
+                              && record.Longitude == storeWithProducts.Longitude
+                        orderby record.RecordDate descending
+                        group record by record.NameProduct into grouped
+                        select grouped.First();
+
+            return await query.ToListAsync();
+        }
+
 
         /// <summary>
         /// Obtiene las coordenadas del usuario que está realizando la consulta.
