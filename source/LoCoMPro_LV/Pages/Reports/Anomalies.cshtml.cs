@@ -22,9 +22,25 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
-            await ProcessGroupedRecordsPrice(groupedRecords);
-            await ProcessGroupedRecordsDate(groupedRecords);
             Anomalies = await _context.Anomalies.ToListAsync();
+        }
+
+        public async Task<IActionResult> OnPostRunAnomaliesPrecio()
+        {
+            var orderedRecordsQuery = BuildOrderedRecordsQuery();
+            List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
+            await ProcessGroupedRecordsPrice(groupedRecords);
+
+            return new JsonResult(new { success = true });
+        }
+
+        public async Task<IActionResult> OnPostRunAnomaliesFecha()
+        {
+            var orderedRecordsQuery = BuildOrderedRecordsQuery();
+            List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
+            await ProcessGroupedRecordsDate(groupedRecords);
+
+            return new JsonResult(new { success = true });
         }
 
         private IQueryable<RecordStoreModel> BuildOrderedRecordsQuery()
@@ -38,22 +54,6 @@ namespace LoCoMPro_LV.Pages.Reports
                                                                    Store = store
                                                                };
             return orderedRecordsQuery;
-        }
-
-        private IOrderedQueryable<IGrouping<object, RecordStoreModel>> ApplySorting(IQueryable<RecordStoreModel> orderedRecordsQuery, string sortOrder)
-        {
-            var groupedRecordsQuery = from record in orderedRecordsQuery
-                                      group record by new
-                                      {
-                                          record.Record.NameProduct,
-                                          record.Record.NameStore,
-                                          record.Store.NameCanton,
-                                          record.Store.NameProvince
-                                      } into recordGroup
-                                      orderby recordGroup.Key.NameProduct descending
-                                      select recordGroup;
-            
-            return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
         }
 
         public class GroupingKey
@@ -80,12 +80,14 @@ namespace LoCoMPro_LV.Pages.Reports
         private async Task ProcessGroupedRecordsDate(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
+            int contador = 0;
             foreach (var group in groupedRecords)
             {
                 GroupingKey groupKey = group.Key;
 
                 foreach (var record in group)
                 {
+                    contador++;
                     recordsGroupContainer.Add(record);
                 }
                 AnomaliesDate(recordsGroupContainer);
@@ -97,12 +99,14 @@ namespace LoCoMPro_LV.Pages.Reports
         private async Task ProcessGroupedRecordsPrice(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
+            int contador = 0;
             foreach (var group in groupedRecords)
             {
                 GroupingKey groupKey = group.Key;
 
                 foreach (var record in group)
                 {
+                    contador++;
                     recordsGroupContainer.Add(record);
                 }
                 AnomaliesPrice(recordsGroupContainer);

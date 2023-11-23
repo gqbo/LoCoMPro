@@ -1,10 +1,20 @@
 ﻿@page
+@Html.AntiForgeryToken()
 @model LoCoMPro_LV.Pages.Reports.AnomaliesModel
 @{
     ViewData["Title"] = "Consulta";
 }
 
-<div class="container container-search index align-items-center">
+<div class="container container-anomalie-buttons index align-items-center">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <button type="button" class="anomalies-date-button btn btn-primary btn-sm" id="anomalies-date">Buscar Anomalias en Fecha</button>
+            <button type="button" class="anomalies-price-button btn btn-primary btn-sm" id="anomalies-price">Buscar Anomalias en Precio</button>
+        </div>
+    </div>
+</div>
+
+<div class="container container-anomalie-tittle index align-items-center">
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
             <h1 class="title_add">Anomalias</h1>
@@ -12,17 +22,7 @@
     </div>
 </div>
 
-<div class="container container-search index align-items-center">
-    <div class="row">
-        <div class="col-12 d-flex justify-content-center">
-            <button type="button" class="clear-filter-button btn btn-primary" id="filters-date" data-filter="fecha">Anomalias Fecha</button>
-            <button type="button" class="clear-filter-button btn btn-primary" id="filters-price" data-filter="precio">Anomalias Precio</button>
-            <button type="button" class="clear-filter-button btn btn-primary" id="clear-filters" data-filter="todos">Ver Todas</button>
-        </div>
-    </div>
-</div>
-
-<table class="table" id="miTabla">
+<table class="table-anomalies table" id="miTabla">
     <thead>
         <tr>
             <th>
@@ -53,7 +53,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="table-item precio">
+                    <div class="table-item">
                         @Html.DisplayFor(modelItem => firstItem.NameGenerator)
                     </div>
                 </td>
@@ -79,55 +79,43 @@
 
 @section scripts {
     <script>
+        // Asocia la función al evento de clic en el documento, delegando a los elementos con los IDs específicos
         $(document).ready(function () {
-            // Función para filtrar y mostrar solo las anomalías de tipo "Precio"
-            function filterAnomaliesPrecio() {
-                // Oculta todas las filas de la tabla
-                $('#miTabla tbody tr').hide();
-
-                // Muestra solo las filas con tipo "Precio"
-                $('#miTabla tbody tr').filter(':contains("Precio")').show();
-            }
-
-            // Función para mostrar todas las anomalías
-            function showAllAnomalies() {
-                // Muestra todas las filas de la tabla
-                $('#miTabla tbody tr').show();
-            }
-
-            // Asocia la función de filtrado al evento de clic en el botón
-            $('#filters-price').click(function () {
-                filterAnomaliesPrecio();
+            $(document).on('click', '#anomalies-date', function () {
+                runAnomaliesFecha();
             });
 
-            // Asocia la función de mostrar todas las anomalías al evento de clic en el botón de fecha
-            $('#clear-filters').click(function () {
-                showAllAnomalies();
+            $(document).on('click', '#anomalies-price', function () {
+                runAnomaliesPrecio();
             });
         });
-    </script>
 
-    <script>
-        $(document).ready(function () {
-            // Función para filtrar y mostrar solo las anomalías de tipo "Precio"
-            function filterAnomaliesFecha() {
-                // Oculta todas las filas de la tabla
-                $('#miTabla tbody tr').hide();
-
-                // Muestra solo las filas con tipo "Precio"
-                $('#miTabla tbody tr').filter(':contains("Fecha")').show();
-            }
-
-            // Función para mostrar todas las anomalías
-            function showAllAnomalies() {
-                // Muestra todas las filas de la tabla
-                $('#miTabla tbody tr').show();
-            }
-
-            // Asocia la función de filtrado al evento de clic en el botón
-            $('#filters-date').click(function () {
-                filterAnomaliesFecha();
+        function runAnomaliesFecha() {
+            $.ajax({
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                url: '/Reports/Anomalies?handler=RunAnomaliesFecha',
+                success: function () {
+                    location.reload();
+                }
             });
-        });
+        }
+
+        function runAnomaliesPrecio() {
+            $.ajax({
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                url: '/Reports/Anomalies?handler=RunAnomaliesPrecio',
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
     </script>
 }
