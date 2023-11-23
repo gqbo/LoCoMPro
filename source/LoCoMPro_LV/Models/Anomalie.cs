@@ -3,7 +3,7 @@
 namespace LoCoMPro_LV.Models
 {
     /// <summary>
-    /// Modelo con los reportes asociados a un registro dentro de la aplicacion.
+    /// Modelo con las anomalias asociadas a un registro dentro de la aplicacion.
     /// </summary>
     public class Anomalie
     {
