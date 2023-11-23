@@ -122,16 +122,22 @@ namespace LoCoMPro_LV.Pages.Reports
 
             foreach (var indice in selectedRecords)
             {
-                Anomalie anomalie = new Anomalie
+                if (!_context.Anomalies.Any(a =>
+                a.NameGenerator == indice.Record.NameGenerator &&
+                a.RecordDate == indice.Record.RecordDate &&
+                a.Type == "Fecha"))
                 {
-                    NameGenerator = indice.Record.NameGenerator,
-                    RecordDate = indice.Record.RecordDate,
-                    Type = "Fecha",
-                    Comment = "La fecha es muy antigua",
-                    State = 0
-                };
-                _context.Anomalies.Add(anomalie);
-                await _context.SaveChangesAsync();
+                    Anomalie anomalie = new Anomalie
+                    {
+                        NameGenerator = indice.Record.NameGenerator,
+                        RecordDate = indice.Record.RecordDate,
+                        Type = "Fecha",
+                        Comment = "La fecha es muy antigua",
+                        State = 0
+                    };
+                    _context.Anomalies.Add(anomalie);
+                    await _context.SaveChangesAsync();
+                }
             }
             selectedRecordsSubset.Clear();
             endIndex = 0;
@@ -189,16 +195,22 @@ namespace LoCoMPro_LV.Pages.Reports
                     {
                         coment = "El precio es muy alto comparado a los demás";
                     }
-                    Anomalie anomalie = new Anomalie
+                    if (!_context.Anomalies.Any(a =>
+                    a.NameGenerator == indice.Record.NameGenerator &&
+                    a.RecordDate == indice.Record.RecordDate &&
+                    a.Type == "Precio"))
                     {
-                        NameGenerator = indice.Record.NameGenerator,
-                        RecordDate = indice.Record.RecordDate,
-                        Type = "Precio",
-                        Comment = coment,
-                        State = 0
-                    };
-                    _context.Anomalies.Add(anomalie);
-                    await _context.SaveChangesAsync();
+                        Anomalie anomalie = new Anomalie
+                        {
+                            NameGenerator = indice.Record.NameGenerator,
+                            RecordDate = indice.Record.RecordDate,
+                            Type = "Precio",
+                            Comment = coment,
+                            State = 0
+                        };
+                        _context.Anomalies.Add(anomalie);
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
 
