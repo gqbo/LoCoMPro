@@ -39,14 +39,24 @@ namespace LoCoMPro_LV.Pages.Lists
         /// <summary>
         /// En este metodo se buscan los productos que estan listados en la lista del usuario para presentarlo al usuario.
         /// </summary>
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            var listed =  from listed_item in _context.Listed
-                              where listed_item.NameList == User.Identity.Name
-                              select listed_item;
+            var listed = await GetListedItemsAsync(User.Identity.Name);
 
-            Listed = await listed.ToListAsync();
+            Listed = listed;
+
+            return Page();
         }
+
+        private async Task<List<Listed>> GetListedItemsAsync(string userName)
+        {
+            var listed = from listedItem in _context.Listed
+                         where listedItem.NameList == userName
+                         select listedItem;
+
+            return await listed.ToListAsync();
+        }
+
 
         /// <summary>
         /// Este metodo se utiliza cuando se va a eliminar un producto de la lista para que entonces se bsuque el producto en la tabla
@@ -54,16 +64,30 @@ namespace LoCoMPro_LV.Pages.Lists
         /// </summary>
         public async Task<IActionResult> OnPostEliminarItem()
         {
-            var listed = await _context.Listed
-                .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == User.Identity.Name);
+            var listed = await GetListedItemAsync(User.Identity.Name);
 
+            if (listed != null)
+            {
+                RemoveListedItem(listed);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToPage("./Index");
+        }
+
+        private async Task<Listed> GetListedItemAsync(string userName)
+        {
+
+            return await _context.Listed
+                .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == userName);
+        }
+
+        private void RemoveListedItem(Listed listed)
+        {
             if (listed != null)
             {
                 _context.Listed.Remove(listed);
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToPage("./Index");
         }
     }
 }

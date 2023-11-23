@@ -61,7 +61,7 @@
         </div>
     </div>
     @if (User.Identity.IsAuthenticated) {
-        <form method="post" asp-page-handler="AgregarALista" class="ml-auto">
+        <form method="post" asp-page-handler="ManageList" class="ml-auto">
             <div class="row d-flex justify-content-end align-items-center details-container">
                 <input type="hidden" id="nameProduct" value="@Model.Records.First().Record.NameProduct" name="NameProduct" asp-for="NameProduct">
                 <input type="hidden" id="nameGenerator" name="NameGenerator" asp-for="NameGenerator">

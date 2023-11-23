@@ -224,35 +224,46 @@ namespace LoCoMPro_LV.Pages.Records
         /// Este metodo se utiliza al presionar el boton de agaregar a lista o de eliminar de lista y dependiendo la opcion seleccionada va a agregar el 
         /// producto a la lista del usuario o la va eliminar de la lista.
         /// </summary>
-        public async Task<IActionResult> OnPostAgregarAListaAsync()
+        public async Task<IActionResult> OnPostManageListAsync()
         {
             if (InList == 3)
             {
-                Listed item = new Listed
-                {
-                    NameList = User.Identity.Name,
-                    NameProduct = NameProduct,
-                    UserName = User.Identity.Name,
-                };
-
-                _context.Listed.Add(item);
-            } 
-            else if (InList == 4) 
+                AddToList(User.Identity.Name);
+            }
+            else if (InList == 4)
             {
-                var listed = await _context.Listed
-                    .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == User.Identity.Name);
-
-                if (listed != null)
-                {
-                    _context.Listed.Remove(listed);
-                    await _context.SaveChangesAsync();
-                }
+                await RemoveFromListAsync(User.Identity.Name);
             }
 
             await _context.SaveChangesAsync();
+
             string formattedDate = RecordDate.ToString("yyyy-MM-dd HH:mm:ss");
             string url = $"/Records/Details?NameGenerator={NameGenerator}&RecordDate={formattedDate}";
             return Redirect(url);
         }
+
+        public void AddToList(string userName)
+        {
+            Listed item = new Listed
+            {
+                NameList = userName,
+                NameProduct = NameProduct,
+                UserName = userName,
+            };
+
+            _context.Listed.Add(item);
+        }
+
+        public async Task RemoveFromListAsync(string userName)
+        {
+            var listed = await _context.Listed
+                .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == userName);
+
+            if (listed != null)
+            {
+                _context.Listed.Remove(listed);
+            }
+        }
+
     }
 }
