@@ -155,21 +155,30 @@ namespace LoCoMPro_LV.Pages.Reports
 
             // Calcula Q1 y Q3 utilizando los índices de Q2
             int q1Index = CalculateQ1Index(q2Index);
-            int q3Index = CalculateQ3Index(q2Index);
+            int q3Index = CalculateQ3Index(q2Index, sortedRecords.Count);
             double? q1;
             double? q3;
 
             // Obtiene los valores reales de Q1, Q2 y Q3
-            if (q2Index % 2 == 0)
+            if (q2Index % 2 == 0 )
             {
-                q1 = ((sortedRecords[q1Index].Record.Price) + (sortedRecords[q1Index + 1].Record.Price)) / 2;
-                q3 = ((sortedRecords[q3Index].Record.Price) + (sortedRecords[q3Index - 1].Record.Price)) / 2;
+                if (sortedRecords.Count % 2 != 0)
+                {
+                    q1 = (sortedRecords[q1Index].Record.Price);
+                    q3 = (sortedRecords[q3Index].Record.Price);
+                }
+                else
+                {
+                    q1 = ((sortedRecords[q1Index].Record.Price) + (sortedRecords[q1Index+1].Record.Price))/2;
+                    q3 = ((sortedRecords[q3Index].Record.Price) + (sortedRecords[q3Index-1].Record.Price))/2;
+                }             
             }
             else
             {
-                q1 = sortedRecords[q1Index].Record.Price;
-                q3 = sortedRecords[q3Index].Record.Price;
+                q1 = ((sortedRecords[q1Index].Record.Price) + (sortedRecords[q1Index + 1].Record.Price))/2;
+                q3 = ((sortedRecords[q3Index].Record.Price) + (sortedRecords[q3Index - 1].Record.Price))/2;
             }
+           
 
             // Calcula el RIC
             double? ric = q3 - q1;
@@ -238,23 +247,37 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             if (q2 % 2 == 0)
             {
-                return (int)((q2 / 2) - 1);
+                return (int) ((q2 / 2) - 1);
             }
             else
             {
-                return (int)(((q2 - 1) / 2));
+                return (int) (((q2-1) / 2) - 1);
             }
         }
 
-        private int CalculateQ3Index(int q2)
+        private int CalculateQ3Index(int q2, int recordCount)
         {
             if (q2 % 2 == 0)
             {
-                return (int)((q2 + (q2 / 2)) - 1);
+                if ((recordCount % 2 == 0))
+                {
+                    return (int)(((q2 + 1) + (q2 / 2)) - 1);
+                }
+                else
+                {
+                    return (int)((q2 + (q2 / 2)) - 1);
+                }
             }
             else
             {
-                return (int)(q2 + ((q2 - 1) / 2));
+                if ((recordCount % 2 == 0))
+                {
+                    return (int)((q2 + 1) + ((q2 + 1) / 2));
+                }
+                else
+                {
+                    return (int)((q2 + 1) + ((q2 - 1) / 2));
+                }
             }
         }
     }

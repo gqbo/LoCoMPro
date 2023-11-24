@@ -128,5 +128,40 @@ namespace LoCoMPro_LV.Pages.Reports
             int userRating = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
             return userRating;
         }
+
+        /// <summary>
+        /// Este metodo recibe los datos obtenidos de la vista para poder acepar o rechazar los reportes que se estan manejando.
+        /// </summary>
+        /// <param name="action">Es el dato que especifica si el dato fue aceptado o rechazado</param>
+        /// <param name="nameReporter">El nombre del usuario que realizo el reporte</param>
+        /// <param name="reportDate">La fecha en la que se realizo el reporte</param>
+        public async Task<IActionResult> OnPostAsync(string action, DateTime recordDate)
+        {
+            var entities = await _context.Anomalies
+                .Where(e => e.NameGenerator == NameGenerator && e.RecordDate == recordDate && e.RecordDate == RecordDate)
+                .ToListAsync();
+
+            if (entities == null || entities.Count == 0)
+            {
+                return NotFound();
+            }
+
+            foreach (var entity in entities)
+            {
+                if (action == "accept")
+                {
+                    entity.State = 1;
+                }
+                else if (action == "reject")
+                {
+                    entity.State = 2;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+           // await UpdateReportsAndHide(entities);
+            return RedirectToPage("./Index");
+        }
     }
 }
