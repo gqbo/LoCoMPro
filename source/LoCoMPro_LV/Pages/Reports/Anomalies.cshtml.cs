@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Pages.Records;
 using LoCoMPro_LV.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LoCoMPro_LV.Pages.Reports
 {
@@ -88,7 +87,10 @@ namespace LoCoMPro_LV.Pages.Reports
                 {
                     recordsGroupContainer.Add(record);
                 }
-                AnomaliesDate(recordsGroupContainer);
+                if (recordsGroupContainer.Count() > 4)
+                {
+                    AnomaliesDate(recordsGroupContainer);
+                }
 
                 recordsGroupContainer.Clear();
             }
@@ -105,8 +107,10 @@ namespace LoCoMPro_LV.Pages.Reports
                 {
                     recordsGroupContainer.Add(record);
                 }
-                AnomaliesPrice(recordsGroupContainer);
-
+                if (recordsGroupContainer.Count() > 6)
+                {
+                    AnomaliesPrice(recordsGroupContainer);
+                }
                 recordsGroupContainer.Clear();
             }
         }
@@ -114,11 +118,27 @@ namespace LoCoMPro_LV.Pages.Reports
         private async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
-            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
-            int endIndex = (int)(sortedRecords.Count * 0.2);
-            var selectedRecordsSubset = sortedRecords.Take(endIndex).ToList();
 
-            selectedRecords.AddRange(selectedRecordsSubset.Where(r => r.Record.Hide == false));
+            // Ordena los registros por fecha
+            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
+
+            // Calcula el índice que representa el 25% de los registros
+            int startIndex = (int)(sortedRecords.Count * 0.30);
+
+            // Obtiene la fecha en el índice del 25%
+            DateTime startDate = sortedRecords[startIndex].Record.RecordDate;
+
+            // Obtiene la fecha en el índice 100 (el dato más reciente)
+            DateTime endDate = sortedRecords[sortedRecords.Count - 1].Record.RecordDate;
+
+            // Calcula la fecha de referencia restando daysDifference
+            int delta = 2;
+            int daysDifference = (((int)(endDate - startDate).TotalDays)) * delta;
+            DateTime referenceDate = startDate.AddDays(-daysDifference);
+
+            // Filtra los registros que están antes de referenceDate
+
+            selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false));
 
             foreach (var indice in selectedRecords)
             {
@@ -139,8 +159,6 @@ namespace LoCoMPro_LV.Pages.Reports
                     await _context.SaveChangesAsync();
                 }
             }
-            selectedRecordsSubset.Clear();
-            endIndex = 0;
             sortedRecords.Clear();
             selectedRecords.Clear();
         }
@@ -282,3 +300,4 @@ namespace LoCoMPro_LV.Pages.Reports
         }
     }
 }
+
