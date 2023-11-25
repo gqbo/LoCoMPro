@@ -135,17 +135,17 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <param name="action">Es el dato que especifica si el dato fue aceptado o rechazado</param>
         /// <param name="nameReporter">El nombre del usuario que realizo el reporte</param>
         /// <param name="reportDate">La fecha en la que se realizo el reporte</param>
-        public async Task<IActionResult> OnPostAsync(string action, DateTime recordDate)
+        public async Task<IActionResult> OnPostAsync(string action, DateTime recordDate, string type)
         {
             var entities = await _context.Anomalies
-                .Where(e => e.NameGenerator == NameGenerator && e.RecordDate == recordDate && e.RecordDate == RecordDate)
+                .Where(e => e.NameGenerator == NameGenerator && e.RecordDate == recordDate )
                 .ToListAsync();
 
             if (entities == null || entities.Count == 0)
             {
                 return NotFound();
             }
-
+           
             foreach (var entity in entities)
             {
                 if (action == "accept")
@@ -154,14 +154,39 @@ namespace LoCoMPro_LV.Pages.Reports
                 }
                 else if (action == "reject")
                 {
-                    entity.State = 2;
+                    if (entity.Type == type)
+                    {
+                        entity.State = 2;
+                    }                    
                 }
             }
 
             await _context.SaveChangesAsync();
+            await UpdateAnomaliesAndHide(entities);
+            return RedirectToPage("./Anomalies");
+        }
 
-           // await UpdateReportsAndHide(entities);
-            return RedirectToPage("./Index");
+        private async Task UpdateAnomaliesAndHide(List<Anomalie> entities)
+        {
+            var recordsToUpdate = await _context.Records
+                .Where(r => r.NameGenerator == NameGenerator && r.RecordDate == RecordDate)
+                .ToListAsync();
+
+            if (recordsToUpdate != null && recordsToUpdate.Count > 0)
+            {
+                foreach (var record in recordsToUpdate)
+                {
+                    if (entities.Any(e => e.State == 1))
+                    {
+                        record.Hide = true;
+                    }
+                    else
+                    {
+                        record.Hide = false;
+                    }
+                }
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

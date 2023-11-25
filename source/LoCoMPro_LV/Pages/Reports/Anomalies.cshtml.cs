@@ -22,7 +22,9 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
-            Anomalies = await _context.Anomalies.ToListAsync();
+            Anomalies = await _context.Anomalies
+                .Where(a => a.State == 0)
+                .ToListAsync();
         }
 
         public async Task<IActionResult> OnPostRunAnomaliesPrecio()
@@ -148,7 +150,7 @@ namespace LoCoMPro_LV.Pages.Reports
             int daysDifference = (((int)(endDate - startDate).TotalDays)) * delta;
             DateTime referenceDate = startDate.AddDays(-daysDifference);
 
-            selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false));
+            selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false ));
 
             foreach (var indice in selectedRecords)
             {
