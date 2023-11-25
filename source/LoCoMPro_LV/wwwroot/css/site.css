@@ -509,3 +509,25 @@ table {
 .report-comment {
     min-width: 500px;
 }
+
+#imagePreviewContainer {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.img-preview {
+    max-width: 175px;
+    max-height: 170px;
+    min-width: 130px;
+    min-height: 130px;
+    margin-right: 10px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: block;
+}
+
+#fileCountError {
+    color: red;
+}
