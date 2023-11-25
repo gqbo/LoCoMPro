@@ -13,7 +13,7 @@ namespace LoCoMPro_LV.Models
         [Display(Name = "Nombre de usuario")]
         public string NameGenerator { get; set; }
 
-        [Display(Name = "Fecha de Registro")]
+        [Display(Name = "Fecha")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "La fecha es obligatorio.")]
         public DateTime RecordDate { get; set; }
