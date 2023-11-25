@@ -48,7 +48,7 @@ namespace LoCoMPro_LV.Pages.Lists
             return Page();
         }
 
-        private async Task<List<Listed>> GetListedItemsAsync(string userName)
+        public async Task<List<Listed>> GetListedItemsAsync(string userName)
         {
             var listed = from listedItem in _context.Listed
                          where listedItem.NameList == userName
@@ -75,7 +75,7 @@ namespace LoCoMPro_LV.Pages.Lists
             return RedirectToPage("./Index");
         }
 
-        private async Task<Listed> GetListedItemAsync(string userName)
+        public async Task<Listed> GetListedItemAsync(string userName)
         {
 
             return await _context.Listed
