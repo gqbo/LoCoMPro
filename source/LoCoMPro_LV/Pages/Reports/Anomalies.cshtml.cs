@@ -22,25 +22,23 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
-            await ProcessGroupedRecordsPrice(groupedRecords);
-            await ProcessGroupedRecordsDate(groupedRecords);
             Anomalies = await _context.Anomalies.ToListAsync();
         }
 
-        public IActionResult OnPostRunAnomaliesPrecio()
+        public async Task<IActionResult> OnPostRunAnomaliesPrecio()
         {
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
-            ProcessGroupedRecordsPrice(groupedRecords);
+            await ProcessGroupedRecordsPrice(groupedRecords);
 
             return new JsonResult(new { success = true });
         }
 
-        public IActionResult OnPostRunAnomaliesFecha()
+        public async Task<IActionResult> OnPostRunAnomaliesFecha()
         {
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
-            ProcessGroupedRecordsDate(groupedRecords);
+            await ProcessGroupedRecordsDate(groupedRecords);
 
             return new JsonResult(new { success = true });
         }
@@ -108,7 +106,7 @@ namespace LoCoMPro_LV.Pages.Reports
                 }
                 if (recordsGroupContainer.Count() > 4)
                 {
-                    AnomaliesDate(recordsGroupContainer);
+                    await AnomaliesDate(recordsGroupContainer);
                 }
 
                 recordsGroupContainer.Clear();
@@ -128,7 +126,7 @@ namespace LoCoMPro_LV.Pages.Reports
                 }
                 if (recordsGroupContainer.Count() > 6)
                 {
-                    AnomaliesPrice(recordsGroupContainer);
+                    await AnomaliesPrice(recordsGroupContainer);
                 }
                 recordsGroupContainer.Clear();
             }
@@ -138,24 +136,17 @@ namespace LoCoMPro_LV.Pages.Reports
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
 
-            // Ordena los registros por fecha
             var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
 
-            // Calcula el índice que representa el 25% de los registros
             int startIndex = (int)(sortedRecords.Count * 0.30);
 
-            // Obtiene la fecha en el índice del 25%
             DateTime startDate = sortedRecords[startIndex].Record.RecordDate;
 
-            // Obtiene la fecha en el índice 100 (el dato más reciente)
             DateTime endDate = sortedRecords[sortedRecords.Count - 1].Record.RecordDate;
 
-            // Calcula la fecha de referencia restando daysDifference
             int delta = 2;
             int daysDifference = (((int)(endDate - startDate).TotalDays)) * delta;
             DateTime referenceDate = startDate.AddDays(-daysDifference);
-
-            // Filtra los registros que están antes de referenceDate
 
             selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false));
 
@@ -187,16 +178,13 @@ namespace LoCoMPro_LV.Pages.Reports
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
             var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.Price).ToList();  // Ordena por precio
 
-            // Calcula Q2
             int q2Index = CalculateQ2Index(sortedRecords.Count);
 
-            // Calcula Q1 y Q3 utilizando los índices de Q2
             int q1Index = CalculateQ1Index(q2Index);
             int q3Index = CalculateQ3Index(q2Index, sortedRecords.Count);
             double? q1;
             double? q3;
 
-            // Obtiene los valores reales de Q1, Q2 y Q3
             if (q2Index % 2 == 0 )
             {
                 if (sortedRecords.Count % 2 != 0)
@@ -215,19 +203,14 @@ namespace LoCoMPro_LV.Pages.Reports
                 q1 = ((sortedRecords[q1Index].Record.Price) + (sortedRecords[q1Index + 1].Record.Price))/2;
                 q3 = ((sortedRecords[q3Index].Record.Price) + (sortedRecords[q3Index - 1].Record.Price))/2;
             }
-           
 
-            // Calcula el RIC
             double? ric = q3 - q1;
 
-            // Define el umbral (puedes ajustar este valor según tus necesidades)
             double umbral = 1.5;
 
-            // Establece el rango para valores no atípicos
             double? lowerBound = q1 - umbral * ric;
             double? upperBound = q3 + umbral * ric;
 
-            // Identifica los valores atípicos y agrégales a selectedRecords
             foreach (var indice in sortedRecords)
             {
                 if (indice.Record.Price < lowerBound || indice.Record.Price > upperBound)
@@ -235,11 +218,11 @@ namespace LoCoMPro_LV.Pages.Reports
                     string coment;
                     if (indice.Record.Price < lowerBound)
                     {
-                        coment = "El precio es muy bajo comparado a los demás";
+                        coment = "El precio es muy bajo comparado a los demás.";
                     }
                     else
                     {
-                        coment = "El precio es muy alto comparado a los demás";
+                        coment = "El precio es muy alto comparado a los demás.";
                     }
                     if (!_context.Anomalies.Any(a =>
                     a.NameGenerator == indice.Record.NameGenerator &&
@@ -259,23 +242,18 @@ namespace LoCoMPro_LV.Pages.Reports
                     }
                 }
             }
-
-            // Limpia la lista de registros seleccionados
             sortedRecords.Clear();
             selectedRecords.Clear();
         }
 
         private int CalculateQ2Index(int recordCount)
         {
-            // La mediana siempre es el valor en el centro o el promedio de los dos valores centrales
             if (recordCount % 2 == 0)
             {
-                // Si la cantidad de datos es par, la mediana es el índice del valor en el centro
                 return recordCount / 2;
             }
             else
             {
-                // Si la cantidad de datos es impar, la mediana es el índice del valor en el centro
                 return ((recordCount - 1) / 2) + 1;
             }
         }
