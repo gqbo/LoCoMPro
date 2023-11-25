@@ -346,6 +346,31 @@ td {
     padding: 10px !important;
 }
 
+.table-anomalies th:nth-child(1), .table-anomalies td:nth-child(1) {
+    width: 25% !important;
+    padding: 10px !important;
+}
+
+.table-anomalies th:nth-child(2), .table-anomalies td:nth-child(2) {
+    width: 13% !important;
+    padding: 10px !important;
+}
+
+.table-anomalies th:nth-child(3), .table-anomalies td:nth-child(3) {
+    width: 10% !important;
+    padding: 10px !important;
+}
+
+.table-anomalies th:nth-child(4), .table-anomalies td:nth-child(4) {
+    width: 5% !important;
+    padding: 10px !important;
+}
+
+.table-anomalies th:nth-child(5), .table-anomalies td:nth-child(5) {
+    width: 28% !important;
+    padding: 10px !important;
+}
+
 table {
     width: 100%;
 }
@@ -508,4 +533,30 @@ table {
 
 .report-comment {
     min-width: 500px;
+}
+
+.container-anomalie-tittle,
+.container-anomalie-buttons {
+    padding: 30px;
+    width: 500px;
+}
+
+.container-anomalie-buttons {
+    padding-bottom: 0px;
+}
+.anomalies-date-button,
+.anomalies-price-button {
+    border-radius: 25px !important;
+    border: 6px solid #276E90 !important;
+    background: #0A3143 !important;
+    width: 140px !important;
+    height: 70px !important;
+    margin: 20px;
+    color: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Ajusta el valor de la sombra según tu preferencia */
+}
+
+.anomalies-price-button {
+    border: 6px solid #0A3143 !important;
+    background: #276E90 !important;
 }
