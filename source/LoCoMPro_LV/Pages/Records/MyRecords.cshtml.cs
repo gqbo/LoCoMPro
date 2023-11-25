@@ -26,16 +26,58 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty]
         public List<Record> Records { get; set; }
 
-        /// <summary>
+        [BindProperty]
+        public string AuthenticatedUserName { get; set; }
+
+        [BindProperty]
+        public DateTime RecordDate { get; set; }
+
+        /// <summary> 
         /// Método invocado cuando se realiza una solicitud GET para mostrar los registros de un usuario.
         /// </summary>
         public async Task OnGetAsync()
         {
-            string authenticatedUserName = User.Identity.Name;
+            AuthenticatedUserName = User.Identity.Name;
             Records = await _context.Records
                 .Include(r => r.Store)
-                .Where(r => r.NameGenerator == authenticatedUserName)
+                .Where(r => r.NameGenerator == AuthenticatedUserName)
                 .ToListAsync();
+        }
+
+        /// <summary>
+        /// Este metodo se utiliza cuando se va a eliminar un registro realizado por un usuario registrado.
+        /// </summary>
+        public async Task<IActionResult> OnPostEliminarRegistro()
+        {
+            var record = await _context.Records
+                .FirstOrDefaultAsync(r => r.NameGenerator == User.Identity.Name && r.RecordDate == RecordDate);
+            if (record != null)
+            {
+                var reports = await _context.Reports
+                    .Where(r => r.NameGenerator == User.Identity.Name && r.RecordDate == RecordDate)
+                    .ToListAsync();
+                if (reports != null)
+                {
+                    foreach (var report in reports)
+                    {
+                        _context.Reports.Remove(report);
+                    }
+                }
+                var valorations = await _context.Valorations
+                    .Where(v => v.NameGenerator == User.Identity.Name && v.RecordDate == RecordDate)
+                    .ToListAsync();
+
+                if (valorations != null)
+                {
+                    foreach (var valoration in valorations)
+                    {
+                        _context.Valorations.Remove(valoration);
+                    }
+                }
+                _context.Records.Remove(record);
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToPage("./MyRecords");
         }
     }
 }
