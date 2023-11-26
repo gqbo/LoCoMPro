@@ -11,7 +11,7 @@
         <div class="card">
             <div class="bg">
                 <div class="info_detail row">
-                    <div class="col-4">
+                    <div class="col-6">
                         <div id="imageCarousel" class="carousel slide" data-ride="carousel">
                             <div class="carousel-inner">
                                 @foreach (var (image, index) in Model.Records.First().Images.Select((value, i) => (value, i)))
@@ -21,11 +21,11 @@
                                     </div>
                                 }
                             </div>
-                            <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+                            <a class="carousel-control-prev" href="#imageCarousel" style="background-color:rgba(11,43,58,0.3) !important;" role="button" data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
+                                <span class="sr-only">Previous </span>
                             </a>
-                            <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+                            <a class="carousel-control-next" href="#imageCarousel" style="background-color:rgba(11,43,58,0.3) !important;" role="button" data-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -415,23 +415,10 @@
 </script>
 
 <style>
-    /* Agrega este estilo para cambiar el color de los botones a azul */
     .carousel-control-prev,
     .carousel-control-next {
-        background-color: blue;
+        border-width: 6px; /* Puedes ajustar el valor según tu preferencia */
     }
-
-    /* Agrega este estilo para cambiar el color del icono de los botones a blanco */
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-        background-color: white;
-    }
-
-        /* Agrega este estilo para cambiar el color de la flecha de los botones a azul */
-        .carousel-control-prev-icon::before,
-        .carousel-control-next-icon::before {
-            color: blue;
-        }
 </style>
 
 <!-- Bootstrap CSS -->
