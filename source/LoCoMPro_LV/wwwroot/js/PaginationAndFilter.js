@@ -1,20 +1,24 @@
-﻿let allRows = [];
+﻿﻿// Variables para el manejo de datos y paginación
+let allRows = [];
 let filteredRows = [];
 let pageSize = 10;
 let currentPage = 1;
 let totalPages = 1;
 
+// Variables para el manejo de ordenamiento
 let selectedOrdering = "";
 let orderingState = 0;
 let clearFilter = 0;
 
-const tableBody = document.querySelector('#miTabla tbody');
-const priceOrdering = document.getElementById('orderPrice');
-const dateOrdering = document.getElementById('orderDate');
-const clearFilters = document.getElementById('clear-filters');
-const pageButtonsContainer = document.getElementById("pageButtonsContainer");
-const previousButton = document.getElementById('pagination-button-previous');
-const nextButton = document.getElementById('pagination-button-next');
+// Elementos del DOM
+const tableBody = document.querySelector('#miTabla tbody'); // Cuerpo de la tabla
+const priceOrdering = document.getElementById('orderPrice'); // Botón de ordenamiento por precio
+const dateOrdering = document.getElementById('orderDate'); // Botón de ordenamiento por fecha
+const distanceOrdering = document.getElementById('orderDistance'); // Botón de ordenamiento por distancia
+const clearFilters = document.getElementById('clear-filters'); // Botón de limpieza de filtros
+const pageButtonsContainer = document.getElementById("pageButtonsContainer"); // Contenedor de botones de paginación
+const previousButton = document.getElementById('pagination-button-previous'); // Botón de página anterior
+const nextButton = document.getElementById('pagination-button-next'); // Botón de página siguiente
 
 function initialize() {
     allRows = Array.from(document.querySelectorAll('#miTabla tbody tr'));
@@ -41,6 +45,9 @@ function initialize() {
 
     priceOrdering.addEventListener('click', () => handleOrderingClick("Price"));
     dateOrdering.addEventListener('click', () => handleOrderingClick("Date"));
+    if (distanceOrdering != null) {
+        distanceOrdering.addEventListener('click', () => handleOrderingClick("Distance"));
+    }
 
     showPageRows(currentPage);
     updateNavigationButtons();
@@ -171,6 +178,7 @@ function updateCantonsFilter(selectedProvinces) {
     });
 }
 
+// Manejador de eventos para limpiar los filtros
 function handleClearFilterClick() {
     document.querySelectorAll('.province-checkbox:checked').forEach(checkbox => {
         checkbox.checked = false;
@@ -190,6 +198,7 @@ function handleClearFilterClick() {
     applyFilters();
 }
 
+// Manejador de eventos para los botones de ordenamiento.
 function handleOrderingClick(orderType) {
     if (selectedOrdering === orderType) {
         orderingState *= -1; // Alternar entre ascendente y descendente
@@ -201,6 +210,7 @@ function handleOrderingClick(orderType) {
     applyFilters();
 }
 
+// Función de ordenamiento de la tabla por fecha
 function sortTableByDate() {
     var filas = filteredRows;
 
@@ -224,6 +234,7 @@ function sortTableByDate() {
     });
 }
 
+// Función de ordenamiento de la tabla por precio
 function sortTableByPrice() {
     var filas = filteredRows;
 
@@ -247,12 +258,41 @@ function sortTableByPrice() {
     });
 }
 
+// Función de ordenamiento de la tabla por distancia
+function sortTableByDistance() {
+    var filas = filteredRows;
+
+    filas.sort(function (a, b) {
+        var valueA = parseFloat(a.querySelector(".distancia").innerText.replace(' km', '')) || 0;
+        var valueB = parseFloat(b.querySelector(".distancia").innerText.replace(' km', '')) || 0;
+
+        if (orderingState === 1) {
+            return valueA - valueB;
+        } else {
+            return valueB - valueA;
+        }
+    });
+
+    filas.forEach(function (fila) {
+        tableBody.removeChild(fila);
+    });
+
+    filas.forEach(function (fila) {
+        tableBody.appendChild(fila);
+    });
+}
+
+// Función para actualizar la apariencia de los botones de ordenamiento
 function updateOrderingButtonAppearance() {
     const orderPriceButton = document.getElementById('orderPrice');
     const orderDateButton = document.getElementById('orderDate');
+    const orderDistanceButton = document.getElementById('orderDistance');
 
     orderPriceButton.innerHTML = orderPriceButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
     orderDateButton.innerHTML = orderDateButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
+    if (orderDistanceButton != null) {
+        orderDistanceButton.innerHTML = orderDistanceButton.innerHTML.replace(' 🡅', '').replace(' 🡇', '');
+    }
 
     if (selectedOrdering === "Price") {
         if (orderingState === 1) {
@@ -266,9 +306,16 @@ function updateOrderingButtonAppearance() {
         } else if (orderingState === -1) {
             orderDateButton.innerHTML += ' 🡇';
         }
+    } else if (selectedOrdering == "Distance") {
+        if (orderingState === 1) {
+            orderDistanceButton.innerHTML += ' 🡅';
+        } else if (orderingState === -1) {
+            orderDistanceButton.innerHTML += ' 🡇';
+        }
     }
 }
 
+// Función para aplicar filtros
 function applyFilters() {
     var selectedProvinces = Array.from(document.querySelectorAll('.province-checkbox:checked')).map(checkbox => checkbox.value);
     var selectedCantons = Array.from(document.querySelectorAll('.canton-checkbox:checked')).map(checkbox => checkbox.value);
@@ -282,11 +329,15 @@ function applyFilters() {
         (selectedStores.length === 0 || selectedStores.includes(row.dataset.store))
     );
 
+    // Ordenar la tabla y actualizar la apariencia de los botones de ordenamiento
     if (selectedOrdering === "Price") {
         sortTableByPrice();
         updateOrderingButtonAppearance();
     } else if (selectedOrdering === "Date") {
         sortTableByDate();
+        updateOrderingButtonAppearance();
+    } else if (selectedOrdering === "Distance") {
+        sortTableByDistance();
         updateOrderingButtonAppearance();
     }
 

@@ -233,6 +233,13 @@
                         <th class="date">
                             <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Record[0].Record.RecordDate)</a>
                         </th>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <th class="distance">
+                                <a class="a-ordering" id="orderDistance">@Html.DisplayNameFor(model => model.Record[0].Distance)</a>
+                            </th>
+
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -270,6 +277,14 @@
                                     @Html.DisplayFor(modelItem => firstItem.Record.RecordDate)
                                 </div>
                             </td>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <td>
+                                    <div class="table-item distancia">
+                                        @(firstItem.Distance != 0 ? string.Format("{0:0.0} km", firstItem.Distance) : "N/A")
+                                    </div>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>
