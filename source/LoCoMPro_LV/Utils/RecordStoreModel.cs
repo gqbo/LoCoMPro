@@ -14,5 +14,6 @@ namespace LoCoMPro_LV.Pages.Records
         public int AverageRating { get; set; }
         [Display(Name = "Distancia")]
         public double Distance { get; set; }
+        public int CountRating { get; set; }
     }
 }
