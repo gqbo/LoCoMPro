@@ -46,6 +46,15 @@
                             @Html.DisplayFor(modelItem => record.RecordDate)
                         </div>
                     </td>
+                    <td>
+                    <form method="post" asp-page-handler="DeleteRecord" class="ml-auto">
+                        <input type="hidden" id="RecordDate" value="@record.RecordDate" name="RecordDate" asp-for="RecordDate">
+                        <input type="hidden" id="Username" value="@record.NameGenerator" name="Username" asp-for="Username">
+                        <div class="table-item report">
+                            <input type="image" src="~/Images/borrar.png" alt="Eliminar" style="cursor: pointer;">
+                        </div>
+                    </form>
+                    </td>
                 </tr>
             }
         </tbody>

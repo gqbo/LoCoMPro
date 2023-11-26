@@ -29,6 +29,9 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty]
         public DateTime RecordDate { get; set; }
 
+        [BindProperty]
+        public string Username { get; set; }
+
         /// <summary> 
         /// Método invocado cuando se realiza una solicitud GET para mostrar los registros de un usuario.
         /// </summary>
@@ -41,16 +44,16 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
-        /// Este metodo se utiliza cuando se elimina un registro realizado por un usuario registrado.
+        /// Elimina un registro realizado por un usuario registrado.
         /// </summary>
         public async Task<IActionResult> OnPostDeleteRecord()
         {
             var record = await _context.Records
-                .FirstOrDefaultAsync(r => r.NameGenerator == User.Identity.Name && r.RecordDate == RecordDate);
+                .FirstOrDefaultAsync(r => r.NameGenerator == Username && r.RecordDate == RecordDate);
             if (record != null)
             {
-                await DeleteReports();
-                await DeleteValorations();
+                await DeleteReports(Username);
+                await DeleteValorations(Username);
                 _context.Records.Remove(record);
             }
             await _context.SaveChangesAsync();
@@ -60,11 +63,9 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Elimina los reportes relacionados al registro a eliminar.
         /// </summary>
-        private async Task DeleteReports()
+        public async Task DeleteReports(string Username)
         {
-            var reports = await _context.Reports
-                .Where(r => r.NameGenerator == User.Identity.Name && r.RecordDate == RecordDate)
-                .ToListAsync();
+            var reports = await GetReports(Username);
             if (reports != null)
             {
                 foreach (var report in reports)
@@ -77,12 +78,9 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Elimina las valoraciones relacionadas al registro a eliminar.
         /// </summary>
-        private async Task DeleteValorations()
+        public async Task DeleteValorations(string Username)
         {
-            var valorations = await _context.Valorations
-                .Where(v => v.NameGenerator == User.Identity.Name && v.RecordDate == RecordDate)
-                .ToListAsync();
-
+            var valorations = await GetValorations(Username);
             if (valorations != null)
             {
                 foreach (var valoration in valorations)
@@ -90,6 +88,28 @@ namespace LoCoMPro_LV.Pages.Records
                     _context.Valorations.Remove(valoration);
                 }
             }
+        }
+
+        /// <summary>
+        /// Obtiene las valoraciones relacionadas al registro a eliminar.
+        /// </summary>
+        public async Task<List<Evaluate>> GetValorations(string Username)
+        {
+            var valorations = await _context.Valorations
+                .Where(v => v.NameGenerator == Username && v.RecordDate == RecordDate)
+                .ToListAsync();
+            return valorations;
+        }
+
+        /// <summary>
+        /// Obtiene los reportes relacionadas al registro a eliminar.
+        /// </summary>
+        public async Task<List<Report>> GetReports(string Username)
+        {
+            var reports = await _context.Reports
+                .Where(r => r.NameGenerator == Username && r.RecordDate == RecordDate)
+                .ToListAsync();
+            return reports;
         }
     }
 }
