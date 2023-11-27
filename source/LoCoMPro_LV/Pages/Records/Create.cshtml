@@ -55,14 +55,16 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col d-flex justify-content-start align-items-center">
-                <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" />
-            </div>
-            <div class="col d-flex justify-content-end align-items-center">
-                <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
-            </div>
-        </div>
+        <form method="post">
+           <div class="row">
+               <div class="col d-flex justify-content-start align-items-center">
+                   <input type="submit" value="Confirmar" class="add_confirm" />
+               </div>
+               <div class="col d-flex justify-content-end align-items-center">
+                   <a asp-page="/Index" class="add_cancel d-flex justify-content-center align-items-center">Cancelar</a>
+               </div>
+           </div>
+       </form>
     </form>
 </div>
 

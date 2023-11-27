@@ -10,71 +10,54 @@
     <div class="row d-flex justify-content-center align-items-center">
         <div class="card">
             <div class="bg">
-                <div class="info_detail row">
-                    <div class="col-6">
-                        <div id="imageCarousel" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                                @foreach (var (image, index) in Model.Records.First().Images.Select((value, i) => (value, i)))
-                                {
-                                    <div class="carousel-item @(index == 0 ? "active" : "")">
-                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.DataImage)" alt="@image.NameImage" class="d-block w-100" style="max-width: 100%; max-height: 100%;">
-                                    </div>
-                                }
-                            </div>
-                            <a class="carousel-control-prev" href="#imageCarousel" style="background-color:rgba(11,43,58,0.3) !important;" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous </span>
-                            </a>
-                            <a class="carousel-control-next" href="#imageCarousel" style="background-color:rgba(11,43,58,0.3) !important;" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
+                <div class="info_detail">
+                    <div class="row">
+                        <div class="col-4 details-image">
                         </div>
-                    </div>
-
-                    <div>
-                        <div class="row d-flex justify-content-between align-items-center">
-                            <div class="col-10">
-                                <h2>
-                                    @Html.DisplayFor(model => model.Records.First().Record.NameProduct)
-                                </h2>
+                        <div class="col-8">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-10">
+                                    <h4>
+                                        @Html.DisplayFor(model => model.Records.First().Record.NameProduct)
+                                    </h4>
+                                </div>
+                                <div class="col-2 d-flex justify-content-end">
+                                    <h4>
+                                        ₡@Html.DisplayFor(model => model.Records.First().Record.Price)
+                                    </h4>
+                                </div>
                             </div>
-                            <div class="col-2 d-flex justify-content-end">
-                                <h4>
-                                    ₡@Html.DisplayFor(model => model.Records.First().Record.Price)
-                                </h4>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h4>
+                                        Usuario: @Html.DisplayFor(model => model.Records.First().Record.NameGenerator)
+                                    </h4>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row d-flex justify-content-between align-items-center">
-                            <div class="col">
-                                <h3>
-                                    Usuario: @Html.DisplayFor(model => model.Records.First().Record.NameGenerator)
-                                </h3>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h7>
+                                        Tienda: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        <br>
+                                        Provincia: @Html.DisplayFor(model => model.Records.First().Store.NameProvince)
+                                        <br>
+                                        Cantón: @Html.DisplayFor(model => model.Records.First().Store.NameCanton)
+                                    </h7>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row d-flex justify-content-between align-items-center">
-                            <div class="col">
-                                <h6>
-                                    Tienda: @Html.DisplayFor(model => model.Records.First().Record.NameStore)
-                                    <br>
-                                    Provincia: @Html.DisplayFor(model => model.Records.First().Store.NameProvince)
-                                    <br>
-                                    Cantón: @Html.DisplayFor(model => model.Records.First().Store.NameCanton)
-                                </h6>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h7>
+                                        Descripción: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt sapien eu turpis sodales, sed bibendum elit euismod. Nunc vel ipsum id leo luctus fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.
+                                    </h7>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row d-flex justify-content-between align-items-center">
-                            <div class="col">
-                                <h7>
-                                    Descripción: @Html.DisplayFor(model => model.Records.First().Record.Description)
-                                </h7>
-                            </div>
-                        </div>
-                        <div class="row d-flex justify-content-between align-items-center">
-                            <div class="col d-flex justify-content-end">
-                                <h7>
-                                    @Html.DisplayFor(model => model.Records.First().Record.RecordDate)
-                                </h7>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col d-flex justify-content-end">
+                                    <h7>
+                                        @Html.DisplayFor(model => model.Records.First().Record.RecordDate)
+                                    </h7>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -84,7 +67,7 @@
         </div>
     </div>
     <div class="row">
-        <table class="table-details table table-striped" id="miTabla">
+        <table class="table-details table" id="miTabla">
             <thead>
                 <tr>
                     <th>
@@ -107,7 +90,7 @@
                         Valoración
                     </th>
                     <th class="report">
-                        Reportar
+                        
                     </th>
                 </tr>
             </thead>
@@ -140,7 +123,7 @@
                                 <div class="ratings">
                                     @for (var starNumber = 5; starNumber >= 1; starNumber--)
                                     {
-                                        <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate" 
+                                        <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate"
                                         @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
                                             <span>★</span>
                                         </span>
@@ -183,7 +166,7 @@
                 star.addEventListener('click', () => {
 
                     if (isAuthenticated == "True") {
-                      
+
                         var rating = star.getAttribute('data-rating');
                         var nameGenerator = star.getAttribute('data-nameGenerator');
                         var recordDate = star.getAttribute('data-RecordDate');
@@ -235,7 +218,7 @@
             }
         });
     }
- 
+
     manageStarRatings();
 
 </script>
