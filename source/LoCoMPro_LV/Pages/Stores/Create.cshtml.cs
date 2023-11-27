@@ -65,7 +65,7 @@ namespace LoCoMPro_LV.Pages.Stores
         /// <summary>
         /// Almacena en una estructuras de datos las tiendas encontradas en la base de datos.
         /// </summary>
-        private async Task LoadStoresAsync()
+        public async Task LoadStoresAsync()
         {
             var stores = await _context.Stores.ToListAsync();
             Stores = new HashSet<string>(stores.Select(store => store.NameStore));

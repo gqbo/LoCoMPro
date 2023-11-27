@@ -37,10 +37,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         public async Task OnGetAsync()
         {
-            Records = await _context.Records
-                .Include(r => r.Store)
-                .Where(r => r.NameGenerator == User.Identity.Name)
-                .ToListAsync();
+            Records = await GetRecords(User.Identity.Name);
         }
 
         /// <summary>
@@ -110,6 +107,18 @@ namespace LoCoMPro_LV.Pages.Records
                 .Where(r => r.NameGenerator == Username && r.RecordDate == RecordDate)
                 .ToListAsync();
             return reports;
+        }
+
+        /// <summary>
+        /// Obtiene los registros relacionados al usuario.
+        /// </summary>
+        public async Task<List<Record>> GetRecords(string Username)
+        {
+            var Records = await _context.Records
+                .Include(r => r.Store)
+                .Where(r => r.NameGenerator == Username)
+                .ToListAsync();
+            return Records;
         }
     }
 }

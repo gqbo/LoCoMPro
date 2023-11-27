@@ -17,6 +17,38 @@ namespace n_unit_tests
     {
         // Test by Yordi Robles Siles - C06557. Sprint 3
         [Test]
+        public async Task GetRecordsUser()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
+
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var record = CreateSampleRecord();
+            dbContext.Add(record);
+            dbContext.SaveChanges();
+
+            var model = new MyRecordsModel(dbContext);
+
+            model.Username = record.NameGenerator;
+            model.RecordDate = record.RecordDate;
+
+            await dbContext.SaveChangesAsync();
+            var result = await model.GetRecords(model.Username);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.First().NameGenerator, Is.EqualTo("anne"));
+
+        }
+        // Test by Yordi Robles Siles - C06557. Sprint 3
+        [Test]
         public async Task GetValorationsUser()
         {
             var dbName = Guid.NewGuid().ToString();
