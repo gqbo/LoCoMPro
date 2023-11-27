@@ -79,7 +79,7 @@ namespace n_unit_tests
 
             await dbContext.SaveChangesAsync();
 
-            var addedItem = dbContext.Listed.FirstOrDefault(item => item.NameList == "anne" && item.NameProduct == "Apple Iphone 11 64gb");
+            var addedItem = dbContext.Listed.FirstOrDefault(item => item.NameList == "anne" && item.NameProduct == "Apple Iphone 12 64gb");
             Assert.Null(addedItem);
         }
 

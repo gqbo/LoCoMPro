@@ -1,4 +1,4 @@
-﻿// Variables para el manejo de datos y paginación
+﻿﻿// Variables para el manejo de datos y paginación
 let allRows = [];
 let filteredRows = [];
 let pageSize = 10;
@@ -20,30 +20,34 @@ const pageButtonsContainer = document.getElementById("pageButtonsContainer"); //
 const previousButton = document.getElementById('pagination-button-previous'); // Botón de página anterior
 const nextButton = document.getElementById('pagination-button-next'); // Botón de página siguiente
 
-// Inicialización de eventos y paginación al cargar la página
+// Esta función se encarga de inicializar la página. Configura los manejadores de eventos para los botones de paginación, 
+// las casillas de verificación de provincias, cantones y tiendas, así como los botones de ordenamiento y limpieza de filtros.
+// También inicializa la visualización de las filas de la página actual y actualiza los botones de navegación.
 function initialize() {
-    // Obtener todas las filas y copiarlas para filtrar
     allRows = Array.from(document.querySelectorAll('#miTabla tbody tr'));
     filteredRows = allRows.slice();
     totalPages = Math.ceil(filteredRows.length / pageSize);
     clearFilter = 0;
 
-    // Eventos para la paginación
     previousButton.addEventListener('click', handlePreviousButtonClick);
     nextButton.addEventListener('click', handleNextButtonClick);
 
-    // Eventos para los checkboxes de y establecimientos
+    document.querySelectorAll('.province-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', handleProvinceCheckboxChange);
+    });
+
+    document.querySelectorAll('.canton-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', applyFilters);
+    });
+
     document.querySelectorAll('.store-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', applyFilters);
     });
 
-    // Evento para limpiar filtros
     clearFilters.addEventListener('click', handleClearFilterClick);
 
-    // Mostrar las filas de la página actual y actualizar botones de navegación
     priceOrdering.addEventListener('click', () => handleOrderingClick("Price"));
     dateOrdering.addEventListener('click', () => handleOrderingClick("Date"));
-
     if (distanceOrdering != null) {
         distanceOrdering.addEventListener('click', () => handleOrderingClick("Distance"));
     }
@@ -52,18 +56,18 @@ function initialize() {
     updateNavigationButtons();
 }
 
-// Función para mostrar las filas de la página actual
+// Muestra las filas correspondientes a la página proporcionada y oculta las demás.
 function showPageRows(page) {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const rowsToDisplay = filteredRows.slice(startIndex, endIndex);
 
-    // Oculta todas las filas y muestra las seleccionadas
     allRows.forEach(row => row.style.display = 'none');
     rowsToDisplay.forEach(row => row.style.display = 'table-row');
 }
 
-// Función para crear los botones de la paginación
+// Crea un botón de página para la paginación, asignándole una clase específica y un manejador de eventos que actualiza 
+// la visualización de las filas y los botones de navegación.
 function createPageButtons(index) {
     const button = document.createElement("button");
     button.className = index === currentPage ? "pagination-current-page" : "pagination-pages";
@@ -76,7 +80,8 @@ function createPageButtons(index) {
     return button;
 }
 
-// Función para actualizar la apariencia de los botones de navegación
+// Actualiza la apariencia de los botones de navegación(anterior y siguiente) y los botones de páginas, mostrando un rango 
+// específico de páginas y añadiendo puntos suspensivos en caso de haber más páginas disponibles.
 function updateNavigationButtons() {
     previousButton.hidden = currentPage === 1;
     pageButtonsContainer.innerHTML = "";
@@ -123,7 +128,6 @@ function updateNavigationButtons() {
     nextButton.hidden = currentPage === totalPages;
 }
 
-// Manejador de eventos para el botón siguiente de la paginación.
 function handlePreviousButtonClick() {
     if (currentPage > 1) {
         currentPage--;
@@ -132,13 +136,76 @@ function handlePreviousButtonClick() {
     }
 }
 
-// Manejador de eventos para el botón anterior de la paginación.
 function handleNextButtonClick() {
     if (currentPage < totalPages) {
         currentPage++;
         showPageRows(currentPage);
         updateNavigationButtons();
     }
+}
+
+// Maneja el cambio en las casillas de verificación de las provincias, actualizando las casillas de verificación de los cantones y 
+// aplicando los filtros.
+function handleProvinceCheckboxChange() {
+    var selectedProvinces = Array.from(document.querySelectorAll('.province-checkbox:checked')).map(checkbox => checkbox.value);
+
+    if (selectedProvinces.length === 0) {
+        document.querySelectorAll('.canton-checkbox:checked').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    } else {
+        document.querySelectorAll('.canton-checkbox').forEach(checkbox => {
+            var province = checkbox.closest('.cantones-list').id.replace('cantones-', '');
+
+            if (!selectedProvinces.includes(province)) {
+                checkbox.checked = false;
+            }
+        });
+    }
+
+    // Ocultar los desplegables de cantones
+    document.querySelectorAll('.cantones-list').forEach(cantonesList => {
+        cantonesList.style.display = 'none';
+    });
+
+    selectedProvinces.forEach(province => {
+        document.getElementById('cantones-' + province).style.display = 'block';
+    });
+
+    updateCantonsFilter(selectedProvinces);
+    applyFilters();
+}
+
+// Actualiza las casillas de verificación de los cantones según las provincias seleccionadas.
+function updateCantonsFilter(selectedProvinces) {
+    var cantonCheckboxes = document.querySelectorAll('.canton-checkbox');
+
+    cantonCheckboxes.forEach(checkbox => {
+        var province = checkbox.closest('.cantones-list').id.replace('cantones-', '');
+
+        checkbox.disabled = selectedProvinces.length > 0 && !selectedProvinces.includes(province);
+        checkbox.checked = checkbox.checked && !checkbox.disabled;
+    });
+}
+
+// Maneja el evento de hacer clic en el botón de limpieza de filtros, deseleccionando todas las casillas de verificación y aplicando los filtros.
+function handleClearFilterClick() {
+    document.querySelectorAll('.province-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+        // Oculta el desplegable de cantones asociado
+        const province = checkbox.value;
+        document.getElementById('cantones-' + province).style.display = 'none';
+    });
+
+    document.querySelectorAll('.canton-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    document.querySelectorAll('.store-checkbox:checked').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    applyFilters();
 }
 
 // Manejador de eventos para los botones de ordenamiento.
@@ -153,17 +220,7 @@ function handleOrderingClick(orderType) {
     applyFilters();
 }
 
-// Manejador de eventos para limpiar los filtros
-function handleClearFilterClick() {
-    document.querySelectorAll('.store-checkbox:checked').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-
-    // Volver a aplicar los filtros y reinicializar la tabla
-    applyFilters();
-}
-
-// Función de ordenamiento de la tabla por fecha
+// Ordena la tabla por fecha, ascendente o descendente según el estado de ordenamiento.
 function sortTableByDate() {
     var filas = filteredRows;
 
@@ -187,7 +244,7 @@ function sortTableByDate() {
     });
 }
 
-// Función de ordenamiento de la tabla por precio
+// Ordena la tabla por precio, ascendente o descendente según el estado de ordenamiento.
 function sortTableByPrice() {
     var filas = filteredRows;
 
@@ -211,7 +268,7 @@ function sortTableByPrice() {
     });
 }
 
-// Función de ordenamiento de la tabla por distancia
+// Ordena la tabla por distancia, ascendente o descendente según el estado de ordenamiento.
 function sortTableByDistance() {
     var filas = filteredRows;
 
@@ -235,8 +292,7 @@ function sortTableByDistance() {
     });
 }
 
-// Función para actualizar la apariencia de los botones de ordenamiento
-
+// Actualiza la apariencia de los botones de ordenamiento indicando la dirección del ordenamiento (ascendente o descendente).
 function updateOrderingButtonAppearance() {
     const orderPriceButton = document.getElementById('orderPrice');
     const orderDateButton = document.getElementById('orderDate');
@@ -269,30 +325,19 @@ function updateOrderingButtonAppearance() {
     }
 }
 
-// Función para aplicar filtros
+// Aplica los filtros seleccionados, actualizando las filas a mostrar y ordenando la tabla según el criterio seleccionado.
 function applyFilters() {
-    // Obtener establecimientos seleccionados
+    var selectedProvinces = Array.from(document.querySelectorAll('.province-checkbox:checked')).map(checkbox => checkbox.value);
+    var selectedCantons = Array.from(document.querySelectorAll('.canton-checkbox:checked')).map(checkbox => checkbox.value);
     var selectedStores = Array.from(document.querySelectorAll('.store-checkbox:checked')).map(checkbox => checkbox.value);
 
     currentPage = 1;
 
-    // Filtrar las filas según los establecimientos seleccionados
     filteredRows = allRows.filter(row =>
+        (selectedProvinces.length === 0 || selectedProvinces.includes(row.dataset.province)) &&
+        (selectedCantons.length === 0 || selectedCantons.includes(row.dataset.canton)) &&
         (selectedStores.length === 0 || selectedStores.includes(row.dataset.store))
     );
-
-    // Desmarcar todos los checkboxes antes de aplicar los filtros
-    document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-
-    // Marcar los checkboxes según los filtros aplicados
-    selectedStores.forEach(store => {
-        const checkbox = document.querySelector('.store-checkbox[value="' + store + '"]');
-        if (checkbox) {
-            checkbox.checked = true;
-        }
-    });
 
     // Ordenar la tabla y actualizar la apariencia de los botones de ordenamiento
     if (selectedOrdering === "Price") {
@@ -306,12 +351,10 @@ function applyFilters() {
         updateOrderingButtonAppearance();
     }
 
-    // Actualizar el número total de páginas y mostrar la página actual
     totalPages = Math.ceil(filteredRows.length / pageSize);
 
     showPageRows(currentPage);
     updateNavigationButtons();
 }
 
-// Inicializar la funcionalidad al cargar la página
 initialize();

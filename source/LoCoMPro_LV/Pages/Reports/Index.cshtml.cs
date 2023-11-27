@@ -4,6 +4,7 @@ using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using LoCoMPro_LV.Utils;
 using System.Data.SqlClient;
+using LoCoMPro_LV.Pages.Records;
 
 namespace LoCoMPro_LV.Pages.Reports
 {
@@ -45,7 +46,7 @@ namespace LoCoMPro_LV.Pages.Reports
 
             currentReports.RemoveAll(m => m.Reports.Count == 0);
 
-            SetAverageRatings(currentReports);
+            SetAverageAndCountRatings(currentReports);
 
             SetCountActiveReports(currentReports);
 
@@ -133,19 +134,43 @@ namespace LoCoMPro_LV.Pages.Reports
         }
 
         /// <summary>
+        /// Método utilizado para obtener la cantidad de valoraciones de un registro en específico utilizando
+        /// una función escalar creada en la base de datos.
+        /// <param name="nameGenerator">Nombre del generador de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// <param name="recordDate">Fecha de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// </summary>
+        private int GetCountRating(string nameGenerator, DateTime recordDate)
+        {
+            string connectionString = _databaseUtils.GetConnectionString();
+            string sqlQuery = "SELECT dbo.GetCountRating(@NameGenerator, @RecordDate)";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@NameGenerator", nameGenerator),
+                new SqlParameter("@RecordDate", recordDate)
+            };
+            int countRating = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
+            return countRating;
+        }
+
+        /// <summary>
         /// Método utilizado para definir el promedio de las valoraciones de estrellas de un registro en específico utilizando
         /// una función escalar creada en la base de datos.
         /// <param name="currentReports">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
         /// </summary>
-        private void SetAverageRatings(List<RecordStoreReportModel> currentReports)
+        private void SetAverageAndCountRatings(List<RecordStoreReportModel> currentReports)
         {
-            List<int> averageRatings = new List<int>();
+            List<int> averageRatings = new();
+            List<int> countRatings = new();
+
 
             foreach (var recordStoreModel in currentReports)
             {
                 int averageRating = GetAverageRating(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
+                int countRating = GetCountRating(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
                 averageRatings.Add(averageRating);
+                countRatings.Add(countRating);
                 recordStoreModel.recordValoration = averageRatings.Last();
+                recordStoreModel.CountRating = countRatings.Last();
             }
         }
 

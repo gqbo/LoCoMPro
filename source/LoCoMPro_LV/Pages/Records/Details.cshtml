@@ -139,15 +139,20 @@
                             </div>
                         </td>
                         <td>
-                            <div class="ratings-wrapper">
-                                <div class="ratings">
-                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
-                                    {
-                                        <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate" 
-                                        @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
-                                            <span>★</span>
-                                        </span>
-                                    }
+                            <div class="ratings-container">
+                                <div class="ratings-wrapper">
+                                    <div class="ratings">
+                                        @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                        {
+                                            <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate"
+                                            @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
+                                                <span>★</span>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="count-rating" data-id="@firstItem.Record.NameGenerator-@firstItem.Record.RecordDate">
+                                    ( @Html.DisplayFor(modelItem => firstItem.CountRating) )
                                 </div>
                             </div>
                         </td>
@@ -181,7 +186,6 @@
 
             stars.forEach(star => {
                 star.addEventListener('click', () => {
-
                     if (isAuthenticated == "True") {
                       
                         var rating = star.getAttribute('data-rating');
@@ -189,9 +193,11 @@
                         var recordDate = star.getAttribute('data-RecordDate');
 
                         updateStarColors(stars, rating);
-                        sendPost(rating, nameGenerator, recordDate);
+                        sendPostRating(rating, nameGenerator, recordDate);
+
                     } else {
                         window.location.href = '../Identity/Account/Login';
+                        return false;
                     }
                 });
             });
@@ -220,7 +226,7 @@
         console.log(`Usuario calificador: ${userName}`);
     }
 
-    function sendPost(rating, nameGenerator, recordDate) {
+    function sendPostRating(rating, nameGenerator, recordDate) {
         $.ajax({
             type: 'POST',
             beforeSend: function (xhr) {
@@ -229,13 +235,16 @@
             },
             url: '/Records/Details?handler=SubmitRating',
             data: { rating: rating, nameGenerator: nameGenerator, recordDate: recordDate },
-            success: function (data) {
+            success: function (result) {
+                console.log("SI SIRVIO EL POST para el promedio de la valoración");
+                var elementId = nameGenerator + "-" + recordDate;
+                $(".count-rating[data-id='" + elementId + "']").text("( " + result.countRating + " )");
             },
-            error: function (error) {
+            error: function () {
             }
         });
-    }
- 
+    } 
+
     manageStarRatings();
 
 </script>
@@ -413,4 +422,3 @@
         generarPaginacion();
     });
 </script>
-
