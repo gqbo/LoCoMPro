@@ -15,7 +15,7 @@
                             <div class="col-10">
                                 <div class="input-group mb-3 loupe-text">
                                     <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
-                                    <input class=" loupe-button btn btn-light" id="button-addon2" type="submit" value="Buscar">
+                                    <input class=" loupe-button btn btn-light" id="searchButton" type="submit" value="Buscar">
                                 </div>
                             </div>
                             <div class="col-2">
@@ -121,7 +121,7 @@
 
     function toggleSearchButton() {
         const searchStringInput = document.getElementById("SearchString");
-        const searchButton = document.getElementById("button-addon2");
+        const searchButton = document.getElementById("searchButton");
 
         if (searchStringInput.value.trim() !== "") {
             searchButton.disabled = false;
@@ -180,6 +180,26 @@
             <div class="filtro-form filter-box bg-red">
                 <h4>Filtros</h4>
                 <div class="form-group">
+                    <h5>Ubicación</h5>
+                    @foreach (var province in Model.FilteredProvinces)
+                    {
+                        <div>
+                            <input type="checkbox" class="province-checkbox" value="@province"> @province
+                        </div>
+                        <div id="cantones-@province" class="cantones-list" style="display: none; padding-left: 20px;">
+                            @foreach (var canton in Model.Cantons[province])
+                            {
+                                if (Model.FilteredCantons.Contains(canton))
+                                {
+                                    <div>
+                                        <input type="checkbox" class="canton-checkbox province-@province" value="@canton"> @canton
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="form-group">
                     <h5>Establecimiento</h5>
                     @foreach (var store in Model.FilteredStores)
                     {
@@ -188,7 +208,7 @@
                         </div>
                     }
                 </div>
-                <button type="button" class="clear-filter-button btn btn-danger d-flex justify-content-center align-items-center" id="clear-filters">Limpiar Filtros</button>
+                <button type="button" class="clear-filter-button btn btn-primary" id="clear-filters">Limpiar Filtros</button>
             </div>
         </div>
         <div class="col-md-9">
@@ -213,6 +233,13 @@
                         <th class="date">
                             <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Record[0].Record.RecordDate)</a>
                         </th>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <th class="distance">
+                                <a class="a-ordering" id="orderDistance">@Html.DisplayNameFor(model => model.Record[0].Distance)</a>
+                            </th>
+
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -250,6 +277,14 @@
                                     @Html.DisplayFor(modelItem => firstItem.Record.RecordDate)
                                 </div>
                             </td>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <td>
+                                    <div class="table-item distancia">
+                                        @(firstItem.Distance != 0 ? string.Format("{0:0.0} km", firstItem.Distance) : "N/A")
+                                    </div>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>
