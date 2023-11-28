@@ -106,7 +106,7 @@ namespace functional_tests
 
             // Test Funcional:  Yordi Robles Siles. Sprint 3
             [Test]
-            public void DeleteRecordTest()
+            public void CreateRecordTest()
             {
                 LoginPage loginPage = new LoginPage(driver);
                 loginPage.LoginUser("yordi", "Yordi1.");
@@ -115,6 +115,17 @@ namespace functional_tests
                 addRecordPage.CreateStore();
                 addRecordPage.CreateRecord("Pali", "Esto es una prueba", "1000", "Esto es una prueba.", "Moda");
 
+                string currentUrl = driver.Url;
+                string expectedUrl = "http://localhost:5064/";
+                Assert.That(currentUrl, Is.EqualTo(expectedUrl));
+            }
+
+            // Test Funcional:  Yordi Robles Siles. Sprint 3
+            [Test]
+            public void DeleteRecordTest()
+            {
+                LoginPage loginPage = new LoginPage(driver);
+                loginPage.LoginUser("yordi", "Yordi1.");
                 MyRecordsPage myRecordsPage = new MyRecordsPage(driver);
                 myRecordsPage.DeleteRecord();
 
@@ -122,5 +133,5 @@ namespace functional_tests
                 string expectedUrl = "http://localhost:5064/Records/MyRecords";
                 Assert.That(currentUrl, Is.EqualTo(expectedUrl));
             }
-        }
+    }
 }
