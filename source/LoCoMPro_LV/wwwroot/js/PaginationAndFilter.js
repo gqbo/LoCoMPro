@@ -249,8 +249,8 @@ function sortTableByPrice() {
     var filas = filteredRows;
 
     filas.sort(function (a, b) {
-        var valueA = a.querySelector(".precio").textContent.replace("₡", "").trim();
-        var valueB = b.querySelector(".precio").textContent.replace("₡", "").trim();
+        var valueA = a.querySelector(".precio").textContent.replace("₡", "").replace(/[.,]/g, "").trim();
+        var valueB = b.querySelector(".precio").textContent.replace("₡", "").replace(/[.,]/g, "").trim();
 
         if (orderingState === 1) {
             return parseFloat(valueA) - parseFloat(valueB);

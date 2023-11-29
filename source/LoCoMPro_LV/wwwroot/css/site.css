@@ -165,7 +165,7 @@ body {
 .card {
     position: relative !important;
     width: 87% !important;
-    height: 300px !important;
+    height: 290px !important;
     border-radius: 14px !important;
     z-index: 1111;
     overflow: hidden !important;
@@ -249,7 +249,6 @@ td {
 
 .precio {
     text-align: right !important;
-    margin-right: 20px !important;
 }
 
 .report {
@@ -264,7 +263,7 @@ td {
 }
 
 .table-details th:nth-child(1), .table-details td:nth-child(1) {
-    width: 15% !important;
+    width: 17% !important;
     padding: 10px !important;
 }
 
@@ -279,12 +278,12 @@ td {
 }
 
 .table-details th:nth-child(4), .table-details td:nth-child(4) {
-    width: 32% !important;
+    width: 35% !important;
     padding: 10px !important;
 }
 
 .table-details th:nth-child(5), .table-details td:nth-child(5) {
-    width: 15% !important;
+    width: 10% !important;
     padding: 10px !important;
 }
 
@@ -294,7 +293,7 @@ td {
 }
 
 .table th:nth-child(1), .table td:nth-child(1) {
-    width: 25%;
+    width: 23%;
     padding: 10px;
 }
 
@@ -314,16 +313,18 @@ td {
 }
 
 .table th:nth-child(5), .table td:nth-child(5) {
+    width: 12%;
     width: 13%;
     padding: 10px;
 }
 
 .table th:nth-child(6), .table td:nth-child(6) {
+    width: 18%;
     width: 13%;
     padding: 10px;
 }
 .table th:nth-child(7), .table td:nth-child(7) {
-    width: 13%;
+    width: 25%;
     padding: 10px;
 }
 
@@ -333,22 +334,22 @@ td {
 }
 
 .table-reports th:nth-child(2), .table-reports td:nth-child(2) {
-    width: 15% !important;
+    width: 8% !important;
     padding: 10px !important;
 }
 
 .table-reports th:nth-child(3), .table-reports td:nth-child(3) {
-    width: 15% !important;
+    width: 17% !important;
     padding: 10px !important;
 }
 
 .table-reports th:nth-child(4), .table-reports td:nth-child(4) {
-    width: 22% !important;
+    width: 26% !important;
     padding: 10px !important;
 }
 
 .table-reports th:nth-child(5), .table-reports td:nth-child(5) {
-    width: 12% !important;
+    width: 13% !important;
     padding: 10px !important;
 }
 
@@ -435,34 +436,133 @@ table {
 }
 
 .add_confirm {
-    border-radius: 25px !important;
-    border: 6px solid #276E90 !important;
-    background: #0A3143 !important;
-    width: 140px !important;
-    height: 70px !important;
-    margin: 20px;
-    color: white !important;
+    appearance: none;
+    background-color: transparent;
+    border: 0.125em solid #0A3143;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    color: #0A3143;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 3.75em;
+    min-width: 0;
+    outline: none;
+    padding: 1em 2.3em;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+}
+
+.add_confirm:disabled {
+    pointer-events: none;
+}
+
+    .add_confirm:hover {
+        color: #fff !important;
+        background-color: #0A3143;
+        box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+        transform: translateY(-2px);
+    }
+
+.add_confirm:active {
+    box-shadow: none;
+    transform: translateY(0);
 }
 
 .add_reject {
-    border-radius: 25px !important;
-    border: 6px solid #125270 !important;
-    background: #276E90 !important;
-    width: 140px !important;
-    height: 70px !important;
-    margin: 20px;
-    color: white !important;
+    appearance: none;
+    background-color: transparent;
+    border: 0.125em solid #276E90;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    color: #276E90;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 18px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    height: 50px;
+    width: 160px;
+    outline: none;
+    padding: 1em 2.3em;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+}
+
+.add_reject:disabled {
+    pointer-events: none;
+}
+
+    .add_reject:hover {
+        color: #fff !important;
+        background-color: #276E90;
+        box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+        transform: translateY(-2px);
+    }
+
+.add_reject:active {
+    box-shadow: none;
+    transform: translateY(0);
 }
 
 .add_cancel {
-    border-radius: 25px !important;
-    border: 6px solid #d0d0d0 !important;
-    background: #dcdcdc !important;
-    width: 140px !important;
-    height: 70px !important;
-    color: #000 !important;
-    margin: 20px;
+    appearance: none;
+    background-color: transparent;
+    border: 0.125em solid #a50808;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    color: #a50808 !important;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 3.75em;
+    min-width: 0;
+    outline: none;
+    padding: 1em 2.3em;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
 }
+
+    .add_cancel:disabled {
+        pointer-events: none;
+    }
+
+    .add_cancel:hover {
+        color: #fff !important;
+        background-color: #a50808;
+        box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+        transform: translateY(-2px);
+    }
+
+    .add_cancel:active {
+        box-shadow: none;
+        transform: translateY(0);
+    }
 
 .in_list {
     border-radius: 15px !important;
@@ -524,12 +624,13 @@ table {
     margin: 25px;
 }
 
+
 .marker-info {
     display: none;
 }
 
 .report-item {
-    margin: 20px;
+    margin: 15px;
 }
 
 .carousel {
@@ -537,7 +638,7 @@ table {
 }
 
 .carousel-item {
-    height: 300px;
+    max-height: 300px;
 }
 
 .carousel-item .container {

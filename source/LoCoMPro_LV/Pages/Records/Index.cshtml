@@ -208,7 +208,9 @@
                         </div>
                     }
                 </div>
-                <button type="button" class="clear-filter-button btn btn-primary" id="clear-filters">Limpiar Filtros</button>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button type="button" class="add_reject d-flex justify-content-center align-items-center" id="clear-filters">Limpiar</button>
+                </div>
             </div>
         </div>
         <div class="col-md-9">
@@ -216,8 +218,7 @@
                 <thead>
                     <tr>
                         <th>
-                            <a class="a-ordering" id="orderNameProduct">Producto</a>
-                            <span class="arrow" id="dateArrow"></span>
+                            @Html.DisplayNameFor(model => model.Record[0].Record.NameProduct)
                         </th>
                         <th class="precio">
                             <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Record[0].Record.Price)</a>

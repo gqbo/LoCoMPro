@@ -9,7 +9,7 @@ namespace LoCoMPro_LV.Models
     {
         [Key]
         [Required(ErrorMessage = "El nombre del establecimiento es obligatorio.")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "El nombre del establecimiento debe tener entre 2 y 100 caracteres.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre del establecimiento debe tener entre 2 y 50 caracteres.")]
         [RegularExpression(@"^(?=.*[a-zA-ZáéíóúÁÉÍÓÚ])[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
             ErrorMessage = "El nombre del establecimiento debe contener al menos una letra (mayúscula o minúscula), además de números, espacios y caracteres especiales básicos, así como letras acentuadas.")]
         public string NameStore { get; set; }
