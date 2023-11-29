@@ -19,5 +19,7 @@ namespace LoCoMPro_LV.Models
         public ICollection<Evaluate> Valorations { get; set; }
 
         public ICollection<Report> Reports { get; set; }
+
+        public ICollection<List> Lists { get; set; }
     }
 }

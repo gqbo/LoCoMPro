@@ -60,6 +60,32 @@
             <div class="blob"></div>
         </div>
     </div>
+    @if (User.Identity.IsAuthenticated) {
+        <form method="post" asp-page-handler="ManageList" class="ml-auto">
+            <div class="row d-flex justify-content-end align-items-center details-container">
+                <input type="hidden" id="nameProduct" value="@Model.Records.First().Record.NameProduct" name="NameProduct" asp-for="NameProduct">
+                <input type="hidden" id="nameGenerator" name="NameGenerator" asp-for="NameGenerator">
+                <input type="hidden" id="recordDate" name="RecordDate" asp-for="RecordDate">
+
+                @if (Model.InList == 1)
+                {
+                    <button type="submit" class="button_quit button">
+                        <input type="hidden" id="InList" value="4" name="InList" asp-for="InList">
+                        <span class="button__text">Quitar de la lista</span>
+                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="button">
+                        <input type="hidden" id="InList" value="3" name="InList" asp-for="InList">
+                        <span class="button__text">Agregar a lista</span>
+                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                    </button>
+                }
+            </div>
+        </form>
+    }
     <div class="row">
         <table class="table-details table" id="miTabla">
             <thead>
@@ -140,9 +166,6 @@
             </tbody>
 
         </table>
-    </div>
-    <div>
-        <a href="javascript:history.go(-1);">Volver</a>
     </div>
 </div>
 
