@@ -249,7 +249,6 @@ td {
 
 .precio {
     text-align: right !important;
-    margin-right: 20px !important;
 }
 
 .report {
@@ -294,7 +293,7 @@ td {
 }
 
 .table th:nth-child(1), .table td:nth-child(1) {
-    width: 30%;
+    width: 23%;
     padding: 10px;
 }
 
@@ -325,7 +324,7 @@ td {
     padding: 10px;
 }
 .table th:nth-child(7), .table td:nth-child(7) {
-    width: 13%;
+    width: 25%;
     padding: 10px;
 }
 

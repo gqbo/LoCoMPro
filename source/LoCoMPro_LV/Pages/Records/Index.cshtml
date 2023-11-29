@@ -218,8 +218,7 @@
                 <thead>
                     <tr>
                         <th>
-                            <a class="a-ordering" id="orderNameProduct">Producto</a>
-                            <span class="arrow" id="dateArrow"></span>
+                            @Html.DisplayNameFor(model => model.Record[0].Record.NameProduct)
                         </th>
                         <th class="precio">
                             <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Record[0].Record.Price)</a>
