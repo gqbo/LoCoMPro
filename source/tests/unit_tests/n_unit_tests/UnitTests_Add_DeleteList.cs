@@ -39,7 +39,7 @@ namespace n_unit_tests
 
             model.NameProduct = "Apple Iphone 11 64gb";
 
-            model.AddToList("anne");
+            model.AddToListAsync("anne");
 
             await dbContext.SaveChangesAsync();
 
@@ -75,7 +75,7 @@ namespace n_unit_tests
 
             model.NameProduct = "Apple Iphone 12 64gb";
 
-            model.AddToList("anne");
+            _ = model.AddToListAsync("anne");
 
             await dbContext.SaveChangesAsync();
 

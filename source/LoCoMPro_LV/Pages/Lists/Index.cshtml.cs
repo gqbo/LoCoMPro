@@ -48,6 +48,10 @@ namespace LoCoMPro_LV.Pages.Lists
             return Page();
         }
 
+        /// <summary>
+        /// Este metodo funciona para obtener todos los los productos que pertenezcan a la lista del usuario que recibe por linea de parametros.
+        /// </summary>
+        /// <param name="userName">Usuario, dueño de la lista de la que se va a recopilar la información, arréglame esto gramaticalmente.</param>
         public async Task<List<Listed>> GetListedItemsAsync(string userName)
         {
             var listed = from listedItem in _context.Listed
@@ -75,6 +79,10 @@ namespace LoCoMPro_LV.Pages.Lists
             return RedirectToPage("./Index");
         }
 
+        /// <summary>
+        /// Este metodo funciona para obtener el item de la tabla listed que tenga el producto seleccionado y que pertenece a la lista del usuario que recibe por linea de parametros.
+        /// </summary>
+        /// <param name="userName">Usuario, dueño de la lista de la que se va a recopilar la información, arréglame esto gramaticalmente.</param>
         public async Task<Listed> GetListedItemAsync(string userName)
         {
 
@@ -82,6 +90,10 @@ namespace LoCoMPro_LV.Pages.Lists
                 .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == userName);
         }
 
+        /// <summary>
+        /// Este metodo recibe un item de listed por linea de parametros para que lo ilimine de la tabla.
+        /// </summary>
+        /// <param name="listed">Item de listred que va a ser eliminado</param>
         private void RemoveListedItem(Listed listed)
         {
             if (listed != null)

@@ -253,7 +253,7 @@ namespace LoCoMPro_LV.Pages.Records
         {
             if (InList == 3)
             {
-                AddToList(User.Identity.Name);
+                _ = AddToListAsync(User.Identity.Name);
             }
             else if (InList == 4)
             {
@@ -267,18 +267,33 @@ namespace LoCoMPro_LV.Pages.Records
             return Redirect(url);
         }
 
-        public void AddToList(string userName)
+        /// <summary>
+        /// Este metodo se encarga de realizar el agregado del producto que tiene NameProduct de la pagina de detalles a la lista que recibe por linea de parametros.
+        /// </summary>
+        /// <param name="userName">Es el nombre de la lista al que se le va a agregar el item.</param>
+        public async Task AddToListAsync(string userName)
         {
-            Listed item = new Listed
-            {
-                NameList = userName,
-                NameProduct = NameProduct,
-                UserName = userName,
-            };
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.NameProduct == NameProduct);
 
-            _context.Listed.Add(item);
+            if (product != null)
+            {
+                Listed item = new Listed
+                {
+                    NameList = userName,
+                    NameProduct = NameProduct,
+                    UserName = userName,
+                };
+
+                _context.Listed.Add(item);
+            }
         }
 
+
+        /// <summary>
+        /// Este metodo se encraga de eliminar el item de la lista que recibe por linea de parametros cuyo producto es el que tiene el NameProduct de la pagina de detalle.
+        /// </summary>
+        /// <param name="userName">Es el nombre de la lista al que se le va a eliminar el item.</param>
         public async Task RemoveFromListAsync(string userName)
         {
             var listed = await _context.Listed
