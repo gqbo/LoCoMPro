@@ -15,7 +15,7 @@
 .ratings span {
     cursor: pointer;
     transition: color .2s;
-    font-size: 23px;
+    font-size: 19px;
 }
 
 .ratings span:hover {
