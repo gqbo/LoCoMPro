@@ -37,7 +37,7 @@
                             <div class="row d-flex justify-content-between align-items-center">
                                 <div class="col">
                                     <h7>
-                                        Tienda: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        Tienda: @Html.DisplayFor(model => model.Records.First().Store.NameStore)
                                         <br>
                                         Provincia: @Html.DisplayFor(model => model.Records.First().Store.NameProvince)
                                         <br>
@@ -48,7 +48,7 @@
                             <div class="row d-flex justify-content-between align-items-center">
                                 <div class="col">
                                     <h7>
-                                        Descripción: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt sapien eu turpis sodales, sed bibendum elit euismod. Nunc vel ipsum id leo luctus fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.
+                                        Descripción: @Html.DisplayFor(model => model.Records.First().Record.Description)
                                     </h7>
                                 </div>
                             </div>
