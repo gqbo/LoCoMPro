@@ -114,6 +114,7 @@
                             </div>
                             <form method="post">
                                 <input type="hidden" name="reportDate" value="@Model.recordStoreAnomalies.Anomalies[report].RecordDate">
+                                <input type="hidden" name="type" value="@Model.recordStoreAnomalies.Anomalies[report].Type">
                                 <div class="row d-flex justify-content-center align-items-center">
                                     <div class="col d-flex justify-content-center align-items-center">
                                         <button class="add_confirm" type="submit" name="action" value="accept">Aceptar</button>

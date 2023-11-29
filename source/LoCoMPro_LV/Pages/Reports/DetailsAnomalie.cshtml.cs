@@ -10,6 +10,9 @@ namespace LoCoMPro_LV.Pages.Reports
 {
     public class DetailsAnomalieModel : PageModel
     {
+        /// <summary>
+        /// Contexto de la base de datos de LoCoMPro.
+        /// </summary>
         private readonly LoComproContext _context;
 
         /// <summary>
@@ -24,7 +27,7 @@ namespace LoCoMPro_LV.Pages.Reports
         }
 
         /// <summary>
-        /// Lista de tipo "RecordStoreReportModel", que almacena los registros correspondientes al producto que se selecciono para ver en detalle, con su respectiva tienda.
+        /// Lista de tipo "RecordStoreAnomaliesModel", que almacena los registros correspondientes al producto que se selecciono para ver en detalle, con su respectiva tienda.
         /// </summary>
         public RecordStoreAnomaliesModel recordStoreAnomalies { get; set; } = default!;
 
@@ -78,7 +81,7 @@ namespace LoCoMPro_LV.Pages.Reports
         }
 
         /// <summary>
-        /// Este metodo busca los reportes asociados a un registro
+        /// Este método busca los reportes anómalos asociados a un registro
         /// </summary>
         /// <param name="nameGenerator">Es el nombre del usuario que genero el registro al cual se le busca los reportes</param>
         /// <param name="recordDate">Es la fecha en la cual se genero el registro al cual se le busca los reportes</param>
@@ -116,7 +119,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// Este metodo se utiliza para sacar la valoracion media de un usuario con base a las valoraciones de los registros del usuario.
         /// </summary>
         /// <param name="nameGenerator">Nombre de usuario del usuario del que se requiere la valoracion.</param>
-        /// <returns>Devuelve la valoracion del usuario deseado</returns>
+        /// <returns>Devuelve la valoración del usuario deseado</returns>
         private int GetUserRating(string nameGenerator)
         {
             string connectionString = _databaseUtils.GetConnectionString();
@@ -133,19 +136,19 @@ namespace LoCoMPro_LV.Pages.Reports
         /// Este metodo recibe los datos obtenidos de la vista para poder acepar o rechazar los reportes que se estan manejando.
         /// </summary>
         /// <param name="action">Es el dato que especifica si el dato fue aceptado o rechazado</param>
-        /// <param name="nameReporter">El nombre del usuario que realizo el reporte</param>
-        /// <param name="reportDate">La fecha en la que se realizo el reporte</param>
-        public async Task<IActionResult> OnPostAsync(string action, DateTime recordDate)
+        /// <param name="type">Tipo de registro realizado</param>
+        /// <param name="recordDate">La fecha en la que se realizo el registro</param>
+        public async Task<IActionResult> OnPostAsync(string action, DateTime recordDate, string type)
         {
             var entities = await _context.Anomalies
-                .Where(e => e.NameGenerator == NameGenerator && e.RecordDate == recordDate && e.RecordDate == RecordDate)
+                .Where(e => e.NameGenerator == NameGenerator && e.RecordDate == recordDate )
                 .ToListAsync();
 
             if (entities == null || entities.Count == 0)
             {
                 return NotFound();
             }
-
+           
             foreach (var entity in entities)
             {
                 if (action == "accept")
@@ -154,14 +157,43 @@ namespace LoCoMPro_LV.Pages.Reports
                 }
                 else if (action == "reject")
                 {
-                    entity.State = 2;
+                    if (entity.Type == type)
+                    {
+                        entity.State = 2;
+                    }                    
                 }
             }
 
             await _context.SaveChangesAsync();
+            await UpdateAnomaliesAndHide(entities);
+            return RedirectToPage("./Anomalies");
+        }
 
-           // await UpdateReportsAndHide(entities);
-            return RedirectToPage("./Index");
+        /// <summary>
+        /// Este método se encarga de actualizar el campo "Hide" en la entidad "Record" basado en el campo "State" de las entidades "Anomalie".
+        /// </summary>
+        /// <param name="entities">La lista de entidades de tipo "Anomalie" que se utilizan para determinar el valor de "Hide"</param>
+        private async Task UpdateAnomaliesAndHide(List<Anomalie> entities)
+        {
+            var recordsToUpdate = await _context.Records
+                .Where(r => r.NameGenerator == NameGenerator && r.RecordDate == RecordDate)
+                .ToListAsync();
+
+            if (recordsToUpdate != null && recordsToUpdate.Count > 0)
+            {
+                foreach (var record in recordsToUpdate)
+                {
+                    if (entities.Any(e => e.State == 1))
+                    {
+                        record.Hide = true;
+                    }
+                    else
+                    {
+                        record.Hide = false;
+                    }
+                }
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

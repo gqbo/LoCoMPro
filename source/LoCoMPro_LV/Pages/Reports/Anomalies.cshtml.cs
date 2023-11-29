@@ -7,8 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LoCoMPro_LV.Pages.Reports
 {
+    /// <summary>
+    /// Página generadora de anomalias para la visualización de reportes generados por el sistema.
+    /// </summary>
     public class AnomaliesModel : PageModel
     {
+        /// <summary>
+        /// Contexto de la base de datos de LoCoMPro.
+        /// </summary>
         private readonly LoComproContext _context;
 
         public AnomaliesModel(LoComproContext context)
@@ -16,13 +22,21 @@ namespace LoCoMPro_LV.Pages.Reports
             _context = context;
         }
 
+        /// <summary>
+        /// Lista de tipo "Anomalie", que almacena los registros anómalos encontrados por el sistema.
+        /// </summary>
         public List<Anomalie> Anomalies { get; set; }
 
+        /// <summary>
+        /// Método que se ejecuta cuando se carga la página y se realiza la búsqueda y paginación de registros anómalos.
+        /// </summary>
         public async Task OnGetAsync()
         {
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
-            Anomalies = await _context.Anomalies.ToListAsync();
+            Anomalies = await _context.Anomalies
+                .Where(a => a.State == 0)
+                .ToListAsync();
         }
 
         public async Task<IActionResult> OnPostRunAnomaliesPrecio()
@@ -34,6 +48,10 @@ namespace LoCoMPro_LV.Pages.Reports
             return new JsonResult(new { success = true });
         }
 
+        /// <summary>
+        /// Método que carga los datos anómalos por fecha.
+        /// Realiza una serie de llamados que validan la consistencia de los datos que se desean añadir en la base de datos.
+        /// </summary>
         public async Task<IActionResult> OnPostRunAnomaliesFecha()
         {
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
@@ -43,6 +61,10 @@ namespace LoCoMPro_LV.Pages.Reports
             return new JsonResult(new { success = true });
         }
 
+        /// <summary>
+        /// Construye la consulta de registros ordenados basada en las opciones de búsqueda.
+        /// </summary>
+        /// <returns>Consulta de registros ordenados.</returns>
         private IQueryable<RecordStoreModel> BuildOrderedRecordsQuery()
         {
             IQueryable<RecordStoreModel> orderedRecordsQuery = from record in _context.Records
@@ -93,6 +115,10 @@ namespace LoCoMPro_LV.Pages.Reports
             ).ToList();
         }
 
+        /// <summary>
+        /// Método que recorre los diferentes grupos para enviar a validar los datos anómalos en agrupamientos con más de 4 datos.
+        /// Realiza llamados a un método que verifica los datos anómalos por fecha.
+        /// </summary>
         private async Task ProcessGroupedRecordsDate(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
@@ -148,7 +174,7 @@ namespace LoCoMPro_LV.Pages.Reports
             int daysDifference = (((int)(endDate - startDate).TotalDays)) * delta;
             DateTime referenceDate = startDate.AddDays(-daysDifference);
 
-            selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false));
+            selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false ));
 
             foreach (var indice in selectedRecords)
             {
