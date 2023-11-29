@@ -45,15 +45,20 @@
                     <td>@Html.DisplayFor(modelItem => reports.Record.NameGenerator)</td>
                     <td>@Html.DisplayFor(modelItem => reports.Record.Description)</td>
                     <td>
-                        <div class="ratings-wrapper">
-                            <div class="ratings">
-                                @for (var starNumber = 5; starNumber >= 1; starNumber--)
-                                {
-                                    <span data-rating="@starNumber"
-                                    @(starNumber <= reports.recordValoration ? "data-clicked" : "")>
-                                        <span>★</span>
-                                    </span>
-                                }
+                        <div class="ratings-container">
+                            <div class="ratings-wrapper">
+                                <div class="ratings">
+                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                    {
+                                        <span data-rating="@starNumber"
+                                        @(starNumber <= reports.recordValoration ? "data-clicked" : "")>
+                                            <span>★</span>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="count-rating">
+                                ( @Html.DisplayFor(modelItem => reports.CountRating) )
                             </div>
                         </div>
                     </td>

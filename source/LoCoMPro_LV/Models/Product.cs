@@ -17,5 +17,7 @@ namespace LoCoMPro_LV.Models
         public ICollection<Record> Record { get; set; }
 
         public ICollection<Associated> Associated { get; set; }
+
+        public ICollection<Listed> Listed { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace LoCoMPro_LV.Pages.Reports
         public int recordValoration { get; set; }
         public int generatorValoration { get; set; }
         public int reportCount { get; set; }
+        public int CountRating { get; set; }
         public IList<int> reporterValorations { get; set; }
     }
 }

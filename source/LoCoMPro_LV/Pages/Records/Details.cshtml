@@ -66,6 +66,32 @@
             <div class="blob"></div>
         </div>
     </div>
+    @if (User.Identity.IsAuthenticated) {
+        <form method="post" asp-page-handler="ManageList" class="ml-auto">
+            <div class="row d-flex justify-content-end align-items-center details-container">
+                <input type="hidden" id="nameProduct" value="@Model.Records.First().Record.NameProduct" name="NameProduct" asp-for="NameProduct">
+                <input type="hidden" id="nameGenerator" name="NameGenerator" asp-for="NameGenerator">
+                <input type="hidden" id="recordDate" name="RecordDate" asp-for="RecordDate">
+
+                @if (Model.InList == 1)
+                {
+                    <button type="submit" class="button_quit button">
+                        <input type="hidden" id="InList" value="4" name="InList" asp-for="InList">
+                        <span class="button__text">Quitar de la lista</span>
+                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="button">
+                        <input type="hidden" id="InList" value="3" name="InList" asp-for="InList">
+                        <span class="button__text">Agregar a lista</span>
+                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                    </button>
+                }
+            </div>
+        </form>
+    }
     <div class="row">
         <table class="table-details table" id="miTabla">
             <thead>
@@ -119,15 +145,20 @@
                             </div>
                         </td>
                         <td>
-                            <div class="ratings-wrapper">
-                                <div class="ratings">
-                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
-                                    {
-                                        <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate"
-                                        @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
-                                            <span>★</span>
-                                        </span>
-                                    }
+                            <div class="ratings-container">
+                                <div class="ratings-wrapper">
+                                    <div class="ratings">
+                                        @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                        {
+                                            <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate"
+                                            @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
+                                                <span>★</span>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="count-rating" data-id="@firstItem.Record.NameGenerator-@firstItem.Record.RecordDate">
+                                    ( @Html.DisplayFor(modelItem => firstItem.CountRating) )
                                 </div>
                             </div>
                         </td>
@@ -141,9 +172,6 @@
             </tbody>
 
         </table>
-    </div>
-    <div>
-        <a href="javascript:history.go(-1);">Volver</a>
     </div>
 </div>
 
@@ -164,7 +192,6 @@
 
             stars.forEach(star => {
                 star.addEventListener('click', () => {
-
                     if (isAuthenticated == "True") {
 
                         var rating = star.getAttribute('data-rating');
@@ -172,9 +199,11 @@
                         var recordDate = star.getAttribute('data-RecordDate');
 
                         updateStarColors(stars, rating);
-                        sendPost(rating, nameGenerator, recordDate);
+                        sendPostRating(rating, nameGenerator, recordDate);
+
                     } else {
                         window.location.href = '../Identity/Account/Login';
+                        return false;
                     }
                 });
             });
@@ -203,7 +232,7 @@
         console.log(`Usuario calificador: ${userName}`);
     }
 
-    function sendPost(rating, nameGenerator, recordDate) {
+    function sendPostRating(rating, nameGenerator, recordDate) {
         $.ajax({
             type: 'POST',
             beforeSend: function (xhr) {
@@ -212,12 +241,15 @@
             },
             url: '/Records/Details?handler=SubmitRating',
             data: { rating: rating, nameGenerator: nameGenerator, recordDate: recordDate },
-            success: function (data) {
+            success: function (result) {
+                console.log("SI SIRVIO EL POST para el promedio de la valoración");
+                var elementId = nameGenerator + "-" + recordDate;
+                $(".count-rating[data-id='" + elementId + "']").text("( " + result.countRating + " )");
             },
-            error: function (error) {
+            error: function () {
             }
         });
-    }
+    } 
 
     manageStarRatings();
 
@@ -396,4 +428,3 @@
         generarPaginacion();
     });
 </script>
-
