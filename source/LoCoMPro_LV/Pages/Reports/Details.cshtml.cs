@@ -5,6 +5,8 @@ using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using LoCoMPro_LV.Utils;
 using System.Data.SqlClient;
+using LoCoMPro_LV.Pages.Records;
+using System.Collections.Generic;
 
 namespace LoCoMPro_LV.Pages.Reports
 {
@@ -56,20 +58,16 @@ namespace LoCoMPro_LV.Pages.Reports
                                    Record = r,
                                    Store = s
                                })
-                 .FirstOrDefaultAsync();
+                               .FirstOrDefaultAsync();
 
             RecordStoreReportModel temp = new RecordStoreReportModel
             {
                 Record = query.Record,
                 Store = query.Store,
-
                 Reports = await GetReportsForRecordAsync(NameGenerator, RecordDate),
-
                 recordValoration = GetAverageRating(NameGenerator, RecordDate),
-
                 generatorValoration = GetUserRating(NameGenerator)
             };
-
             temp.reporterValorations = new List<int>();
 
             foreach (Report report in temp.Reports)
@@ -78,9 +76,27 @@ namespace LoCoMPro_LV.Pages.Reports
                 temp.reporterValorations.Add(rating);
             }
 
-            recordStoreReports = temp;
+            var images = await _context.Images
+            .Where(img => img.NameGenerator == temp.Record.NameGenerator
+                    && img.RecordDate == temp.Record.RecordDate)
+            .ToListAsync();
 
+            temp.Record.Images = images;
+
+            recordStoreReports = temp;
+            
             return Page();
+        }
+
+        private async Task LoadImagesForRecordsAsync(List<RecordStoreModel> records)
+        {
+            foreach (var recordStoreModel in records)
+            {
+                recordStoreModel.Images = await _context.Images
+                    .Where(img => img.NameGenerator == recordStoreModel.Record.NameGenerator
+                                && img.RecordDate == recordStoreModel.Record.RecordDate)
+                    .ToListAsync();
+            }
         }
 
         /// <summary>
