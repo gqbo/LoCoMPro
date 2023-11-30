@@ -13,23 +13,24 @@ namespace LoCoMPro_LV.Models
         [Display(Name = "Nombre de usuario")]
         public string NameGenerator { get; set; }
 
-        [Display(Name = "Fecha de Registro")]
+        [Display(Name = "Fecha")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "La fecha es obligatorio.")]
         public DateTime RecordDate { get; set; }
 
-        [StringLength(512, MinimumLength = 2, ErrorMessage = "La descripción tener entre 2 y 512 caracteres.")]
+        [StringLength(256, MinimumLength = 2, ErrorMessage = "La descripción tener entre 2 y 256 caracteres.")]
         [Display(Name = "Descripción")]
         public string Description { get; set; }
 
         [Display(Name = "Precio")]
         [Required(ErrorMessage = "El precio es obligatorio.")]
         [RegularExpression(@"^[1-9]\d*$", ErrorMessage = "El precio debe ser un número entero mayor que 0.")]
+        [DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
         public double? Price { get; set; }
 
         [Display(Name = "Establecimiento")]
         [Required(ErrorMessage = "El nombre del establecimiento es obligatorio.")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "El nombre del establecimiento debe tener entre 2 y 100 caracteres.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre del establecimiento debe tener entre 2 y 50 caracteres.")]
         [RegularExpression(@"^[\w\s,./\-()%:#áéíóúÁÉÍÓÚ]+$",
             ErrorMessage = "El nombre del establecimiento no es un nombre valido.")]
         public string NameStore { get; set; }
@@ -54,10 +55,13 @@ namespace LoCoMPro_LV.Models
 
         public Product Product { get; set; }
 
+        public ICollection<Image> Images { get; set; }
+
         public ICollection<Report> Reports { get; set; }
 
         public ICollection<Anomalie> Anomalies { get; set; }
 
         public ICollection<Evaluate> Valorations { get; set; }
+
     }
 }
