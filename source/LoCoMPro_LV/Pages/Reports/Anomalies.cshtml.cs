@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LoCoMPro_LV.Pages.Reports
 {
     /// <summary>
-    /// Página generadora de anomalias para la visualización de reportes generados por el sistema.
+    /// Página que muestra las anomalias y genera reportes del sistema que indican la anomalía encontrada.
     /// </summary>
     public class AnomaliesModel : PageModel
     {
@@ -39,6 +39,10 @@ namespace LoCoMPro_LV.Pages.Reports
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Procesa y ejecuta la detección de anomalías relacionadas con los precios en los registros ordenados.
+        /// </summary>
+        /// <returns>Una acción que representa el resultado de la operación.</returns>
         public async Task<IActionResult> OnPostRunAnomaliesPrecio()
         {
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
@@ -78,22 +82,10 @@ namespace LoCoMPro_LV.Pages.Reports
             return orderedRecordsQuery;
         }
 
-        private IOrderedQueryable<IGrouping<object, RecordStoreModel>> ApplySorting(IQueryable<RecordStoreModel> orderedRecordsQuery, string sortOrder)
-        {
-            var groupedRecordsQuery = from record in orderedRecordsQuery
-                                      group record by new
-                                      {
-                                          record.Record.NameProduct,
-                                          record.Record.NameStore,
-                                          record.Store.NameCanton,
-                                          record.Store.NameProvince
-                                      } into recordGroup
-                                      orderby recordGroup.Key.NameProduct descending
-                                      select recordGroup;
-            
-            return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
-        }
-
+        /// <summary>
+        /// Clase que representa una clave de agrupación para registros.
+        /// Contiene propiedades que representan los atributos de agrupación.
+        /// </summary>
         public class GroupingKey
         {
             public string NameProduct { get; set; }
@@ -102,6 +94,11 @@ namespace LoCoMPro_LV.Pages.Reports
             public string NameProvince { get; set; }
         }
 
+        /// <summary>
+        /// Agrupa registros de tiendas utilizando una clave personalizada.
+        /// </summary>
+        /// <param name="orderedRecordsQuery">Consulta de registros ordenados.</param>
+        /// <returns>Una lista de grupos de registros agrupados por una clave personalizada.</returns>
         private List<IGrouping<GroupingKey, RecordStoreModel>> GroupRecords(IQueryable<RecordStoreModel> orderedRecordsQuery)
         {
             return orderedRecordsQuery.GroupBy(
@@ -139,7 +136,11 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
-        private async Task ProcessGroupedRecordsPrice(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
+        /// <summary>
+        /// Ejecuta la detección de anomalías relacionadas con los precios en los registros agrupados.
+        /// </summary>
+        /// <param name="groupedRecords">La lista de registros agrupados.</param>
+        public async Task ProcessGroupedRecordsPrice(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
             foreach (var group in groupedRecords)
@@ -158,6 +159,10 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
+        /// <summary>
+        /// Identifica y maneja las anomalías relacionadas con las fechas en un grupo de registros.
+        /// </summary>
+        /// <param name="recordsGroupContainer">La lista de registros en el grupo.</param>
         private async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
@@ -199,10 +204,14 @@ namespace LoCoMPro_LV.Pages.Reports
             selectedRecords.Clear();
         }
 
+        /// <summary>
+        /// Identifica y maneja las anomalías relacionadas con los precios en un grupo de registros.
+        /// </summary>
+        /// <param name="recordsGroupContainer">La lista de registros en el grupo.</param>
         private async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
-            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.Price).ToList();  // Ordena por precio
+            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.Price).ToList();
 
             int q2Index = CalculateQ2Index(sortedRecords.Count);
 
@@ -272,7 +281,12 @@ namespace LoCoMPro_LV.Pages.Reports
             selectedRecords.Clear();
         }
 
-        private int CalculateQ2Index(int recordCount)
+        /// <summary>
+        /// Calcula el índice para Q2 (mediana) en una lista ordenada de registros.
+        /// </summary>
+        /// <param name="recordCount">El número total de registros.</param>
+        /// <returns>El índice para Q2.</returns>
+        public int CalculateQ2Index(int recordCount)
         {
             if (recordCount % 2 == 0)
             {
@@ -284,7 +298,12 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
-        private int CalculateQ1Index(int q2)
+        /// <summary>
+        /// Calcula el índice para Q1 (cuaril inferior) basado en el índice de Q2.
+        /// </summary>
+        /// <param name="q2">El índice para Q2 (mediana).</param>
+        /// <returns>El índice para Q1.</returns>
+        public int CalculateQ1Index(int q2)
         {
             if (q2 % 2 == 0)
             {
@@ -296,7 +315,13 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
-        private int CalculateQ3Index(int q2, int recordCount)
+        /// <summary>
+        /// Calcula el índice para Q3 (cuaril superior) basado en el índice de Q2 y el número total de registros.
+        /// </summary>
+        /// <param name="q2">El índice para Q2 (mediana).</param>
+        /// <param name="recordCount">El número total de registros.</param>
+        /// <returns>El índice para Q3.</returns>
+        public int CalculateQ3Index(int q2, int recordCount)
         {
             if (q2 % 2 == 0)
             {
