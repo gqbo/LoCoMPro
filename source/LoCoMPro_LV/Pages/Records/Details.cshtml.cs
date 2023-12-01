@@ -253,7 +253,7 @@ namespace LoCoMPro_LV.Pages.Records
         {
             if (InList == 3)
             {
-                _ = AddToListAsync(User.Identity.Name);
+                await AddToListAsync(User.Identity.Name);
             }
             else if (InList == 4)
             {

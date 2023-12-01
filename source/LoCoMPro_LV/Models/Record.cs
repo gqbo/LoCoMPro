@@ -55,8 +55,11 @@ namespace LoCoMPro_LV.Models
 
         public Product Product { get; set; }
 
+        public ICollection<Image> Images { get; set; }
+
         public ICollection<Report> Reports { get; set; }
 
         public ICollection<Evaluate> Valorations { get; set; }
+
     }
 }

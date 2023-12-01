@@ -6,6 +6,7 @@
     ViewData["Title"] = "Details";
 }
 
+
 <div class="container details-container">
     <div class="row d-flex justify-content-center align-items-center">
         <div class="card">
@@ -66,7 +67,8 @@
             <div class="blob"></div>
         </div>
     </div>
-    @if (User.Identity.IsAuthenticated) {
+    @if (User.Identity.IsAuthenticated)
+    {
         <form method="post" asp-page-handler="ManageList" class="ml-auto">
             <div class="row d-flex justify-content-end align-items-center details-container">
                 <input type="hidden" id="nameProduct" value="@Model.Records.First().Record.NameProduct" name="NameProduct" asp-for="NameProduct">
@@ -116,7 +118,7 @@
                         Valoración
                     </th>
                     <th class="report">
-                        
+
                     </th>
                 </tr>
             </thead>
@@ -249,7 +251,7 @@
             error: function () {
             }
         });
-    } 
+    }
 
     manageStarRatings();
 
@@ -428,3 +430,4 @@
         generarPaginacion();
     });
 </script>
+
