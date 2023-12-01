@@ -16,11 +16,10 @@
             <thead>
                 <tr>
                     <th>
-                        <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Listed[0].NameProduct)</a>
-                        <span class="arrow" id="dateArrow"></span>
+                        <a class="a-ordering" id="orderNameProduct">@Html.DisplayNameFor(model => model.Listed[0].NameProduct)</a>
+                        <span class="arrow" id="NameProductArrow"></span>
                     </th>
                     <th class="report">
-                        Eliminar
                     </th>
                 </tr>
             </thead>
@@ -29,17 +28,21 @@
                 {
                     <tr>
                         <td>
-                            <div class="table-item fecha">
+                            <div class="table-item nombre">
                                 @Html.DisplayFor(modelItem => firstItem.NameProduct)
                             </div>
                         </td>
                         <td>
-                            <form method="post" asp-page-handler="EliminarItem" class="ml-auto">
-                                <input type="hidden" id="nameProduct" value="@firstItem.NameProduct" name="NameProduct" asp-for="NameProduct">
-                                <div class="table-item report">
-                                    <input type="image" src="~/Images/borrar.png" alt="Eliminar" style="cursor: pointer;">
-                                </div>
-                            </form>
+                            <div class="delete">
+                                <form method="post" asp-page-handler="EliminarItem">
+                                    <div class="delete">
+                                        <button class="button_delete" type="submit">
+                                            <svg viewBox="0 0 448 512" class="svgIcon"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="nameProduct" value="@firstItem.NameProduct" name="NameProduct" asp-for="NameProduct">
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -49,10 +52,12 @@
     </div>
 
     <div class="row d-flex justify-content-center">
-        @if (Model.Listed.Count != 0)
-        {
-            <a asp-page="./Details" class="search_list btn btn-danger d-flex justify-content-center align-items-center">Ubicar tiendas</a>
-        }
+        <div class="col search_button d-flex justify-content-center">
+            @if (Model.Listed.Count != 0)
+            {
+                <a asp-page="./Details" class="add_confirm">Ubicar tiendas</a>
+            }
+        </div>
     </div>
     <div class="row">
         <div id="pagination" class="pagination">
@@ -69,10 +74,47 @@
         var pagination = document.getElementById("pagination");
         var registrosPorPagina = 10;
         var currentPage = 1;
-        var sortOrderPrice = "asc";
-        var sortOrderDate = "desc";
+        var sortOrder = 1; // 1 para ascendente, -1 para descendente
         var currentSortColumn = null;
 
+        // Esta función se encarga de mostrar las filas de la tabla que deben estar visibles en la página actual.
+        // Filtra las filas según la página actual y oculta las demás.
+        function mostrarFilas() {
+            var filas = tableBody.querySelectorAll("tr");
+            var inicio = (currentPage - 1) * registrosPorPagina;
+            var fin = currentPage * registrosPorPagina;
+
+            filas.forEach(function (fila, index) {
+                if (index >= inicio && index < fin) {
+                    fila.style.display = "table-row";
+                } else {
+                    fila.style.display = "none";
+                }
+            });
+        }
+
+        // Esta función se encarga de ordenar la tabla por el nombre del producto en orden ascendente o descendente.
+        // Utiliza el valor de sortOrder para determinar el orden y actualiza la tabla en consecuencia.
+        function ordenarTablaPorNombre() {
+            var filas = Array.from(tableBody.querySelectorAll("tr"));
+
+            filas.sort(function (a, b) {
+                var valueA = a.querySelector(".table-item.nombre").textContent.trim();
+                var valueB = b.querySelector(".table-item.nombre").textContent.trim();
+
+                return sortOrder * valueA.localeCompare(valueB);
+            });
+
+            // Elimina las filas originales
+            filas.forEach(function (fila) {
+                tableBody.removeChild(fila);
+            });
+
+            // Agrega las filas ordenadas
+            filas.forEach(function (fila) {
+                tableBody.appendChild(fila);
+            });
+        }
 
         // Genera la paginación en la parte inferior de la tabla. Calcula el número de páginas y muestra los botones de
         // navegación para ir a páginas anteriores y siguientes. Además, muestra un número limitado de botones de página alrededor de la página actual.
@@ -121,18 +163,27 @@
             pageButtons.forEach(function (button) {
                 button.addEventListener("click", function () {
                     currentPage = parseInt(this.getAttribute("data-page"));
-                    if (currentSortColumn === "precio") {
-                        ordenarTablaPorPrecio();
-                    } else if (currentSortColumn === "fecha") {
-                        ordenarTablaPorFecha();
-                    }
                     mostrarFilas();
                     generarPaginacion();
                 });
             });
         }
+
+        var orderNameProductLink = document.getElementById("orderNameProduct");
+        orderNameProductLink.addEventListener("click", function () {
+            sortOrder *= -1; // Cambiar entre ascendente y descendente
+            if (sortOrder === 1) {
+                document.getElementById("NameProductArrow").innerHTML = " &#129093;";
+            } else {
+                document.getElementById("NameProductArrow").innerHTML = " &#129095;";
+            }
+            currentSortColumn = "nameProduct";
+            ordenarTablaPorNombre();
+            mostrarFilas();
+            generarPaginacion();
+        });
+
+        generarPaginacion();
+        mostrarFilas();
     });
-
 </script>
-
-

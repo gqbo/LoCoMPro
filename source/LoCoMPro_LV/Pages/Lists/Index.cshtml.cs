@@ -39,14 +39,28 @@ namespace LoCoMPro_LV.Pages.Lists
         /// <summary>
         /// En este metodo se buscan los productos que estan listados en la lista del usuario para presentarlo al usuario.
         /// </summary>
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            var listed =  from listed_item in _context.Listed
-                              where listed_item.NameList == User.Identity.Name
-                              select listed_item;
+            var listed = await GetListedItemsAsync(User.Identity.Name);
 
-            Listed = await listed.ToListAsync();
+            Listed = listed;
+
+            return Page();
         }
+
+        /// <summary>
+        /// Este metodo funciona para obtener todos los los productos que pertenezcan a la lista del usuario que recibe por linea de parametros.
+        /// </summary>
+        /// <param name="userName">Usuario, dueño de la lista de la que se va a recopilar la información, arréglame esto gramaticalmente.</param>
+        public async Task<List<Listed>> GetListedItemsAsync(string userName)
+        {
+            var listed = from listedItem in _context.Listed
+                         where listedItem.NameList == userName
+                         select listedItem;
+
+            return await listed.ToListAsync();
+        }
+
 
         /// <summary>
         /// Este metodo se utiliza cuando se va a eliminar un producto de la lista para que entonces se bsuque el producto en la tabla
@@ -54,16 +68,38 @@ namespace LoCoMPro_LV.Pages.Lists
         /// </summary>
         public async Task<IActionResult> OnPostEliminarItem()
         {
-            var listed = await _context.Listed
-                .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == User.Identity.Name);
+            var listed = await GetListedItemAsync(User.Identity.Name);
 
+            if (listed != null)
+            {
+                RemoveListedItem(listed);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToPage("./Index");
+        }
+
+        /// <summary>
+        /// Este metodo funciona para obtener el item de la tabla listed que tenga el producto seleccionado y que pertenece a la lista del usuario que recibe por linea de parametros.
+        /// </summary>
+        /// <param name="userName">Usuario, dueño de la lista de la que se va a recopilar la información, arréglame esto gramaticalmente.</param>
+        public async Task<Listed> GetListedItemAsync(string userName)
+        {
+
+            return await _context.Listed
+                .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == userName);
+        }
+
+        /// <summary>
+        /// Este metodo recibe un item de listed por linea de parametros para que lo ilimine de la tabla.
+        /// </summary>
+        /// <param name="listed">Item de listred que va a ser eliminado</param>
+        private void RemoveListedItem(Listed listed)
+        {
             if (listed != null)
             {
                 _context.Listed.Remove(listed);
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToPage("./Index");
         }
     }
 }

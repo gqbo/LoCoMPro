@@ -23,6 +23,7 @@ namespace LoCoMPro_LV.Data
         public DbSet<Associated> Associated { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Evaluate> Valorations { get; set; }
+        public DbSet<Image> Images { get; set; }
         public DbSet<List> Lists { get; set; }
         public DbSet<Listed> Listed { get; set; }
 
@@ -41,6 +42,7 @@ namespace LoCoMPro_LV.Data
             builder.Entity<Associated>().ToTable("Associated");
             builder.Entity<Report>().ToTable("Reports");
             builder.Entity<Evaluate>().ToTable("Valorations");
+            builder.Entity<Image>().ToTable("Images");
             builder.Entity<List>().ToTable("Lists");
             builder.Entity<Listed>().ToTable("Listed");
 
@@ -72,6 +74,12 @@ namespace LoCoMPro_LV.Data
 
             builder.Entity<Evaluate>()
                 .HasKey(r => new { r.NameGenerator, r.RecordDate, r.NameEvaluator });
+
+            builder.Entity<Image>()
+                .HasKey(i => new { i.NameGenerator, i.RecordDate });
+
+            builder.Entity<Image>()
+                .HasKey(i => new { i.NameGenerator, i.RecordDate,  i.NameImage});
 
             builder.Entity<List>()
                 .HasKey(r => new { r.NameList, r.UserName});
@@ -148,6 +156,11 @@ namespace LoCoMPro_LV.Data
                 .HasOne(c => c.GeneratorUser)
                 .WithMany(r => r.Valorations)
                 .HasForeignKey(r => new { r.NameEvaluator });
+
+            builder.Entity<Image>()
+                .HasOne(r => r.Record)
+                .WithMany(i => i.Images)
+                .HasForeignKey(i => new { i.NameGenerator, i.RecordDate });
 
             builder.Entity<Listed>()
                 .HasOne(r => r.List)

@@ -75,7 +75,7 @@ namespace LoCoMPro_LV.Pages.Records
             {
                 var allRecords = GetCombinedRecordsAndStores(FirstRecord).ToList();
                 List<RecordStoreModel> currentRecords = allRecords.Where(record => !record.Record.Hide).ToList();
-                SetAverageRatings(currentRecords);
+                SetAverageAndCountRatings(currentRecords);
                 Records = currentRecords;
             }
             else
@@ -123,7 +123,8 @@ namespace LoCoMPro_LV.Pages.Records
                 };
 
                 await AddEvaluationAsync(evaluate);
-                return new OkResult();
+                int newCountRating = GetCountRating(nameGenerator, recordDate);
+                return new OkObjectResult(new { countRating = newCountRating });
             }
             catch (Exception ex)
             {
@@ -204,19 +205,43 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
+        /// Método utilizado para obtener la cantidad de valoraciones de un registro en específico utilizando
+        /// una función escalar creada en la base de datos.
+        /// <param name="nameGenerator">Nombre del generador de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// <param name="recordDate">Fecha de un registro utilizado para utilizarlo como parámetro en la función escalar</param>
+        /// </summary>
+        private int GetCountRating(string nameGenerator, DateTime recordDate)
+        {
+            string connectionString = _databaseUtils.GetConnectionString();
+            string sqlQuery = "SELECT dbo.GetCountRating(@NameGenerator, @RecordDate)";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@NameGenerator", nameGenerator),
+                new SqlParameter("@RecordDate", recordDate)
+            };
+            int countRating = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
+            return countRating;
+        }
+
+        /// <summary>
         /// Método utilizado para definir el promedio de las valoraciones de estrellas de un registro en específico utilizando
         /// una función escalar creada en la base de datos.
         /// <param name="currentRecords">Lista de registros de un producto utilizada para agregarle los promedios en estrellas. </param>
         /// </summary>
-        private void SetAverageRatings(List<RecordStoreModel> currentRecords)
+        private void SetAverageAndCountRatings(List<RecordStoreModel> currentRecords)
         {
-            List<int> averageRatings = new List<int>();
+            List<int> averageRatings = new();
+            List<int> countRatings = new();
+
 
             foreach (var recordStoreModel in currentRecords)
             {
                 int averageRating = GetAverageRating(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
+                int countRating = GetCountRating(recordStoreModel.Record.NameGenerator, recordStoreModel.Record.RecordDate);
                 averageRatings.Add(averageRating);
+                countRatings.Add(countRating);
                 recordStoreModel.AverageRating = averageRatings.Last();
+                recordStoreModel.CountRating = countRatings.Last();
             }
         }
 
@@ -224,35 +249,61 @@ namespace LoCoMPro_LV.Pages.Records
         /// Este metodo se utiliza al presionar el boton de agaregar a lista o de eliminar de lista y dependiendo la opcion seleccionada va a agregar el 
         /// producto a la lista del usuario o la va eliminar de la lista.
         /// </summary>
-        public async Task<IActionResult> OnPostAgregarAListaAsync()
+        public async Task<IActionResult> OnPostManageListAsync()
         {
             if (InList == 3)
             {
-                Listed item = new Listed
-                {
-                    NameList = User.Identity.Name,
-                    NameProduct = NameProduct,
-                    UserName = User.Identity.Name,
-                };
-
-                _context.Listed.Add(item);
-            } 
-            else if (InList == 4) 
+                await AddToListAsync(User.Identity.Name);
+            }
+            else if (InList == 4)
             {
-                var listed = await _context.Listed
-                    .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == User.Identity.Name);
-
-                if (listed != null)
-                {
-                    _context.Listed.Remove(listed);
-                    await _context.SaveChangesAsync();
-                }
+                await RemoveFromListAsync(User.Identity.Name);
             }
 
             await _context.SaveChangesAsync();
+
             string formattedDate = RecordDate.ToString("yyyy-MM-dd HH:mm:ss");
             string url = $"/Records/Details?NameGenerator={NameGenerator}&RecordDate={formattedDate}";
             return Redirect(url);
         }
+
+        /// <summary>
+        /// Este metodo se encarga de realizar el agregado del producto que tiene NameProduct de la pagina de detalles a la lista que recibe por linea de parametros.
+        /// </summary>
+        /// <param name="userName">Es el nombre de la lista al que se le va a agregar el item.</param>
+        public async Task AddToListAsync(string userName)
+        {
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.NameProduct == NameProduct);
+
+            if (product != null)
+            {
+                Listed item = new Listed
+                {
+                    NameList = userName,
+                    NameProduct = NameProduct,
+                    UserName = userName,
+                };
+
+                _context.Listed.Add(item);
+            }
+        }
+
+
+        /// <summary>
+        /// Este metodo se encraga de eliminar el item de la lista que recibe por linea de parametros cuyo producto es el que tiene el NameProduct de la pagina de detalle.
+        /// </summary>
+        /// <param name="userName">Es el nombre de la lista al que se le va a eliminar el item.</param>
+        public async Task RemoveFromListAsync(string userName)
+        {
+            var listed = await _context.Listed
+                .FirstOrDefaultAsync(m => m.NameProduct == NameProduct && m.NameList == userName);
+
+            if (listed != null)
+            {
+                _context.Listed.Remove(listed);
+            }
+        }
+
     }
 }

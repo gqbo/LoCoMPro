@@ -8,7 +8,7 @@
 @attribute [Authorize]
 <div class="add_product">
     <h1 class="title_add">Agregar Producto</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
@@ -30,8 +30,8 @@
                     <select id="Category" asp-for="SelectCategory" asp-items="Model.Categories" class="form-control form-control-add" aria-required="true" placeholder="Categoría">
                         <option value=""> Categoría </option>
                     </select>
+                    <span asp-validation-for="SelectCategory" class="text-danger"></span>
                 </div>
-
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-6">
@@ -42,6 +42,15 @@
                             <textarea asp-for="Record.Description" class="form-control form-control-add form-control form-control-add-lg" placeholder=" Añade una descripción" rows="8"></textarea>
                             <span asp-validation-for="Record.Description" class="text-danger"></span>
                         </div>
+                        <div class="form-group">
+                            <label asp-for="ImageFiles">Seleccionar o reemplazar imágenes</label>
+                            <input type="file" asp-for="ImageFiles"
+                                   class="form-control form-control-add form-control form-control-add-lg"
+                                   accept=".jpg, .jpeg, .png" multiple id="fileInput" onchange="handleFileSelection(event)" />
+                            <span asp-validation-for="ImageFiles" class="text-danger"></span>
+                            <div id="imagePreviewContainer"></div>
+                            <div id="fileCountError"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,10 +58,10 @@
         <form method="post">
             <div class="row">
                 <div class="col d-flex justify-content-start align-items-center">
-                    <input type="submit" value="Confirmar&#10;Producto" class="add_confirm btn btn-primary btn-sm" />
+                    <input type="submit" value="Confirmar" class="add_confirm" />
                 </div>
                 <div class="col d-flex justify-content-end align-items-center">
-                    <a asp-page="/Index" class="add_cancel btn btn-danger d-flex justify-content-center align-items-center">Cancelar</a>
+                    <a asp-page="/Index" class="add_cancel d-flex justify-content-center align-items-center">Cancelar</a>
                 </div>
             </div>
         </form>
@@ -74,4 +83,6 @@
                 });
             });
     </script>
+    <script src="~/js/CreateRecordScripts.js" ></script>
+
 }

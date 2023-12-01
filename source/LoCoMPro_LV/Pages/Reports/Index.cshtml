@@ -12,7 +12,7 @@
             <h1 class="title_add">Reportes</h1>
         </div>
     </div>
-    <table class="table-reports table table-striped" id="miTabla">
+    <table class="table-reports table" id="miTabla">
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.recordStoreReports[0].Record.NameProduct)</th>
@@ -45,21 +45,26 @@
                     <td>@Html.DisplayFor(modelItem => reports.Record.NameGenerator)</td>
                     <td>@Html.DisplayFor(modelItem => reports.Record.Description)</td>
                     <td>
-                        <div class="ratings-wrapper">
-                            <div class="ratings">
-                                @for (var starNumber = 5; starNumber >= 1; starNumber--)
-                                {
-                                    <span data-rating="@starNumber"
-                                    @(starNumber <= reports.recordValoration ? "data-clicked" : "")>
-                                        <span>★</span>
-                                    </span>
-                                }
+                        <div class="ratings-container">
+                            <div class="ratings-wrapper">
+                                <div class="ratings">
+                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                    {
+                                        <span data-rating="@starNumber"
+                                        @(starNumber <= reports.recordValoration ? "data-clicked" : "")>
+                                            <span>★</span>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="count-rating">
+                                ( @Html.DisplayFor(modelItem => reports.CountRating) )
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="table-item report">
-                            <span>@reports.recordValoration</span>
+                            <span>@reports.reportCount</span>
                         </div>
                     </td>
                 </tr>
