@@ -208,7 +208,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// Identifica y maneja las anomalías relacionadas con los precios en un grupo de registros.
         /// </summary>
         /// <param name="recordsGroupContainer">La lista de registros en el grupo.</param>
-        private async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
+        public async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
             var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.Price).ToList();

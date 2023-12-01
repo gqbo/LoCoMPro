@@ -8,8 +8,45 @@ using static LoCoMPro_LV.Pages.Reports.AnomaliesModel;
 namespace n_unit_tests
 {
     [TestFixture]
-    public class UnitTests_AnomaliesModel
+    public class UnitTests_Anomalies
     {
+        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
+        [Test]
+        public async Task AnomaliesPrice_LessThanThreshold_NoAnomaliesDetected()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+            var dbContext = new LoComproContext(options);
+            var model = new AnomaliesModel(dbContext);
+            var groupedRecords = CreateSampleGroupedRecords(7);
+
+            var recordsToTest = groupedRecords.SelectMany(group => group).ToList();
+            await model.AnomaliesPrice(recordsToTest);
+
+            Assert.IsFalse(dbContext.Anomalies.Any());
+        }
+
+        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
+        [Test]
+        public async Task AnomaliesPrice_LessThanThreshold_AnomaliesDetected()
+        {
+            // Arrange
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+            var dbContext = new LoComproContext(options);
+            var model = new AnomaliesModel(dbContext);
+            var groupedRecords = CreateSampleGroupedRecords(8);
+
+            var recordsToTest = groupedRecords.SelectMany(group => group).ToList();
+            await model.AnomaliesPrice(recordsToTest);
+
+            Assert.IsTrue(dbContext.Anomalies.Any());
+        }
+
         // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
         [Test]
         public async Task ProcessGroupedRecordsPrice_LessThanThreshold_NoAnomaliesDetected()
@@ -233,9 +270,8 @@ namespace n_unit_tests
                 Product = product
             };
 
-            if (recordsCount > 6)
+            if (recordsCount == 8)
             {
-                // Crear algunos datos simulados para usar en la lista agrupada
                 var groupKey1 = new GroupingKey { NameProduct = "Apple Iphone 11", NameStore = "Ishop", NameCanton = "Tibás", NameProvince = "San José" };
                 var recordToGroup1 = new RecordStoreModel { Record = record1, Store = store };
                 var recordToGroup2 = new RecordStoreModel { Record = record2, Store = store };
@@ -251,7 +287,24 @@ namespace n_unit_tests
 
                 groupedRecords.AddRange(grouping1);
             }
-            else
+            else if(recordsCount == 7)
+            {
+                // Crear algunos datos simulados para usar en la lista agrupada
+                var groupKey1 = new GroupingKey { NameProduct = "Apple Iphone 11", NameStore = "Ishop", NameCanton = "Tibás", NameProvince = "San José" };
+                var recordToGroup1 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup2 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup3 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup4 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup5 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup6 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup7 = new RecordStoreModel { Record = record2, Store = store };
+
+                var group1 = new List<RecordStoreModel> { recordToGroup1, recordToGroup2, recordToGroup3, recordToGroup4, recordToGroup5, recordToGroup6, recordToGroup7};
+                var grouping1 = group1.GroupBy(r => groupKey1);
+
+                groupedRecords.AddRange(grouping1);
+            }
+            else if (recordsCount == 5)
             {
                 var groupKey1 = new GroupingKey { NameProduct = "Apple Iphone 11", NameStore = "Ishop", NameCanton = "Tibás", NameProvince = "San José" };
                 var recordToGroup1 = new RecordStoreModel { Record = record1, Store = store };
