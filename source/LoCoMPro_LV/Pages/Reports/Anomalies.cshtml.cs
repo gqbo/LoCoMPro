@@ -119,7 +119,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// Método que recorre los diferentes grupos para enviar a validar los datos anómalos en agrupamientos con más de 4 datos.
         /// Realiza llamados a un método que verifica los datos anómalos por fecha.
         /// </summary>
-        private async Task ProcessGroupedRecordsDate(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
+        public async Task ProcessGroupedRecordsDate(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
             foreach (var group in groupedRecords)
@@ -139,7 +139,7 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
-        private async Task ProcessGroupedRecordsPrice(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
+        public async Task ProcessGroupedRecordsPrice(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
             foreach (var group in groupedRecords)
@@ -158,21 +158,11 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
-        private async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
+        public async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
 
-            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
-
-            int startIndex = (int)(sortedRecords.Count * 0.30);
-
-            DateTime startDate = sortedRecords[startIndex].Record.RecordDate;
-
-            DateTime endDate = sortedRecords[sortedRecords.Count - 1].Record.RecordDate;
-
-            int delta = 2;
-            int daysDifference = (((int)(endDate - startDate).TotalDays)) * delta;
-            DateTime referenceDate = startDate.AddDays(-daysDifference);
+            heuristicDate(recordsGroupContainer, out var sortedRecords, out var referenceDate);
 
             selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false ));
 
@@ -195,11 +185,24 @@ namespace LoCoMPro_LV.Pages.Reports
                     await _context.SaveChangesAsync();
                 }
             }
-            sortedRecords.Clear();
-            selectedRecords.Clear();
+            
+        }
+        public void heuristicDate(List<RecordStoreModel> recordsGroupContainer, out List<RecordStoreModel> sortedRecords, out DateTime referenceDate)
+        {
+            sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
+
+            int startIndex = (int)(sortedRecords.Count * 0.30);
+
+            DateTime startDate = sortedRecords[startIndex].Record.RecordDate;
+
+            DateTime endDate = sortedRecords[sortedRecords.Count - 1].Record.RecordDate;
+
+            int delta = 2;
+            int daysDifference = (int)(endDate - startDate).Days * delta;
+            referenceDate = startDate.AddDays(-daysDifference);
         }
 
-        private async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
+        public async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
             var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.Price).ToList();  // Ordena por precio
@@ -272,7 +275,7 @@ namespace LoCoMPro_LV.Pages.Reports
             selectedRecords.Clear();
         }
 
-        private int CalculateQ2Index(int recordCount)
+        public int CalculateQ2Index(int recordCount)
         {
             if (recordCount % 2 == 0)
             {
@@ -284,7 +287,7 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
-        private int CalculateQ1Index(int q2)
+        public int CalculateQ1Index(int q2)
         {
             if (q2 % 2 == 0)
             {
@@ -296,7 +299,7 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
-        private int CalculateQ3Index(int q2, int recordCount)
+        public int CalculateQ3Index(int q2, int recordCount)
         {
             if (q2 % 2 == 0)
             {
