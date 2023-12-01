@@ -218,10 +218,8 @@ namespace LoCoMPro_LV.Pages.Reports
         public async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
-            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.Price).ToList();  // Ordena por precio
-
+            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.Price).ToList();
             int q2Index = CalculateQ2Index(sortedRecords.Count);
-
             int q1Index = CalculateQ1Index(q2Index);
             int q3Index = CalculateQ3Index(q2Index, sortedRecords.Count);
             double? q1;
