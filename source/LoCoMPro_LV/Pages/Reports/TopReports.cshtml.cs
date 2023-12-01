@@ -16,7 +16,8 @@ namespace LoCoMPro_LV.Pages.Reports
         public class TopReportModel
         {
             public string NameGenerator { get; set; }
-            public int TotalReports { get; set; }
+            public int ReportsReceived { get; set; }
+            public int UserRating { get; set; }
         }
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
@@ -46,14 +47,14 @@ namespace LoCoMPro_LV.Pages.Reports
         public async Task OnGetAsync()
         {
             InfoTopReports = new List<InfoTopReportsUser>();
-            var topUsersReports = GetTopReportUsers();
-            foreach(var UserReport in topUsersReports)
+            var TopUsersReports = GetTopReportUsers();
+            foreach(var UserReport in TopUsersReports)
             {
-                var RecordsUser = await GetRecordsCount(UserReport.NameGenerator);
-                var acceptedReportsCount = await GetReportsCount(UserReport.NameGenerator);
-                float PorcentageReports = 100 * acceptedReportsCount / UserReport.TotalReports;
-
-                InfoTopReportsUser infoTopReport = new InfoTopReportsUser(RecordsUser, acceptedReportsCount, PorcentageReports, UserReport.NameGenerator, UserReport.TotalReports);
+                var RecordsCount = await GetRecordsCount(UserReport.NameGenerator);
+                var AcceptedReportsCount = await GetAcceptedReportsCount(UserReport.NameGenerator);
+                float AcceptedReportsPercentage = 100 * AcceptedReportsCount / UserReport.ReportsReceived;
+                var UserRating = GetUserRating(UserReport.NameGenerator);
+                InfoTopReportsUser infoTopReport = new InfoTopReportsUser(RecordsCount, UserReport.ReportsReceived, 0, AcceptedReportsCount, AcceptedReportsPercentage, UserReport.NameGenerator, UserRating);
                 InfoTopReports.Add(infoTopReport);
             }
         }
@@ -77,7 +78,7 @@ namespace LoCoMPro_LV.Pages.Reports
                             yield return new TopReportModel
                             {
                                 NameGenerator = reader.GetString(reader.GetOrdinal("NameGenerator")),
-                                TotalReports = reader.GetInt32(reader.GetOrdinal("TotalReports")),
+                                ReportsReceived = reader.GetInt32(reader.GetOrdinal("TotalReports")),
                             };
                         }
                     }
@@ -97,16 +98,44 @@ namespace LoCoMPro_LV.Pages.Reports
             return recordsCount;
         }
 
-
         /// <summary>
-        /// Obtiene los reportes relacionadas al registro a eliminar.
+        /// Obtiene los reportes de un usuario que han sido aceptados.
         /// </summary>
         public async Task<int> GetReportsCount(string Username)
         {
             int reportsCount = await _context.Reports
-                .Where(r => r.NameGenerator == Username && r.State == 2)
+                .Where(r => r.NameGenerator == Username)
                 .CountAsync();
             return reportsCount;
+        }
+
+
+        /// <summary>
+        /// Obtiene los reportes de un usuario que han sido aceptados.
+        /// </summary>
+        public async Task<int> GetAcceptedReportsCount(string Username)
+        {
+            int acceptedReportsCount = await _context.Reports
+                .Where(r => r.NameGenerator == Username && r.State == 1)
+                .CountAsync();
+            return acceptedReportsCount;
+        }
+
+        /// <summary>
+        /// Este metodo se eutiliza para sacar la valoracion media de un usuario con base a las valoraciones de los registros del usuario.
+        /// </summary>
+        /// <param name="nameGenerator">Nombre de usuario del usuario del que se requiere la valoracion.</param>
+        /// <returns>Devuelve la valoracion del usuario deseado</returns>
+        private int GetUserRating(string nameGenerator)
+        {
+            string connectionString = _databaseUtils.GetConnectionString();
+            string sqlQuery = "SELECT dbo.GetUserRating(@NameGenerator)";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@NameGenerator", nameGenerator)
+            };
+            int userRating = DatabaseUtils.ExecuteScalar<int>(connectionString, sqlQuery, parameters);
+            return userRating;
         }
     }
 }

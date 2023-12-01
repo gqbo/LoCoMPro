@@ -5,50 +5,68 @@
     ViewData["Title"] = "TopReports";
 }
 
-<h1>TopReports</h1>
+<div class="container container-search index align-items-center">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 class="title_add">Top Reportados</h1>
+        </div>
+    </div>
+</div>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
-@*         <tr>
+        <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Report[0].Comment)
+                @Html.DisplayNameFor(model => model.InfoTopReports[0].NameGenerator)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Report[0].State)
+                @Html.DisplayNameFor(model => model.InfoTopReports[0].RecordsCount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Report[0].Record)
+                @Html.DisplayNameFor(model => model.InfoTopReports[0].ReportsReceived)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Report[0].GeneratorUser)
+                @Html.DisplayNameFor(model => model.InfoTopReports[0].AcceptedReportsCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InfoTopReports[0].UserRating)
             </th>
             <th></th>
-        </tr> *@
+        </tr>
     </thead>
     <tbody>
-@* @foreach (var item in Model.Report) {
+        @foreach (var UserReported in Model.InfoTopReports)
+        {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Comment)
+                @Html.DisplayFor(modelItem => UserReported.NameGenerator)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.State)
+                @Html.DisplayFor(modelItem => UserReported.RecordsCount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Record.NameGenerator)
+                @Html.DisplayFor(modelItem => UserReported.ReportsReceived)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GeneratorUser.UserName)
+                @Html.DisplayFor(modelItem => UserReported.AcceptedReportsCount) ( @Html.DisplayFor(modelItem => UserReported.AcceptedReportsPercentage)% )
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <div class="ratings-container">
+                    <div class="ratings-wrapper">
+                        <div class="ratings">
+                                @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                {
+                                <span data-rating="@starNumber"
+                                    @(starNumber <= UserReported.UserRating ? "data-clicked" : "")>
+                                    <span>★</span>
+                                </span>
+                                }
+                        </div>
+                    </div>
+                        
+                </div>
             </td>
         </tr>
-} *@
+        }
     </tbody>
 </table>
