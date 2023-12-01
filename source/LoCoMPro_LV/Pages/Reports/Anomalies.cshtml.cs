@@ -118,6 +118,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <summary>
         /// Método que recorre los diferentes grupos para enviar a validar los datos anómalos en agrupamientos con más de 4 datos.
         /// Realiza llamados a un método que verifica los datos anómalos por fecha.
+        /// <param name="groupedRecords">Datos agrupados.</param>
         /// </summary>
         public async Task ProcessGroupedRecordsDate(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
@@ -158,6 +159,10 @@ namespace LoCoMPro_LV.Pages.Reports
             }
         }
 
+        /// <summary>
+        /// Método valida los agrupamientos que cumplen los requisitos para ser un dato anómalo.
+        /// <param name="recordsGroupContainer">Grupo de los registros del mismo producto por tienda.</param>
+        /// </summary>
         public async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
@@ -185,8 +190,16 @@ namespace LoCoMPro_LV.Pages.Reports
                     await _context.SaveChangesAsync();
                 }
             }
-            
+            sortedRecords.Clear();
+            selectedRecords.Clear();
         }
+
+        /// <summary>
+        /// Método que valida la heuristica de la fecha.
+        /// <param name="recordsGroupContainer">Grupo de los registros del mismo producto por tienda.</param>
+        /// <param name="sortedRecords">Posee una lista con los datos ordenados.</param>
+        /// <param name="referenceDate">Dato que se utiliza para construir una fecha de referencia desde la cual considerar como datos anómalos.</param>
+        /// </summary>
         public void heuristicDate(List<RecordStoreModel> recordsGroupContainer, out List<RecordStoreModel> sortedRecords, out DateTime referenceDate)
         {
             sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
