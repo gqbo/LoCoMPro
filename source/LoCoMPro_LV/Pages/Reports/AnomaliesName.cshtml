@@ -1,27 +1,14 @@
 ﻿@page
 @Html.AntiForgeryToken()
-@model LoCoMPro_LV.Pages.Reports.AnomaliesModel
-@using Microsoft.AspNetCore.Authorization
+@model LoCoMPro_LV.Pages.Reports.AnomaliesNameModel
 @{
     ViewData["Title"] = "Consulta";
 }
 
-@attribute [Authorize]
-
-<div class="container container-anomalie-buttons index align-items-center">
-    <div class="row">
-        <div class="col-12 d-flex justify-content-center">
-            <button type="button" class="add_confirm anomalies-button" id="anomalies-date">Detectar Anomalías en Fecha</button>
-            <button type="button" class="add_confirm anomalies-button" id="anomalies-price">Detectar Anomalías en Precio</button>
-            <a asp-page="/Reports/AnomaliesName" class="add_confirm anomalies-button">Detectar Anomalías en Nombre</a>
-        </div>
-    </div>
-</div>
-
 <div class="container container-anomalie-tittle index align-items-center">
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
-            <h1 class="title_add">Anomalías</h1>
+            <h1 class="title_add">Productos con Nombres Anómalos</h1>
         </div>
     </div>
 </div>
@@ -50,7 +37,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var firstItem in Model.Anomalies.Where(anomaly => anomaly.Type == "Precio" || anomaly.Type == "Fecha"))
+        @foreach (var firstItem in Model.Anomalies.Where(anomaly => anomaly.Type == "Nombre"))
         {
             <tr>
                 <td>

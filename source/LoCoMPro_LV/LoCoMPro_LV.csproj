@@ -6,6 +6,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="F23.StringSimilarity" Version="6.0.0" />
+		<PackageReference Include="Fastenshtein" Version="1.0.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.13" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.13" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
