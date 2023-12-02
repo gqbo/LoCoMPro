@@ -534,3 +534,28 @@ table {
     color: gray;
     margin-left: 10px;
 }
+
+.table-top th:nth-child(1), .table-top td:nth-child(1) {
+    width: 23% !important;
+    padding: 10px !important;
+}
+
+.table-top th:nth-child(2), .table-top td:nth-child(2) {
+    width: 23% !important;
+    padding: 10px !important;
+}
+
+.table-top th:nth-child(3), .table-top td:nth-child(3) {
+    width: 23% !important;
+    padding: 10px !important;
+}
+
+.table-top th:nth-child(4), .table-top td:nth-child(4) {
+    width: 23% !important;
+    padding: 10px !important;
+}
+
+.table-top th:nth-child(5), .table-top td:nth-child(5) {
+    width: 8% !important;
+    padding: 10px !important;
+}

@@ -1,10 +1,11 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Reports.TopReportsModel
+@using Microsoft.AspNetCore.Authorization
 
 @{
     ViewData["Title"] = "TopReports";
 }
-
+@attribute [Authorize]
 <div class="container container-search index align-items-center">
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
@@ -13,25 +14,27 @@
     </div>
 </div>
 
-<table class="table">
+<table class="table-top table" id="miTabla">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.InfoTopReports[0].NameGenerator)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InfoTopReports[0].RecordsCount)
+                <a class="a-ordering" id="orderRecordsCount">@Html.DisplayNameFor(model => model.InfoTopReports[0].RecordsCount)</a>
+                <span class="arrow" id="RecordsCountArrow"></span>   
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InfoTopReports[0].ReportsReceived)
+                <a class="a-ordering" id="orderReportsReceived">@Html.DisplayNameFor(model => model.InfoTopReports[0].ReportsReceived)</a>
+                <span class="arrow" id="ReportsReceivedArrow"></span>   
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InfoTopReports[0].AcceptedReportsCount)
+                <a class="a-ordering" id="orderAcceptedReportsCount">@Html.DisplayNameFor(model => model.InfoTopReports[0].AcceptedReportsCount)</a>
+                <span class="arrow" id="AcceptedReportsCountArrow"></span>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.InfoTopReports[0].UserRating)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -42,13 +45,20 @@
                 @Html.DisplayFor(modelItem => UserReported.NameGenerator)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => UserReported.RecordsCount)
+                <div class="table-item recordsCount">
+                    @Html.DisplayFor(modelItem => UserReported.RecordsCount)
+                </div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => UserReported.ReportsReceived)
+                <div class="table-item reportsReceived">
+                    @Html.DisplayFor(modelItem => UserReported.ReportsReceived)
+                </div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => UserReported.AcceptedReportsCount) ( @Html.DisplayFor(modelItem => UserReported.AcceptedReportsPercentage)% )
+                <div class="table-item acceptedReportsCount">
+                    @Html.DisplayFor(modelItem => UserReported.AcceptedReportsCount) ( @Html.DisplayFor(modelItem => UserReported.AcceptedReportsPercentage)% )
+                </div>
+                
             </td>
             <td>
                 <div class="ratings-container">
@@ -70,3 +80,10 @@
         }
     </tbody>
 </table>
+
+<div id="pagination" class="pagination">
+    <button id="previousPage" class="page-link">Anterior</button>
+    <button id="nextPage" class="page-link">Siguiente</button>
+</div>
+
+<script src="~/js/PaginationAndOrderingTopReports.js"> </script>
