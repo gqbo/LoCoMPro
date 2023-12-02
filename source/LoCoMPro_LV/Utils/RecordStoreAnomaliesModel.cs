@@ -4,7 +4,7 @@ namespace LoCoMPro_LV.Utils
 {
     /// <summary>
     /// Clase que representa un modelo que combina información de un registro (Record) y una tienda (Store),
-    /// e implementa una lista de las anomalias presentes en esa combinación
+    /// y realiza una búsqueda de las anomalías presentes tanto por precio como por fecha basado en una heuristica.
     /// </summary>
     public class RecordStoreAnomaliesModel
     {

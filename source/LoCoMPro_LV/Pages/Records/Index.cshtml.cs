@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
+using LoCoMPro_LV.Models;
+using LoCoMPro_LV.Utils;
+
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -16,15 +20,22 @@ namespace LoCoMPro_LV.Pages.Records
         /// </summary>
         private readonly LoComproContext _context;
 
-        public IndexModel(LoComproContext context)
+        /// <summary>
+        /// Administra a los usuarios de tipo ApplicationUser.
+        /// </summary>
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public IndexModel(LoComproContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
-        
+
         /// <summary>
         /// Lista de tipo "Record", que almacena los registros correspondientes al producto buscado.
         /// </summary>
         public IList<RecordStoreModel> Record { get; set; } = default!;
+
 
         /// <summary>
         /// Cadena de caracteres que se utiliza para filtrar la búsqueda por nombre del producto.
@@ -81,15 +92,36 @@ namespace LoCoMPro_LV.Pages.Records
         public string CurrentFilter { get; set; }
 
         /// <summary>
-        /// Método que se ejecuta cuando se carga la página y se realiza la búsqueda y paginación de registros.
+        /// Lista de provincias filtradas después de aplicar la búsqueda.
+        /// </summary>
+        public List<string> FilteredProvinces { get; set; }
+
+        /// <summary>
+        /// Lista de cantones filtradas después de aplicar la búsqueda.
+        /// </summary>
+        public List<string> FilteredCantons { get; set; }
+
+        /// <summary>
+        /// Lista de establecimientos filtradas después de aplicar la búsqueda.
+        /// </summary>
+        public List<string> FilteredStores { get; set; }
+
+        /// <summary>
+        /// Método que se ejecuta cuando se carga la página, se realiza la búsqueda y paginación de registros.
         /// </summary>
         /// <param name="sortOrder">El orden en el que se deben mostrar los registros.</param>
         public async Task OnGetAsync(string sortOrder)
         {
             await InitializeSortingAndSearching(sortOrder);
-            var orderedRecordsQuery = BuildOrderedRecordsQuery();
-            var orderedGroupsQuery = ApplySorting(orderedRecordsQuery, sortOrder);
+            var userLocation = new double[] { 0, 0 };
+            if (User.Identity.IsAuthenticated)
+            {
+                userLocation = await GetLocationUserAsync();
+            }
+            var orderedRecordsQuery = BuildOrderedRecordsQuery(userLocation);
+            var orderedGroupsQuery = ApplySorting(orderedRecordsQuery);
             var totalCount = await orderedGroupsQuery.CountAsync();
+
             Record = await orderedGroupsQuery
                 .Where(group => group.Any(record => record.Record.Hide == false))
                 .Select(group => group.OrderByDescending(r => r.Record.RecordDate).FirstOrDefault())
@@ -127,10 +159,13 @@ namespace LoCoMPro_LV.Pages.Records
 
         /// <summary>
         /// Construye la consulta de registros ordenados basada en las opciones de búsqueda.
+        /// <param name="LocationUser"> Contiene las coordenadas del usuario.</param>
         /// </summary>
         /// <returns>Consulta de registros ordenados.</returns>
-        private IQueryable<RecordStoreModel> BuildOrderedRecordsQuery()
+        private IQueryable<RecordStoreModel> BuildOrderedRecordsQuery(double[] LocationUser)
         {
+            var LatitudeUser = LocationUser[0];
+            var LongitudeUser = LocationUser[1];
             IQueryable<RecordStoreModel> orderedRecordsQuery = from record in _context.Records
                                                                join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                                                equals new { store.NameStore, store.Latitude, store.Longitude }
@@ -138,7 +173,9 @@ namespace LoCoMPro_LV.Pages.Records
                                                                select new RecordStoreModel
                                                                {
                                                                    Record = record,
-                                                                   Store = store
+                                                                   Store = store,
+                                                                   Distance = (LatitudeUser != 0 && LongitudeUser != 0) ?
+                                                                      Geolocation.CalculateDistance(LatitudeUser, LongitudeUser, store.Latitude, store.Longitude) / 1000 : 0
                                                                };
 
             if (!string.IsNullOrEmpty(SearchString))
@@ -168,9 +205,8 @@ namespace LoCoMPro_LV.Pages.Records
         /// Aplica el ordenamiento a la consulta de registros.
         /// </summary>
         /// <param name="orderedRecordsQuery">Consulta de registros ordenados.</param>
-        /// <param name="sortOrder">El orden en el que se deben mostrar los registros.</param>
         /// <returns>Consulta de registros ordenados con el orden especificado.</returns>
-        private IOrderedQueryable<IGrouping<object, RecordStoreModel>> ApplySorting(IQueryable<RecordStoreModel> orderedRecordsQuery, string sortOrder)
+        private IOrderedQueryable<IGrouping<object, RecordStoreModel>> ApplySorting(IQueryable<RecordStoreModel> orderedRecordsQuery)
         {
             var groupedRecordsQuery = from record in orderedRecordsQuery
                                       group record by new
@@ -182,18 +218,38 @@ namespace LoCoMPro_LV.Pages.Records
                                       } into recordGroup
                                       orderby recordGroup.Key.NameProduct descending
                                       select recordGroup;
+            
+            FilteredProvinces = groupedRecordsQuery.Select(group => group.Key.NameProvince).Distinct().ToList();
+            FilteredCantons = groupedRecordsQuery.Select(group => group.Key.NameCanton).Distinct().ToList();
+            FilteredStores = groupedRecordsQuery.Select(group => group.Key.NameStore).Distinct().ToList();
 
-            switch (sortOrder)
+            return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
+        }
+
+        /// <summary>
+        /// Obtiene las coordenadas del usuario que está realizando la consulta.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<double[]> GetLocationUserAsync()
+        {
+            var authenticatedUserName = User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(authenticatedUserName);
+
+            if (user != null)
             {
-                case "Date":
-                    return groupedRecordsQuery.OrderBy(group => group.Max(record => record.Record.RecordDate));
-                case "Price":
-                    return groupedRecordsQuery.OrderBy(group => group.Max(record => record.Record.Price));
-                case "price_desc":
-                    return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.Price));
-                default:
-                    return groupedRecordsQuery.OrderByDescending(group => group.Max(record => record.Record.RecordDate));
+                var latitude = user.Latitude;
+                var longitude = user.Longitude;
+                var location = new double[] { latitude, longitude };
+                return location;
+            }
+            else
+            {
+                var latitude = 0;
+                var longitude = 0;
+                var location = new double[] { latitude, longitude };
+                return location;
             }
         }
     }
 }
+

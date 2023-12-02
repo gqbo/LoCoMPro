@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using LoCoMPro_LV.Utils;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -103,6 +105,9 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty(SupportsGet = true)]
         public string NameProvince { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public List<IFormFile> ImageFiles { get; set; }
+
         /// <summary>
         /// Método que carga los datos ingresados por el usuario a los registros y a las diferentes tablas de la base de datos. 
         /// Realiza una serie de llamados que validan la consistencia de los datos que se desean añadir en la base de datos.
@@ -112,17 +117,16 @@ namespace LoCoMPro_LV.Pages.Records
             await ProcessStore();
             await ProcessProduct();
             await ProcessAssociated();
-            Record.RecordDate = GetCurrentDateTime();
-
-            _context.Records.Add(Record);
-            await _context.SaveChangesAsync();
-            return RedirectToPage("../Records/Index");
+            await ProcessRecord();
+            await ProcessImage();
+            return RedirectToPage("../Index");
         }
 
         /// <summary>
         /// String de validación de datos para Category.
         /// </summary>
         [BindProperty]
+        [Required(ErrorMessage = "La categoría es obligatoria")]
         public string SelectCategory { get; set; }
 
         /// <summary>
@@ -278,6 +282,50 @@ namespace LoCoMPro_LV.Pages.Records
         {
             string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             return DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Almacena en el contexto de la base de datos el registro, con la información recolectada.
+        /// </summary>
+        private async Task ProcessRecord()
+        {
+            Record.RecordDate = GetCurrentDateTime();
+            _context.Records.Add(Record);
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Procesa los datos del archivo para almacenar las imágenes del registro dentro de la base de datos.
+        /// </summary>
+        private async Task ProcessImage()
+        {
+            foreach (var imageFile in ImageFiles)
+            {
+                var fileName = imageFile.FileName;
+                var data = await GetBytesFromImageAsync(imageFile);
+                var image = new Image
+                {
+                    NameGenerator = Record.NameGenerator,
+                    RecordDate = Record.RecordDate,
+                    NameImage = fileName,
+                    DataImage = data
+                };
+                _context.Images.Add(image);
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Obtiene la cantidad de bytes que contiene el archivo IFormFile
+        /// </summary>
+        /// <param name="imageFile"> Archivo relacionado a la imagen.</param>
+        private async Task<byte[]> GetBytesFromImageAsync(IFormFile imageFile)
+        {
+            using (var stream = new MemoryStream())
+            {
+                await imageFile.CopyToAsync(stream);
+                return stream.ToArray();
+            }
         }
     }
 }
