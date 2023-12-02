@@ -45,6 +45,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <returns>Una acción que representa el resultado de la operación.</returns>
         public async Task<IActionResult> OnPostRunAnomaliesPrecio()
         {
+            await LimpiarTablaAnomalies();
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
             await ProcessGroupedRecordsPrice(groupedRecords);
@@ -58,11 +59,22 @@ namespace LoCoMPro_LV.Pages.Reports
         /// </summary>
         public async Task<IActionResult> OnPostRunAnomaliesFecha()
         {
+            await LimpiarTablaAnomalies();
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
             await ProcessGroupedRecordsDate(groupedRecords);
 
             return new JsonResult(new { success = true });
+        }
+
+        /// <summary>
+        /// Limpia la tabla de anomalías para eliminar los registros que dejaron de ser anómalos.
+        /// </summary>
+        private async Task LimpiarTablaAnomalies()
+        {
+            var allAnomalies = await _context.Anomalies.ToListAsync();
+            _context.Anomalies.RemoveRange(allAnomalies);
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
