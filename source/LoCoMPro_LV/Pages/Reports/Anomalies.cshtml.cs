@@ -181,28 +181,29 @@ namespace LoCoMPro_LV.Pages.Reports
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
 
             heuristicDate(recordsGroupContainer, out var sortedRecords, out var referenceDate);
+          
+                selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate && r.Record.Hide == false));
 
-            selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false ));
-
-            foreach (var indice in selectedRecords)
-            {
-                if (!_context.Anomalies.Any(a =>
-                a.NameGenerator == indice.Record.NameGenerator &&
-                a.RecordDate == indice.Record.RecordDate &&
-                a.Type == "Fecha"))
+                foreach (var indice in selectedRecords)
                 {
-                    Anomalie anomalie = new Anomalie
+                    if (!_context.Anomalies.Any(a =>
+                    a.NameGenerator == indice.Record.NameGenerator &&
+                    a.RecordDate == indice.Record.RecordDate &&
+                    a.Type == "Fecha"))
                     {
-                        NameGenerator = indice.Record.NameGenerator,
-                        RecordDate = indice.Record.RecordDate,
-                        Type = "Fecha",
-                        Comment = "La fecha es muy antigua",
-                        State = 0
-                    };
-                    _context.Anomalies.Add(anomalie);
-                    await _context.SaveChangesAsync();
+                        Anomalie anomalie = new Anomalie
+                        {
+                            NameGenerator = indice.Record.NameGenerator,
+                            RecordDate = indice.Record.RecordDate,
+                            Type = "Fecha",
+                            Comment = "La fecha es muy antigua",
+                            State = 0
+                        };
+                        _context.Anomalies.Add(anomalie);
+                        await _context.SaveChangesAsync();
+                    }
                 }
-            }
+            
             sortedRecords.Clear();
             selectedRecords.Clear();
         }
@@ -216,7 +217,7 @@ namespace LoCoMPro_LV.Pages.Reports
         public void heuristicDate(List<RecordStoreModel> recordsGroupContainer, out List<RecordStoreModel> sortedRecords, out DateTime referenceDate)
         {
             sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
-
+            var oldDate = sortedRecords.First().Record.RecordDate; ;
             int startIndex = (int)(sortedRecords.Count * 0.30);
 
             DateTime startDate = sortedRecords[startIndex].Record.RecordDate;
@@ -224,8 +225,17 @@ namespace LoCoMPro_LV.Pages.Reports
             DateTime endDate = sortedRecords[sortedRecords.Count - 1].Record.RecordDate;
 
             int delta = 2;
-            int daysDifference = (int)(endDate - startDate).Days * delta;
-            referenceDate = startDate.AddDays(-daysDifference);
+            int daysDifference = (int)(endDate - startDate).Days;
+            if (daysDifference < 30)
+            {
+                referenceDate = oldDate;
+            }
+            else
+            {
+                daysDifference *= delta;
+                referenceDate = startDate.AddDays(-daysDifference);
+            }
+            
         }
 
         /// <summary>         
