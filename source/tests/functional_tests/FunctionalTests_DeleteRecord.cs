@@ -80,9 +80,9 @@ namespace functional_tests
             public void DeleteRecord()
             {
                 driver.FindElement(By.Id("trigger")).Click();
-                driver.FindElement(By.LinkText("Mis Aportes")).Click();
-                driver.FindElement(By.Id("DeleteBotton")).Click();
-            }
+                driver.FindElement(By.LinkText("Mis aportes")).Click();
+                driver.FindElement(By.CssSelector("tr:nth-child(1) .button_delete")).Click();
+        }
         }
 
         public class FunctionalTests_DeleteRecord
