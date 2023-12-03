@@ -8,82 +8,81 @@ using static LoCoMPro_LV.Pages.Reports.AnomaliesModel;
 namespace n_unit_tests
 {
     [TestFixture]
-    public class UnitTests_Anomalies
+    public class UnitTests_AnomaliesDate
     {
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
+        // Test by James Araya - B70528
         [Test]
-        public async Task AnomaliesPrice_LessThanThreshold_NoAnomaliesDetected()
+        public async Task AnomaliesDate_LessThanThreshold_NoAnomaliesDetected()
         {
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
+            var dbContext = ContextTest();
             var model = new AnomaliesModel(dbContext);
             var groupedRecords = CreateSampleGroupedRecords(7);
-
             var recordsToTest = groupedRecords.SelectMany(group => group).ToList();
-            await model.AnomaliesPrice(recordsToTest);
-
+            await model.AnomaliesDate(recordsToTest);
             Assert.IsFalse(dbContext.Anomalies.Any());
         }
 
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
+        // Test by James Araya - B70528
         [Test]
-        public async Task AnomaliesPrice_LessThanThreshold_AnomaliesDetected()
+        public async Task AnomaliesDate_LessThanThreshold_AnomaliesDetected()
         {
-            // Arrange
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
+            var dbContext = ContextTest();
             var model = new AnomaliesModel(dbContext);
             var groupedRecords = CreateSampleGroupedRecords(8);
-
             var recordsToTest = groupedRecords.SelectMany(group => group).ToList();
-            await model.AnomaliesPrice(recordsToTest);
-
+            await model.AnomaliesDate(recordsToTest);
             Assert.IsTrue(dbContext.Anomalies.Any());
         }
 
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
+        // Test by James Araya - B70528
         [Test]
-        public async Task ProcessGroupedRecordsPrice_LessThanThreshold_NoAnomaliesDetected()
+        public async Task ProcessGroupedRecordsDate_LessThanThreshold_NoAnomaliesDetected()
         {
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
+            var dbContext = ContextTest();
             var model = new AnomaliesModel(dbContext);
             var groupedRecords = CreateSampleGroupedRecords(5);
-
-            await model.ProcessGroupedRecordsPrice(groupedRecords);
-
-            Assert.IsFalse(dbContext.Anomalies.Any()); // Verifica que no haya anomalías en la base de datos
+            await model.ProcessGroupedRecordsDate(groupedRecords);
+            Assert.IsFalse(dbContext.Anomalies.Any());
         }
 
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
+        // Test by James Araya - B70528
         [Test]
-        public async Task ProcessGroupedRecordsPrice_ValidRecords_Success()
+        public async Task ProcessGroupedRecords_ValidRecords_Success()
         {
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
+            var dbContext = ContextTest();
             var model = new AnomaliesModel(dbContext);
             var groupedRecords = CreateSampleGroupedRecords(8);
-
-            await model.ProcessGroupedRecordsPrice(groupedRecords);
-
-            Assert.IsTrue(dbContext.Anomalies.Any()); // Verifica que haya al menos una anomalía agregada
+            await model.ProcessGroupedRecordsDate(groupedRecords);
+            Assert.IsTrue(dbContext.Anomalies.Any()); 
         }
 
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
+        // Test by James Araya - B70528
         [Test]
-        public void CalculateQ2Index_EvenCount_ReturnsMiddleIndex()
+        public async Task heuristicDateSorted_ValidRecords_Success()
+        {
+            var dbContext = ContextTest();
+            var model = new AnomaliesModel(dbContext);
+            var groupedRecords = CreateSampleGroupedRecords(8);
+            var recordsToTest = groupedRecords.SelectMany(group => group).ToList();
+            model.heuristicDate(recordsToTest, out var sortedRecords, out var referenceDate);
+
+            Assert.IsTrue(sortedRecords.Any());
+        }
+
+        // Test by James Araya - B70528
+        [Test]
+        public async Task heuristicDatereferenceDate_ValidRecords_Success()
+        {
+            var dbContext = ContextTest();
+            var model = new AnomaliesModel(dbContext);
+            var groupedRecords = CreateSampleGroupedRecords(8);
+            var recordsToTest = groupedRecords.SelectMany(group => group).ToList();
+            model.heuristicDate(recordsToTest, out var sortedRecords, out var referenceDate);
+
+            Assert.IsNotNull(referenceDate);
+        }
+
+        public LoComproContext ContextTest()
         {
             var dbName = Guid.NewGuid().ToString();
             var options = new DbContextOptionsBuilder<LoComproContext>()
@@ -91,98 +90,8 @@ namespace n_unit_tests
                 .Options;
             var dbContext = new LoComproContext(options);
             var model = new AnomaliesModel(dbContext);
-            int recordCount = 8; // Un número par de registros para el ejemplo
 
-            int result = model.CalculateQ2Index(recordCount);
-
-            Assert.That(result, Is.EqualTo(4));
-        }
-
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
-        [Test]
-        public void CalculateQ2Index_OddCount_ReturnsMiddleIndex()
-        {
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
-            var model = new AnomaliesModel(dbContext);
-            int recordCount = 7; // Un número impar de registros para el ejemplo
-
-            int result = model.CalculateQ2Index(recordCount);
-
-            Assert.That(result, Is.EqualTo(4));
-        }
-
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
-        [Test]
-        public void CalculateQ1Index_EvenQ2_ReturnsLowerQuartileIndex()
-        {
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
-            var model = new AnomaliesModel(dbContext);
-            int q2 = 8; // Un índice par de Q2 para el ejemplo
-
-            int result = model.CalculateQ1Index(q2);
-
-            Assert.That(result, Is.EqualTo(3));
-        }
-
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
-        [Test]
-        public void CalculateQ1Index_OddQ2_ReturnsLowerQuartileIndex()
-        {
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
-            var model = new AnomaliesModel(dbContext);
-            int q2 = 11; // Un índice impar de Q2 para el ejemplo
-
-            int result = model.CalculateQ1Index(q2);
-
-            Assert.That(result, Is.EqualTo(4));
-        }
-
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
-        [Test]
-        public void CalculateQ3Index_EvenQ2EvenCount_ReturnsUpperQuartileIndex()
-        {
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
-            var model = new AnomaliesModel(dbContext);
-            int q2 = 4; // Un índice par de Q2 para el ejemplo
-            int recordCount = 8; // Un número par de registros para el ejemplo
-
-            int result = model.CalculateQ3Index(q2, recordCount);
-
-            Assert.That(result, Is.EqualTo(6)); // Ajusta el resultado esperado según tu lógica
-        }
-
-        // Test by Sebastián Rodríguez Tencio - C06756. Sprint 3
-        [Test]
-        public void CalculateQ3Index_OddQ2OddCount_ReturnsUpperQuartileIndex()
-        {
-            var dbName = Guid.NewGuid().ToString();
-            var options = new DbContextOptionsBuilder<LoComproContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            var dbContext = new LoComproContext(options);
-            var model = new AnomaliesModel(dbContext);
-            int q2 = 5; // Un índice impar de Q2 para el ejemplo
-            int recordCount = 9; // Un número impar de registros para el ejemplo
-
-            int result = model.CalculateQ3Index(q2, recordCount);
-
-            Assert.That(result, Is.EqualTo(8));
+            return dbContext;
         }
 
         private List<IGrouping<GroupingKey, RecordStoreModel>> CreateSampleGroupedRecords(int recordsCount)
@@ -246,7 +155,7 @@ namespace n_unit_tests
             {
                 NameGenerator = "anne",
                 GeneratorUser = generatorUser,
-                RecordDate = DateTime.Parse("2022-01-18"),
+                RecordDate = DateTime.Parse("2010-01-18"),
                 Price = 800,
                 NameStore = "Ishop",
                 Latitude = 9.9516,
@@ -270,17 +179,59 @@ namespace n_unit_tests
                 Product = product
             };
 
+            var record3 = new Record
+            {
+                NameGenerator = "anne",
+                GeneratorUser = generatorUser,
+                RecordDate = DateTime.Parse("2022-02-18"),
+                Price = 283000,
+                NameStore = "Ishop",
+                Latitude = 9.9516,
+                Longitude = -84.0990,
+                NameProduct = "Apple Iphone 11",
+                Store = store,
+                Product = product
+            };
+
+            var record4 = new Record
+            {
+                NameGenerator = "anne",
+                GeneratorUser = generatorUser,
+                RecordDate = DateTime.Parse("2023-01-18"),
+                Price = 283000,
+                NameStore = "Ishop",
+                Latitude = 9.9516,
+                Longitude = -84.0990,
+                NameProduct = "Apple Iphone 11",
+                Store = store,
+                Product = product
+            };
+
+            var record5 = new Record
+            {
+                NameGenerator = "anne",
+                GeneratorUser = generatorUser,
+                RecordDate = DateTime.Parse("2023-05-18"),
+                Price = 283000,
+                NameStore = "Ishop",
+                Latitude = 9.9516,
+                Longitude = -84.0990,
+                NameProduct = "Apple Iphone 11",
+                Store = store,
+                Product = product
+            };
+
             if (recordsCount == 8)
             {
                 var groupKey1 = new GroupingKey { NameProduct = "Apple Iphone 11", NameStore = "Ishop", NameCanton = "Tibás", NameProvince = "San José" };
                 var recordToGroup1 = new RecordStoreModel { Record = record1, Store = store };
                 var recordToGroup2 = new RecordStoreModel { Record = record2, Store = store };
                 var recordToGroup3 = new RecordStoreModel { Record = record2, Store = store };
-                var recordToGroup4 = new RecordStoreModel { Record = record2, Store = store };
-                var recordToGroup5 = new RecordStoreModel { Record = record2, Store = store };
-                var recordToGroup6 = new RecordStoreModel { Record = record2, Store = store };
-                var recordToGroup7 = new RecordStoreModel { Record = record2, Store = store };
-                var recordToGroup8 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup4 = new RecordStoreModel { Record = record3, Store = store };
+                var recordToGroup5 = new RecordStoreModel { Record = record4, Store = store };
+                var recordToGroup6 = new RecordStoreModel { Record = record5, Store = store };
+                var recordToGroup7 = new RecordStoreModel { Record = record5, Store = store };
+                var recordToGroup8 = new RecordStoreModel { Record = record4, Store = store };
 
                 var group1 = new List<RecordStoreModel> { recordToGroup1, recordToGroup2, recordToGroup3, recordToGroup4, recordToGroup5, recordToGroup6, recordToGroup7, recordToGroup8 };
                 var grouping1 = group1.GroupBy(r => groupKey1);
@@ -307,11 +258,11 @@ namespace n_unit_tests
             else if (recordsCount == 5)
             {
                 var groupKey1 = new GroupingKey { NameProduct = "Apple Iphone 11", NameStore = "Ishop", NameCanton = "Tibás", NameProvince = "San José" };
-                var recordToGroup1 = new RecordStoreModel { Record = record1, Store = store };
-                var recordToGroup2 = new RecordStoreModel { Record = record2, Store = store };
-                var recordToGroup3 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup1 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup2 = new RecordStoreModel { Record = record3, Store = store };
+                var recordToGroup3 = new RecordStoreModel { Record = record3, Store = store };
                 var recordToGroup4 = new RecordStoreModel { Record = record2, Store = store };
-                var recordToGroup5 = new RecordStoreModel { Record = record2, Store = store };
+                var recordToGroup5 = new RecordStoreModel { Record = record3, Store = store };
 
                 var group1 = new List<RecordStoreModel> { recordToGroup1, recordToGroup2, recordToGroup3, recordToGroup4, recordToGroup5 };
                 var grouping1 = group1.GroupBy(r => groupKey1);

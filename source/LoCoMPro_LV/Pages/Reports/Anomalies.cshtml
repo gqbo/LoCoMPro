@@ -1,10 +1,11 @@
 ﻿@page
 @Html.AntiForgeryToken()
+@using Microsoft.AspNetCore.Authorization
 @model LoCoMPro_LV.Pages.Reports.AnomaliesModel
 @{
     ViewData["Title"] = "Consulta";
 }
-
+@attribute [Authorize]
 <div class="container container-anomalie-buttons index align-items-center">
     <div class="row">
         <div class="col-12 d-flex justify-content-center">
@@ -48,7 +49,6 @@
     <tbody>
         @foreach (var firstItem in Model.Anomalies)
         {
-
             <tr>
                 <td>
                     <div class="table-item">

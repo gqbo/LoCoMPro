@@ -45,6 +45,7 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <returns>Una acción que representa el resultado de la operación.</returns>
         public async Task<IActionResult> OnPostRunAnomaliesPrecio()
         {
+            await LimpiarTablaAnomalies();
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
             await ProcessGroupedRecordsPrice(groupedRecords);
@@ -58,11 +59,22 @@ namespace LoCoMPro_LV.Pages.Reports
         /// </summary>
         public async Task<IActionResult> OnPostRunAnomaliesFecha()
         {
+            await LimpiarTablaAnomalies();
             var orderedRecordsQuery = BuildOrderedRecordsQuery();
             List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords = GroupRecords(orderedRecordsQuery);
             await ProcessGroupedRecordsDate(groupedRecords);
 
             return new JsonResult(new { success = true });
+        }
+
+        /// <summary>
+        /// Limpia la tabla de anomalías para eliminar los registros que dejaron de ser anómalos.
+        /// </summary>
+        private async Task LimpiarTablaAnomalies()
+        {
+            var allAnomalies = await _context.Anomalies.ToListAsync();
+            _context.Anomalies.RemoveRange(allAnomalies);
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -115,8 +127,9 @@ namespace LoCoMPro_LV.Pages.Reports
         /// <summary>
         /// Método que recorre los diferentes grupos para enviar a validar los datos anómalos en agrupamientos con más de 4 datos.
         /// Realiza llamados a un método que verifica los datos anómalos por fecha.
+        /// <param name="groupedRecords">Datos agrupados.</param>
         /// </summary>
-        private async Task ProcessGroupedRecordsDate(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
+        public async Task ProcessGroupedRecordsDate(List<IGrouping<GroupingKey, RecordStoreModel>> groupedRecords)
         {
             List<RecordStoreModel> recordsGroupContainer = new List<RecordStoreModel>();
             foreach (var group in groupedRecords)
@@ -160,15 +173,51 @@ namespace LoCoMPro_LV.Pages.Reports
         }
 
         /// <summary>
-        /// Identifica y maneja las anomalías relacionadas con las fechas en un grupo de registros.
+        /// Método valida los agrupamientos que cumplen los requisitos para ser un dato anómalo.
+        /// <param name="recordsGroupContainer">Grupo de los registros del mismo producto por tienda.</param>
         /// </summary>
-        /// <param name="recordsGroupContainer">La lista de registros en el grupo.</param>
-        private async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
+        public async Task AnomaliesDate(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
 
-            var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
+            heuristicDate(recordsGroupContainer, out var sortedRecords, out var referenceDate);
+          
+                selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate && r.Record.Hide == false));
 
+                foreach (var indice in selectedRecords)
+                {
+                    if (!_context.Anomalies.Any(a =>
+                    a.NameGenerator == indice.Record.NameGenerator &&
+                    a.RecordDate == indice.Record.RecordDate &&
+                    a.Type == "Fecha"))
+                    {
+                        Anomalie anomalie = new Anomalie
+                        {
+                            NameGenerator = indice.Record.NameGenerator,
+                            RecordDate = indice.Record.RecordDate,
+                            Type = "Fecha",
+                            Comment = "La fecha es muy antigua",
+                            State = 0
+                        };
+                        _context.Anomalies.Add(anomalie);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            
+            sortedRecords.Clear();
+            selectedRecords.Clear();
+        }
+
+        /// <summary>
+        /// Método que valida la heuristica de la fecha.
+        /// <param name="recordsGroupContainer">Grupo de los registros del mismo producto por tienda.</param>
+        /// <param name="sortedRecords">Posee una lista con los datos ordenados.</param>
+        /// <param name="referenceDate">Dato que se utiliza para construir una fecha de referencia desde la cual considerar como datos anómalos.</param>
+        /// </summary>
+        public void heuristicDate(List<RecordStoreModel> recordsGroupContainer, out List<RecordStoreModel> sortedRecords, out DateTime referenceDate)
+        {
+            sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.RecordDate).ToList();
+            var oldDate = sortedRecords.First().Record.RecordDate; ;
             int startIndex = (int)(sortedRecords.Count * 0.30);
 
             DateTime startDate = sortedRecords[startIndex].Record.RecordDate;
@@ -176,45 +225,28 @@ namespace LoCoMPro_LV.Pages.Reports
             DateTime endDate = sortedRecords[sortedRecords.Count - 1].Record.RecordDate;
 
             int delta = 2;
-            int daysDifference = (((int)(endDate - startDate).TotalDays)) * delta;
-            DateTime referenceDate = startDate.AddDays(-daysDifference);
-
-            selectedRecords.AddRange(sortedRecords.Where(r => r.Record.RecordDate < referenceDate &&  r.Record.Hide == false ));
-
-            foreach (var indice in selectedRecords)
+            int daysDifference = (int)(endDate - startDate).Days;
+            if (daysDifference < 30)
             {
-                if (!_context.Anomalies.Any(a =>
-                a.NameGenerator == indice.Record.NameGenerator &&
-                a.RecordDate == indice.Record.RecordDate &&
-                a.Type == "Fecha"))
-                {
-                    Anomalie anomalie = new Anomalie
-                    {
-                        NameGenerator = indice.Record.NameGenerator,
-                        RecordDate = indice.Record.RecordDate,
-                        Type = "Fecha",
-                        Comment = "La fecha es muy antigua",
-                        State = 0
-                    };
-                    _context.Anomalies.Add(anomalie);
-                    await _context.SaveChangesAsync();
-                }
+                referenceDate = oldDate;
             }
-            sortedRecords.Clear();
-            selectedRecords.Clear();
+            else
+            {
+                daysDifference *= delta;
+                referenceDate = startDate.AddDays(-daysDifference);
+            }
+            
         }
 
-        /// <summary>
-        /// Identifica y maneja las anomalías relacionadas con los precios en un grupo de registros.
-        /// </summary>
+        /// <summary>         
+        /// Identifica y maneja las anomalías relacionadas con los precios en un grupo de registros.         
+        /// </summary>         
         /// <param name="recordsGroupContainer">La lista de registros en el grupo.</param>
         public async Task AnomaliesPrice(List<RecordStoreModel> recordsGroupContainer)
         {
             List<RecordStoreModel> selectedRecords = new List<RecordStoreModel>();
             var sortedRecords = recordsGroupContainer.OrderBy(r => r.Record.Price).ToList();
-
             int q2Index = CalculateQ2Index(sortedRecords.Count);
-
             int q1Index = CalculateQ1Index(q2Index);
             int q3Index = CalculateQ3Index(q2Index, sortedRecords.Count);
             double? q1;
@@ -246,7 +278,9 @@ namespace LoCoMPro_LV.Pages.Reports
             double? lowerBound = q1 - umbral * ric;
             double? upperBound = q3 + umbral * ric;
 
-            foreach (var indice in sortedRecords)
+            selectedRecords.AddRange(sortedRecords.Where(r =>  r.Record.Hide == false));
+
+            foreach (var indice in selectedRecords)
             {
                 if (indice.Record.Price < lowerBound || indice.Record.Price > upperBound)
                 {
