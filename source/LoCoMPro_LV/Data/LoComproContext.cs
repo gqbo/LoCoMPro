@@ -22,7 +22,11 @@ namespace LoCoMPro_LV.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Associated> Associated { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Anomalie> Anomalies { get; set; }
         public DbSet<Evaluate> Valorations { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<List> Lists { get; set; }
+        public DbSet<Listed> Listed { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -38,7 +42,11 @@ namespace LoCoMPro_LV.Data
             builder.Entity<Category>().ToTable("Category");
             builder.Entity<Associated>().ToTable("Associated");
             builder.Entity<Report>().ToTable("Reports");
+            builder.Entity<Anomalie>().ToTable("Anomalies");
             builder.Entity<Evaluate>().ToTable("Valorations");
+            builder.Entity<Image>().ToTable("Images");
+            builder.Entity<List>().ToTable("Lists");
+            builder.Entity<Listed>().ToTable("Listed");
 
             builder.Entity<ApplicationUser>().HasKey(e => e.UserName);
             builder.Entity<ApplicationUser>().Property(e => e.UserName).IsRequired();
@@ -66,8 +74,23 @@ namespace LoCoMPro_LV.Data
             builder.Entity<Report>()
                 .HasKey(r => new { r.NameGenerator, r.RecordDate, r.NameReporter, r.ReportDate });
 
+            builder.Entity<Anomalie>()
+                .HasKey(an => new { an.NameGenerator, an.RecordDate, an.Type });
+
             builder.Entity<Evaluate>()
                 .HasKey(r => new { r.NameGenerator, r.RecordDate, r.NameEvaluator });
+
+            builder.Entity<Image>()
+                .HasKey(i => new { i.NameGenerator, i.RecordDate });
+
+            builder.Entity<Image>()
+                .HasKey(i => new { i.NameGenerator, i.RecordDate,  i.NameImage});
+
+            builder.Entity<List>()
+                .HasKey(r => new { r.NameList, r.UserName});
+
+            builder.Entity<Listed>()
+                .HasKey(r => new { r.NameList, r.UserName, r.NameProduct });
 
             builder.Entity<ApplicationUser>()
                 .HasOne(c => c.Canton)
@@ -129,6 +152,11 @@ namespace LoCoMPro_LV.Data
                 .WithMany(r => r.Reports)
                 .HasForeignKey(r => new { r.NameReporter });
 
+            builder.Entity<Anomalie>()
+                .HasOne(c => c.Record)
+                .WithMany(an => an.Anomalies)
+                .HasForeignKey(an => new { an.NameGenerator, an.RecordDate });
+
             builder.Entity<Evaluate>()
                 .HasOne(r => r.Record)
                 .WithMany(re => re.Valorations)
@@ -139,10 +167,32 @@ namespace LoCoMPro_LV.Data
                 .WithMany(r => r.Valorations)
                 .HasForeignKey(r => new { r.NameEvaluator });
 
+            builder.Entity<Image>()
+                .HasOne(r => r.Record)
+                .WithMany(i => i.Images)
+                .HasForeignKey(i => new { i.NameGenerator, i.RecordDate });
+
+            builder.Entity<Listed>()
+                .HasOne(r => r.List)
+                .WithMany(re => re.Listed)
+                .HasForeignKey(re => new { re.NameList, re.UserName });
+
+            builder.Entity<Listed>()
+                .HasOne(r => r.Product)
+                .WithMany(re => re.Listed)
+                .HasForeignKey(re => new { re.NameProduct });
+
+            builder.Entity<List>()
+                .HasOne(r => r.User)
+                .WithMany(re => re.Lists)
+                .HasForeignKey(re => new { re.UserName });
+
             builder.Entity<ApplicationUser>().Ignore(e => e.Id);
             builder.Entity<ApplicationUser>().Ignore(e => e.PhoneNumber);
             builder.Entity<ApplicationUser>().Ignore(e => e.PhoneNumberConfirmed);
             builder.Entity<ApplicationUser>().Ignore(e => e.TwoFactorEnabled);
         }
+
+        public DbSet<LoCoMPro_LV.Models.List> List { get; set; }
     }
 }
