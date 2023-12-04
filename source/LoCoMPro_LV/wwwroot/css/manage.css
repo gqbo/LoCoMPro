@@ -1,14 +1,13 @@
 .popover {
     position: absolute;
     z-index: 1;
-    max-width: 500px;
+    max-width: 210px;
     padding: 5px;
     font-size: 14px;
     background-color: #0C2B39 !important;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-
 }
 
 .popover-bottom {

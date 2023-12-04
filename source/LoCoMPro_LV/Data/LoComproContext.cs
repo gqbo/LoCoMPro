@@ -22,6 +22,7 @@ namespace LoCoMPro_LV.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Associated> Associated { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Anomalie> Anomalies { get; set; }
         public DbSet<Evaluate> Valorations { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<List> Lists { get; set; }
@@ -41,6 +42,7 @@ namespace LoCoMPro_LV.Data
             builder.Entity<Category>().ToTable("Category");
             builder.Entity<Associated>().ToTable("Associated");
             builder.Entity<Report>().ToTable("Reports");
+            builder.Entity<Anomalie>().ToTable("Anomalies");
             builder.Entity<Evaluate>().ToTable("Valorations");
             builder.Entity<Image>().ToTable("Images");
             builder.Entity<List>().ToTable("Lists");
@@ -71,6 +73,9 @@ namespace LoCoMPro_LV.Data
 
             builder.Entity<Report>()
                 .HasKey(r => new { r.NameGenerator, r.RecordDate, r.NameReporter, r.ReportDate });
+
+            builder.Entity<Anomalie>()
+                .HasKey(an => new { an.NameGenerator, an.RecordDate, an.Type });
 
             builder.Entity<Evaluate>()
                 .HasKey(r => new { r.NameGenerator, r.RecordDate, r.NameEvaluator });
@@ -146,6 +151,11 @@ namespace LoCoMPro_LV.Data
                 .HasOne(c => c.GeneratorUser)
                 .WithMany(r => r.Reports)
                 .HasForeignKey(r => new { r.NameReporter });
+
+            builder.Entity<Anomalie>()
+                .HasOne(c => c.Record)
+                .WithMany(an => an.Anomalies)
+                .HasForeignKey(an => new { an.NameGenerator, an.RecordDate });
 
             builder.Entity<Evaluate>()
                 .HasOne(r => r.Record)

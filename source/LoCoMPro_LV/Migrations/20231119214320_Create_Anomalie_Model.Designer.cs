@@ -4,6 +4,7 @@ using LoCoMPro_LV.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoCoMPro_LV.Migrations
 {
     [DbContext(typeof(LoComproContext))]
-    partial class LoComproContextModelSnapshot : ModelSnapshot
+    [Migration("20231119214320_Create_Anomalie_Model")]
+    partial class Create_Anomalie_Model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,65 +211,6 @@ namespace LoCoMPro_LV.Migrations
                     b.HasKey("UserName");
 
                     b.ToTable("GeneratorUser", (string)null);
-                });
-
-            modelBuilder.Entity("LoCoMPro_LV.Models.Image", b =>
-                {
-                    b.Property<string>("NameGenerator")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("RecordDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NameImage")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<byte[]>("DataImage")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("NameGenerator", "RecordDate", "NameImage");
-
-                    b.ToTable("Images", (string)null);
-                });
-
-            modelBuilder.Entity("LoCoMPro_LV.Models.List", b =>
-                {
-                    b.Property<string>("NameList")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("NameList", "UserName");
-
-                    b.HasIndex("UserName");
-
-                    b.ToTable("Lists", (string)null);
-                });
-
-            modelBuilder.Entity("LoCoMPro_LV.Models.Listed", b =>
-                {
-                    b.Property<string>("NameList")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NameProduct")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("NameList", "UserName", "NameProduct");
-
-                    b.HasIndex("NameProduct");
-
-                    b.ToTable("Listed", (string)null);
                 });
 
             modelBuilder.Entity("LoCoMPro_LV.Models.ModeratorUser", b =>
@@ -629,47 +573,6 @@ namespace LoCoMPro_LV.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("LoCoMPro_LV.Models.Image", b =>
-                {
-                    b.HasOne("LoCoMPro_LV.Models.Record", "Record")
-                        .WithMany("Images")
-                        .HasForeignKey("NameGenerator", "RecordDate")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Record");
-                });
-
-            modelBuilder.Entity("LoCoMPro_LV.Models.List", b =>
-                {
-                    b.HasOne("LoCoMPro_LV.Models.GeneratorUser", "User")
-                        .WithMany("Lists")
-                        .HasForeignKey("UserName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("LoCoMPro_LV.Models.Listed", b =>
-                {
-                    b.HasOne("LoCoMPro_LV.Models.Product", "Product")
-                        .WithMany("Listed")
-                        .HasForeignKey("NameProduct")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LoCoMPro_LV.Models.List", "List")
-                        .WithMany("Listed")
-                        .HasForeignKey("NameList", "UserName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("List");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("LoCoMPro_LV.Models.ModeratorUser", b =>
                 {
                     b.HasOne("LoCoMPro_LV.Models.ApplicationUser", "ApplicationUser")
@@ -812,8 +715,6 @@ namespace LoCoMPro_LV.Migrations
 
             modelBuilder.Entity("LoCoMPro_LV.Models.GeneratorUser", b =>
                 {
-                    b.Navigation("Lists");
-
                     b.Navigation("Record");
 
                     b.Navigation("Reports");
@@ -821,16 +722,9 @@ namespace LoCoMPro_LV.Migrations
                     b.Navigation("Valorations");
                 });
 
-            modelBuilder.Entity("LoCoMPro_LV.Models.List", b =>
-                {
-                    b.Navigation("Listed");
-                });
-
             modelBuilder.Entity("LoCoMPro_LV.Models.Product", b =>
                 {
                     b.Navigation("Associated");
-
-                    b.Navigation("Listed");
 
                     b.Navigation("Record");
                 });
@@ -842,8 +736,6 @@ namespace LoCoMPro_LV.Migrations
 
             modelBuilder.Entity("LoCoMPro_LV.Models.Record", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("Anomalies");
 
                     b.Navigation("Reports");
