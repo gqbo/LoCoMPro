@@ -46,7 +46,10 @@ namespace LoCoMPro_LV.Pages.Lists
 
             Result.Store = await GetStoreForRecordAsync(firstRecord);
 
-            Result.Distance = await CalculateDistanceToStoreAsync(firstRecord);
+            if (User.Identity.IsAuthenticated)
+            {
+                Result.Distance = await CalculateDistanceToStoreAsync(firstRecord);
+            }
 
             Result.Records = await GetRecordsForStoreAsync(firstRecord);
 
@@ -112,7 +115,7 @@ namespace LoCoMPro_LV.Pages.Lists
         public double? CalculateTotalPrice(IList<Record> records)
         {
             double? totalPrice = 0;
-            foreach (var record in Result.Records)
+            foreach (var record in records)
             {
                 totalPrice += record.Price;
             }

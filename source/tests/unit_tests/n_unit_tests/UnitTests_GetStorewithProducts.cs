@@ -175,6 +175,7 @@ namespace n_unit_tests
             Assert.That(result.Count, Is.EqualTo(temp.ProductCount));
         }
 
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 3
         [Test]
         public async Task GetRecordsAsyncNotValid()
         {

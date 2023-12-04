@@ -132,7 +132,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Permite almacenar los locales en una colección de datos.
         /// </summary>
-        private async Task LoadStoresAsync()
+        public async Task LoadStoresAsync()
         {
             var stores = await _context.Stores.ToListAsync();
             Stores = new HashSet<string>(stores.Select(store => store.NameStore));
@@ -141,7 +141,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Permite obtener y almacenarlos productos en una lista.
         /// </summary>
-        private async Task LoadProductsAsync()
+        public async Task LoadProductsAsync()
         {
             var products = await _context.Products.ToListAsync();
             Product = products.Select(prod => prod.NameProduct).ToList();
