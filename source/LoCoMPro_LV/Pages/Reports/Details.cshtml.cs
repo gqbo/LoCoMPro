@@ -88,19 +88,8 @@ namespace LoCoMPro_LV.Pages.Reports
             return Page();
         }
 
-        private async Task LoadImagesForRecordsAsync(List<RecordStoreModel> records)
-        {
-            foreach (var recordStoreModel in records)
-            {
-                recordStoreModel.Images = await _context.Images
-                    .Where(img => img.NameGenerator == recordStoreModel.Record.NameGenerator
-                                && img.RecordDate == recordStoreModel.Record.RecordDate)
-                    .ToListAsync();
-            }
-        }
-
         /// <summary>
-        /// Este metodo busca los reportes asociados a un registro
+        /// Este método busca los reportes asociados a un registro
         /// </summary>
         /// <param name="nameGenerator">Es el nombre del usuario que genero el registro al cual se le busca los reportes</param>
         /// <param name="recordDate">Es la fecha en la cual se genero el registro al cual se le busca los reportes</param>
