@@ -18,7 +18,8 @@ function handleFileSelection(event) {
     for (var i = 0; i < input.files.length; i++) {
         var file = input.files[i];
 
-        if (file.type.startsWith("image/")) {
+        // Verificar si es una imagen y tiene la extensión permitida
+        if (file.type.startsWith("image/") && /\.(jpeg|jpg|png)$/i.test(file.name)) {
             (function (file) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
@@ -36,8 +37,13 @@ function handleFileSelection(event) {
 
                 reader.readAsDataURL(file);
             })(file);
+        } else {
+            document.getElementById("fileCountError").textContent = "Solo puedes seleccionar imagenes con extension jpg, jpeg y png.";
+            input.value = "";
+            return;
         }
     }
 }
+
 
 

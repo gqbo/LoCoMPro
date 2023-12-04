@@ -1,0 +1,127 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Reports.DetailsAnomalieModel
+@using Microsoft.AspNetCore.Authorization
+@using LoCoMPro_LV.Models
+@{
+    ViewData["Title"] = "Consulta";
+}
+@attribute [Authorize]
+
+<div class="container details-container">
+    <div class="row d-flex justify-content-center align-items-center report-item">
+        <div class="col-12 d-flex justify-content-center">
+            <h2 class="title_add">Registro</h2>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center align-items-center report-item">
+        <div class="card">
+            <div class="bg">
+                <div class="info_detail">
+                    <div class="row">
+                        <div class="col-4 details-image">
+                        </div>
+                        <div class="col-8">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-10">
+                                    <h4>
+                                        @Html.DisplayFor(model => model.recordStoreAnomalies.Record.NameProduct)
+                                    </h4>
+                                </div>
+                                <div class="col-2 d-flex justify-content-end">
+                                    <h4>
+                                        ₡@Html.DisplayFor(model => model.recordStoreAnomalies.Record.Price)
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="col-12 d-flex justify-content-left">
+                                <h4>
+                                    Usuario: @Html.DisplayFor(model => model.recordStoreAnomalies.Record.NameGenerator)
+                                </h4>
+                                <div class="ratings-wrapper-report ratings-wrapper">
+                                    <div class="ratings">
+                                        @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                        {
+                                            <span data-rating="@starNumber"
+                                            @(starNumber <= Model.recordStoreAnomalies.generatorValoration ? "data-clicked" : "")>
+                                                <span>★</span>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h7>
+                                        Tienda: @Html.DisplayFor(model => model.recordStoreAnomalies.Store.NameStore)
+                                        <br>
+                                        Provincia: @Html.DisplayFor(model => model.recordStoreAnomalies.Store.NameProvince)
+                                        <br>
+                                        Cantón: @Html.DisplayFor(model => model.recordStoreAnomalies.Store.NameCanton)
+                                    </h7>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h7>
+                                        Descripción: @Html.DisplayFor(model => model.recordStoreAnomalies.Record.Description)
+                                    </h7>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col d-flex justify-content-end">
+                                    <h7>
+                                        @Html.DisplayFor(model => model.recordStoreAnomalies.Record.RecordDate)
+                                    </h7>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="blob"></div>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center align-items-center report-item">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 class="title_add">Anomalía</h1>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center align-items-center report-item">
+        <div id="carousel" class="carousel carousel-dark carousel slide">
+            <div class="carousel-inner">
+                @for (int report = 0; report < Model.recordStoreAnomalies.Anomalies.Count; report++)
+                {
+                    <div class="carousel-item @(report == 0 ? "active" : "")">
+                        <div class="container d-flex justify-content-center align-items-center report-item">
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div class="info">
+                                    <div class="row d-flex justify-content-center align-items-center report-item">
+                                        <div class="col-9 d-flex justify-content-center align-items-center report-comment">
+                                            <h6>
+                                                Comentario: @Html.DisplayFor(model => model.recordStoreAnomalies.Anomalies[report].Comment)
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form method="post">
+                                <input type="hidden" name="reportDate" value="@Model.recordStoreAnomalies.Anomalies[report].RecordDate">
+                                <input type="hidden" name="type" value="@Model.recordStoreAnomalies.Anomalies[report].Type">
+                                <div class="row d-flex justify-content-center align-items-center">
+                                    <div class="col d-flex justify-content-center align-items-center">
+                                        <button class="add_confirm" type="submit" name="action" value="accept">Aceptar</button>
+                                    </div>
+                                    <div class="col d-flex justify-content-center align-items-center">
+                                        <button class="add_cancel" type="submit" name="action" value="reject">Rechazar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -44,5 +44,55 @@ namespace functional_tests
 
             Assert.That(currentUrl, Is.EqualTo(expectedUrl));
         }
+
+
+        // Test Functional: Yordi Robles Siles. Sprint 3
+        [Test]
+        public void TopReportsFunctionalTest()
+        {
+            LoginModerator loginModerator = new LoginModerator(driver);
+            loginModerator.Login("Admin", "Admin1.");
+            TopReportsPage topReportsPage = new TopReportsPage(driver);
+            topReportsPage.SearchTopReports();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(5000);
+            string currentUrl = driver.Url;
+
+            string expectedUrl = "http://localhost:5064/Reports/TopReports";
+
+            Assert.That(currentUrl, Is.EqualTo(expectedUrl));
+        }
+    }
+    public class LoginModerator
+    {
+        private IWebDriver driver;
+        public LoginModerator(IWebDriver driver) {
+            this.driver = driver;
+        }
+
+        public void Login(string Username, string Password)
+        {
+            driver.Navigate().GoToUrl("http://localhost:5064/");
+            driver.FindElement(By.LinkText("Iniciar Sesión")).Click();
+            driver.FindElement(By.Id("Input_UserName")).Click();
+            driver.FindElement(By.Id("Input_UserName")).SendKeys(Username);
+            driver.FindElement(By.Id("Input_Password")).Click();
+            driver.FindElement(By.Id("Input_Password")).SendKeys(Password);
+            driver.FindElement(By.CssSelector(".register_submit")).Click();
+        }
+    }
+
+    public class TopReportsPage
+    {
+        private IWebDriver driver;
+        public TopReportsPage(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+
+        public void SearchTopReports()
+        {
+            driver.FindElement(By.Id("trigger1")).Click();
+            driver.FindElement(By.LinkText("Top Reportados")).Click();
+        }
     }
 }

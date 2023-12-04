@@ -43,7 +43,7 @@
                             <span asp-validation-for="Record.Description" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="ImageFiles">Seleccionar Imágenes</label>
+                            <label asp-for="ImageFiles">Seleccionar o reemplazar imágenes</label>
                             <input type="file" asp-for="ImageFiles"
                                    class="form-control form-control-add form-control form-control-add-lg"
                                    accept=".jpg, .jpeg, .png" multiple id="fileInput" onchange="handleFileSelection(event)" />
@@ -55,14 +55,16 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col d-flex justify-content-start align-items-center">
-                <input type="submit" value="Confirmar" class="add_confirm" />
+        <form method="post">
+            <div class="row">
+                <div class="col d-flex justify-content-start align-items-center">
+                    <input type="submit" value="Confirmar" class="add_confirm" />
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <a asp-page="/Index" class="add_cancel d-flex justify-content-center align-items-center">Cancelar</a>
+                </div>
             </div>
-            <div class="col d-flex justify-content-end align-items-center">
-                <a asp-page="/Index" class="add_cancel d-flex justify-content-center align-items-center">Cancelar</a>
-            </div>
-        </div>
+        </form>
     </form>
 </div>
 

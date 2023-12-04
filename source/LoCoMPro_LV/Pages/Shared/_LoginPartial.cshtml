@@ -27,12 +27,25 @@
         </li>
         if (user != null && user.IsModerator)
         {
-            <li class="nav-item ml-auto">
-                <button class="navbar_button">
-                    <a class="form-inline nav-link" asp-area="" asp-page="/Reports/Index">
-                        Ver reportes
-                    </a>
-                </button>
+            <li>
+                <button id="trigger1" class="navbar_button form-inline nav-link">Moderar</button>
+                <div id="popover1" class="popover popover-bottom" hidden>
+                    <button class="navbar_button">
+                        <a class="form-inline nav-link" asp-area="" asp-page="/Reports/Index">
+                            Ver Reportes
+                        </a>
+                    </button>
+                    <button class="navbar_button">
+                        <a class="form-inline nav-link" asp-area="" asp-page="/Reports/Anomalies">
+                            Ver Anomalías
+                        </a>
+                    </button>
+                    <button class="navbar_button">
+                        <a class="form-inline nav-link" asp-area="" asp-page="/Reports/TopReports">
+                            Top Reportados
+                        </a>
+                    </button>
+                </div>
             </li>
         }
         <li>
@@ -42,10 +55,14 @@
             <div id="popover" class="popover popover-bottom" hidden>
                 <button class="navbar_button">
                     <a class="form-inline nav-link" asp-area="" asp-page="/Records/MyRecords">
-                        Mis Aportes
+                        Mis aportes
                     </a>
                 </button>
-
+                <button class="navbar_button">
+                    <a class="form-inline nav-link" asp-area="" asp-page="/Lists/Index">
+                        Mi lista de interés
+                    </a>
+                </button>
                 <button class="navbar_button">
                     <a class="form-inline nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">
                         Gestionar cuenta
@@ -77,33 +94,68 @@
 </ul>
 
 <script>
-
     var trigger = document.getElementById("trigger");
     var popover = document.getElementById("popover");
 
-    // Show or hide the popover when the trigger is clicked
-    trigger.addEventListener("click", function () {
-        popover.hidden = !popover.hidden;
-        // Position the popover relative to the trigger
-        var triggerRect = trigger.getBoundingClientRect();
-        var popoverRect = popover.getBoundingClientRect();
-        popover.style.left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2 + "px";
-        popover.style.top = triggerRect.bottom + "px";
-    });
+    var trigger1 = document.getElementById("trigger1");
+    var popover1 = document.getElementById("popover1");
 
-    // Hide the popover when the document is clicked outside of it
+    // Función para mostrar u ocultar el popover
+    function togglePopover(trigger, popover) {
+        if (popover && trigger) {
+            if (popover.hidden) {
+                // Si el popover está oculto, lo mostramos
+                popover.hidden = false;
+
+                // Posicionar el popover en relación con el trigger
+                var triggerRect = trigger.getBoundingClientRect();
+                var popoverRect = popover.getBoundingClientRect();
+                popover.style.left = triggerRect.left + (triggerRect.width - popoverRect.width) / 2 + "px";
+                popover.style.top = triggerRect.bottom + "px";
+            } else {
+                // Si el popover está visible, lo ocultamos
+                popover.hidden = true;
+            }
+        }
+    }
+
+    // Mostrar u ocultar el primer popover cuando se hace clic en su trigger
+    if (trigger1) {
+        trigger1.addEventListener("click", function () {
+            togglePopover(trigger1, popover1);
+
+            // Cerrar el segundo popover si está abierto
+            if (popover) {
+                popover.hidden = true;
+            }
+        });
+    }
+
+    // Mostrar u ocultar el segundo popover cuando se hace clic en su trigger
+    if (trigger) {
+        trigger.addEventListener("click", function () {
+            togglePopover(trigger, popover);
+
+            // Cerrar el primer popover si está abierto
+            if (popover1) {
+                popover1.hidden = true;
+            }
+        });
+    }
+
+    // Ocultar ambos popovers cuando se hace clic fuera de ellos
     document.addEventListener("click", function (event) {
-        if (!popover.contains(event.target) && !trigger.contains(event.target)) {
+        if (popover && trigger && !popover.contains(event.target) && !trigger.contains(event.target) && popover1 && trigger1 && !popover1.contains(event.target) && !trigger1.contains(event.target)) {
             popover.hidden = true;
+            popover1.hidden = true;
         }
     });
 
-    // Hide the popover when the escape key is pressed
+    // Ocultar ambos popovers cuando se presiona la tecla Escape
     document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
+        if (event.key === "Escape" && popover && popover1) {
             popover.hidden = true;
+            popover1.hidden = true;
         }
     });
-
 </script>
-
