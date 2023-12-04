@@ -301,31 +301,3 @@
         generarPaginacion();
     });
 </script>
-
-<script>
-
-    // Ordena la tabla por distancia, ascendente o descendente según el estado de ordenamiento.
-    function sortTableByDistance() {
-        var filas = filteredRows;
-
-        filas.sort(function (a, b) {
-            var valueA = parseFloat(a.querySelector(".distancia").innerText.replace(' km', '')) || 0;
-            var valueB = parseFloat(b.querySelector(".distancia").innerText.replace(' km', '')) || 0;
-
-            if (orderingState === 1) {
-                return valueA - valueB;
-            } else {
-                return valueB - valueA;
-            }
-        });
-
-        filas.forEach(function (fila) {
-            tableBody.removeChild(fila);
-        });
-
-        filas.forEach(function (fila) {
-            tableBody.appendChild(fila);
-        });
-    }
-
-</script>
