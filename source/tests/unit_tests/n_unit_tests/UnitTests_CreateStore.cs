@@ -3,6 +3,11 @@ using LoCoMPro_LV.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LoCoMPro_LV.Pages.Stores;
 using LoCoMPro_LV.Utils;
+using LoCoMPro_LV.Data;
+using LoCoMPro_LV.Pages.Records;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using Microsoft.Extensions.Configuration;
 
 namespace n_unit_tests
 {
@@ -112,6 +117,63 @@ namespace n_unit_tests
             var radians = Geolocation.DegreesToRadians(9.9614);
             Assert.That(radians == 0.17385922811, Is.False);
 
+        }
+
+        // Test by Yordi Robles Siles - C06557. Sprint 3
+        [Test]
+        public async Task GetStores()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
+
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var store1 = CreateSampleStore("Carniceria buen gusto", "San José", "Goicoechea");
+            var store2 = CreateSampleStore("MasxMenos", "Heredia", "Heredia");
+            var store3 = CreateSampleStore("Walmart", "Cartago", "Cartago");
+            dbContext.Add(store1);
+            dbContext.Add(store2);
+            dbContext.Add(store3);
+            dbContext.SaveChanges();
+
+            var model = new CreateStoreModel(dbContext);
+
+
+            await model.LoadStoresAsync();
+            await dbContext.SaveChangesAsync();
+
+            Assert.That(model.Stores, Is.Not.Null);
+            Assert.That(model.Stores, Has.Count.EqualTo(3));
+        }
+
+        private Store CreateSampleStore(string nameStore, string nameProvince, string nameCanton)
+        {
+            var province = new Province
+            {
+                NameProvince = nameProvince
+            };
+
+            var canton = new Canton
+            {
+                NameCanton = nameCanton,
+                Province = province,
+                NameProvince = province.NameProvince
+            };
+            return new Store
+            {
+                NameStore = nameStore,
+                Canton = canton,
+                NameProvince = province.NameProvince,
+                NameCanton = canton.NameCanton,
+                Latitude = 9.9516,
+                Longitude = -84.0990
+            };
         }
     }
 }
