@@ -51,6 +51,39 @@ namespace n_unit_tests
             CollectionAssert.AreEqual(expected_items, items);
         }
 
+        // Test by Cristopher Hernandez Calderon - C13632. Sprint 3
+        [Test]
+        public async Task GetListItem()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
+
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var record = CreateSampleRecord();
+            var list = CreateSampleList();
+            var listed = CreateSampleListed();
+
+            dbContext.Add(record);
+            dbContext.Add(list);
+            dbContext.Add(listed);
+            dbContext.SaveChanges();
+
+            var model = new IndexModel(dbContext);
+
+            model.NameProduct = "Apple Iphone 11 64gb";
+
+            var item = await model.GetListedItemAsync("anne");
+
+            Assert.AreEqual(listed, item);
+        }
+
         private LoCoMPro_LV.Models.List CreateSampleList()
         {
             var user = new ApplicationUser

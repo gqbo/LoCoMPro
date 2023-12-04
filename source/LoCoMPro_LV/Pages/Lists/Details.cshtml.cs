@@ -128,18 +128,25 @@ namespace LoCoMPro_LV.Pages.Lists
         /// <param name="count">Cantidad de productos.</param>
         public async Task<ListSearchResults> CreateListSearchResult(StoreWithProductsModel storeWithProducts, int count)
         {
-            ListSearchResults result = new ListSearchResults
+            if (count == 0)
             {
-                productCount = storeWithProducts.ProductCount,
-                percentageInList = 100 * storeWithProducts.ProductCount / count,
-                Store = await GetStoreAsync(storeWithProducts),
-                Distance = await CalculateDistanceAsync(storeWithProducts),
-                Records = await GetRecordsAsync(storeWithProducts)
-            };
+                return null;
+            } 
+            else
+            {
+                ListSearchResults result = new ListSearchResults
+                {
+                    productCount = storeWithProducts.ProductCount,
+                    percentageInList = 100 * storeWithProducts.ProductCount / count,
+                    Store = await GetStoreAsync(storeWithProducts),
+                    Distance = await CalculateDistanceAsync(storeWithProducts),
+                    Records = await GetRecordsAsync(storeWithProducts)
+                };
 
-            result.totalPrice = result.Records.Sum(record => record.Price);
+                result.totalPrice = result.Records.Sum(record => record.Price);
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
