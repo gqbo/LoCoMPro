@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
-using LoCoMPro_LV.Pages.Records;
 using LoCoMPro_LV.Utils;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Identity;
@@ -55,7 +50,10 @@ namespace LoCoMPro_LV.Pages.Lists
 
         public IList<ListSearchResults> Results { get; set; } = new List<ListSearchResults>();
 
-
+        /// <summary>
+        /// Maneja las solicitudes GET para la página actual.
+        /// Obtiene y muestra resultados de búsqueda para cada tienda con productos del usuario actual.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
             var count = GetListedCount(User.Identity.Name);
@@ -73,14 +71,22 @@ namespace LoCoMPro_LV.Pages.Lists
             return Page();
         }
 
-        private int GetListedCount( string UserName)
+        /// <summary>
+        /// Obtiene la cantidad de listas creadas por un usuario específico.
+        /// </summary>
+        /// <param name="UserName">Nombre de usuario para el cual se desea obtener la cantidad de listas.</param>
+        public int GetListedCount( string UserName)
         {
             return _context.Listed
                 .Where(listed => listed.NameList == UserName)
                 .Count();
         }
 
-        private IEnumerable<StoreWithProductsModel> GetStoresWithProducts()
+        /// <summary>
+        /// Obtiene las tiendas con la cantidad de productos asociados a un usuario específico
+        /// utilizando una función de la base de datos.
+        /// </summary>
+        public IEnumerable<StoreWithProductsModel> GetStoresWithProducts()
         {
             string connectionString = _databaseUtils.GetConnectionString();
             string sqlQuery = "SELECT * FROM dbo.GetStoresWithProducts(@NameList)";
@@ -114,7 +120,13 @@ namespace LoCoMPro_LV.Pages.Lists
             }
         }
 
-        private async Task<ListSearchResults> CreateListSearchResult(StoreWithProductsModel storeWithProducts, int count)
+
+        /// <summary>
+        /// Crea un resultado de búsqueda de lista a partir de un modelo de tienda con productos.
+        /// </summary>
+        /// <param name="storeWithProducts">Modelo de tienda con productos.</param>
+        /// <param name="count">Cantidad de productos.</param>
+        public async Task<ListSearchResults> CreateListSearchResult(StoreWithProductsModel storeWithProducts, int count)
         {
             ListSearchResults result = new ListSearchResults
             {
@@ -130,7 +142,11 @@ namespace LoCoMPro_LV.Pages.Lists
             return result;
         }
 
-        private async Task<Store> GetStoreAsync(StoreWithProductsModel storeWithProducts)
+        /// <summary>
+        /// Obtiene una tienda según la información proporcionada en el modelo de tienda con productos.
+        /// </summary>
+        /// <param name="storeWithProducts">Modelo de tienda con productos.</param>
+        public async Task<Store> GetStoreAsync(StoreWithProductsModel storeWithProducts)
         {
             return await _context.Stores
                 .FirstOrDefaultAsync(m => m.Latitude == storeWithProducts.Latitude &&
@@ -138,7 +154,11 @@ namespace LoCoMPro_LV.Pages.Lists
                                             m.NameStore == storeWithProducts.NameStore);
         }
 
-        private async Task<double> CalculateDistanceAsync(StoreWithProductsModel storeWithProducts)
+        /// <summary>
+        /// Calcula la distancia entre la ubicación del usuario y una tienda con productos.
+        /// </summary>
+        /// <param name="storeWithProducts">Modelo de tienda con productos.</param>
+        public async Task<double> CalculateDistanceAsync(StoreWithProductsModel storeWithProducts)
         {
             var userLocation = User.Identity.IsAuthenticated ? await GetLocationUserAsync() : new double[] { 0, 0 };
 
@@ -146,7 +166,11 @@ namespace LoCoMPro_LV.Pages.Lists
                    Geolocation.CalculateDistance(userLocation[0], userLocation[1], storeWithProducts.Latitude, storeWithProducts.Longitude) / 1000 : 0;
         }
 
-        private async Task<List<Record>> GetRecordsAsync(StoreWithProductsModel storeWithProducts)
+        /// <summary>
+        /// Obtiene registros asociados a una tienda con productos, seleccionando el primer registro para cada producto.
+        /// </summary>
+        /// <param name="storeWithProducts">Modelo de tienda con productos.</param>
+        public async Task<List<Record>> GetRecordsAsync(StoreWithProductsModel storeWithProducts)
         {
             var query = from record in _context.Records
                         join listed in _context.Listed
@@ -165,7 +189,7 @@ namespace LoCoMPro_LV.Pages.Lists
         /// <summary>
         /// Obtiene las coordenadas del usuario que está realizando la consulta.
         /// </summary>
-        private async Task<double[]> GetLocationUserAsync()
+        public async Task<double[]> GetLocationUserAsync()
         {
             var authenticatedUserName = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(authenticatedUserName);

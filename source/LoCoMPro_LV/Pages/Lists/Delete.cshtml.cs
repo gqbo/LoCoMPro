@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
@@ -12,9 +8,9 @@ namespace LoCoMPro_LV.Pages.Lists
 {
     public class DeleteModel : PageModel
     {
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
 
-        public DeleteModel(LoCoMPro_LV.Data.LoComproContext context)
+        public DeleteModel(LoComproContext context)
         {
             _context = context;
         }
@@ -22,6 +18,11 @@ namespace LoCoMPro_LV.Pages.Lists
         [BindProperty]
       public List List { get; set; }
 
+        /// <summary>
+        /// Maneja las solicitudes GET para la página actual.
+        /// Recupera una lista según el id y la asigna a "List".
+        /// </summary>
+        /// <param name="id">El identificador de la lista a recuperar.</param>
         public async Task<IActionResult> OnGetAsync(string id)
         {
             if (id == null || _context.List == null)
@@ -42,6 +43,11 @@ namespace LoCoMPro_LV.Pages.Lists
             return Page();
         }
 
+        /// <summary>
+        /// Maneja las solicitudes POST para la página actual.
+        /// Elimina una lista según el id y redirige a la página de índice.
+        /// </summary>
+        /// <param name="id">El identificador de la lista a eliminar.</param>
         public async Task<IActionResult> OnPostAsync(string id)
         {
             if (id == null || _context.List == null)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +9,9 @@ namespace LoCoMPro_LV.Pages.Lists
 {
     public class EditModel : PageModel
     {
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
 
-        public EditModel(LoCoMPro_LV.Data.LoComproContext context)
+        public EditModel(LoComproContext context)
         {
             _context = context;
         }
@@ -23,6 +19,11 @@ namespace LoCoMPro_LV.Pages.Lists
         [BindProperty]
         public List List { get; set; } = default!;
 
+        /// <summary>
+        /// Maneja las solicitudes GET para la página actual.
+        /// Recupera y muestra los detalles de una lista según el identificador proporcionado.
+        /// </summary>
+        /// <param name="id">Identificador de la lista.</param>
         public async Task<IActionResult> OnGetAsync(string id)
         {
             if (id == null || _context.List == null)
@@ -40,8 +41,10 @@ namespace LoCoMPro_LV.Pages.Lists
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
+        /// <summary>
+        /// Maneja las solicitudes POST para la página actual.
+        /// Actualiza la lista en la base de datos después de una modificación.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -70,6 +73,10 @@ namespace LoCoMPro_LV.Pages.Lists
             return RedirectToPage("./Index");
         }
 
+        /// <summary>
+        /// Verifica si una lista con el identificador dado existe en la base de datos.
+        /// </summary>
+        /// <param name="id">Identificador de la lista.</param>
         private bool ListExists(string id)
         {
           return _context.List.Any(e => e.NameList == id);

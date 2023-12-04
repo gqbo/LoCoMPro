@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
@@ -46,45 +42,88 @@ namespace LoCoMPro_LV.Pages.Lists
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var FirstRecord = await _context.Records
+            var firstRecord = await GetFirstRecordAsync();
+
+            Result.Store = await GetStoreForRecordAsync(firstRecord);
+
+            Result.Distance = await CalculateDistanceToStoreAsync(firstRecord);
+
+            Result.Records = await GetRecordsForStoreAsync(firstRecord);
+
+            Result.totalPrice = CalculateTotalPrice(Result.Records);
+
+            return Page();
+        }
+
+        /// <summary>
+        /// Obtiene el primer registro de la base de datos.
+        /// </summary>
+        public async Task<Record> GetFirstRecordAsync()
+        {
+            return await _context.Records
                 .FirstOrDefaultAsync(m => m.NameGenerator == NameGenerator && m.RecordDate == RecordDate);
+        }
 
-            Result.Store = await _context.Stores
-                .FirstOrDefaultAsync(m => m.Latitude == FirstRecord.Latitude && m.Longitude == FirstRecord.Longitude && m.NameStore == FirstRecord.NameStore);
+        /// <summary>
+        /// Obtiene la tienda asociada a un registro.
+        /// </summary>
+        public async Task<Store> GetStoreForRecordAsync(Record record)
+        {
+            return await _context.Stores
+                .FirstOrDefaultAsync(m => m.Latitude == record.Latitude && m.Longitude == record.Longitude && m.NameStore == record.NameStore);
+        }
 
+        /// <summary>
+        /// Calcula la distancia entre la ubicación del usuario y la tienda asociada a un registro.
+        /// </summary>
+        public async Task<double> CalculateDistanceToStoreAsync(Record record)
+        {
             var userLocation = new double[] { 0, 0 };
             if (User.Identity.IsAuthenticated)
             {
                 userLocation = await GetLocationUserAsync();
             }
 
-            Result.Distance = (userLocation[0] != 0 && userLocation[1] != 0) ?
-                              Geolocation.CalculateDistance(userLocation[0], userLocation[1], FirstRecord.Latitude, FirstRecord.Longitude) / 1000 : 0;
+            return (userLocation[0] != 0 && userLocation[1] != 0) ?
+                   Geolocation.CalculateDistance(userLocation[0], userLocation[1], record.Latitude, record.Longitude) / 1000 : 0;
+        }
 
-            var query = from record in _context.Records
+        /// <summary>
+        /// Obtiene los registros asociados a la tienda de un registro.
+        /// </summary>
+        public async Task<IList<Record>> GetRecordsForStoreAsync(Record record)
+        {
+            var query = from r in _context.Records
                         join listed in _context.Listed
-                        on record.NameProduct equals listed.NameProduct
-                        where record.NameStore == FirstRecord.NameStore
-                        && record.Latitude == FirstRecord.Latitude
-                        && record.Longitude == FirstRecord.Longitude
-                        orderby record.RecordDate descending
-                        group record by record.NameProduct into grouped
+                        on r.NameProduct equals listed.NameProduct
+                        where r.NameStore == record.NameStore
+                              && r.Latitude == record.Latitude
+                              && r.Longitude == record.Longitude
+                        orderby r.RecordDate descending
+                        group r by r.NameProduct into grouped
                         select grouped.First();
 
-            Result.Records = await query.ToListAsync();
+            return await query.ToListAsync();
+        }
 
+        /// <summary>
+        /// Calcula el precio total de una lista de registros.
+        /// </summary>
+        public double? CalculateTotalPrice(IList<Record> records)
+        {
+            double? totalPrice = 0;
             foreach (var record in Result.Records)
             {
-                Result.totalPrice += record.Price;
+                totalPrice += record.Price;
             }
 
-            return Page();
+            return totalPrice;
         }
 
         /// <summary>
         /// Obtiene las coordenadas del usuario que está realizando la consulta.
         /// </summary>
-        private async Task<double[]> GetLocationUserAsync()
+        public async Task<double[]> GetLocationUserAsync()
         {
             var authenticatedUserName = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(authenticatedUserName);
