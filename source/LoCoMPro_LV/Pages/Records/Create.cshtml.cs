@@ -150,7 +150,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Permite obtener y almacenar las categorías en una lista.
         /// </summary>
-        private async Task LoadCategoriesAsync()
+        public async Task LoadCategoriesAsync()
         {
             var categories = await _context.Categories.OrderBy(c => c.NameCategory).ToListAsync();
             Categories = new SelectList(categories, "NameCategory", "NameCategory");

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace n_unit_tests
 {
     [TestFixture]
-    public class CreateModelTests
+    public class UnitTests_CreateRecord
     {
         // Test by Gabriel González Flores - C03376. Sprint 3
         [Test]
@@ -118,6 +118,48 @@ namespace n_unit_tests
 
             Assert.IsNotNull(model.Product);
             Assert.That(model.Product.Count, Is.EqualTo(0));
+        }
+
+        // Test by Yordi Robles Siles - C06557. Sprint 3
+        [Test]
+        public async Task LoadCategoriesAsync_Invalid()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
+
+            var model = new CreateModel(dbContext, signInManager: null);
+
+            await model.LoadCategoriesAsync();
+
+            Assert.IsNotNull(model.Categories);
+            Assert.That(model.Categories.Count, Is.EqualTo(0));
+        }
+
+        // Test by Yordi Robles Siles - C06557. Sprint 3
+        [Test]
+        public async Task LoadCategoriesAsync_Valid()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
+            Category category1 = new Category { NameCategory = "Carros", NameTopCategory = "Juguetes" };
+            Category category2 = new Category { NameCategory = "Motos", NameTopCategory = "Juguetes" };
+            dbContext.Categories.Add(category1);
+            dbContext.Categories.Add(category2);
+            dbContext.SaveChanges();
+            var model = new CreateModel(dbContext, signInManager: null);
+
+            await model.LoadCategoriesAsync();
+
+            Assert.IsNotNull(model.Categories);
+            Assert.That(model.Categories.Count, Is.EqualTo(2));
         }
     }
 
