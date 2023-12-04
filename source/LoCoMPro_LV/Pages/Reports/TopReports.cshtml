@@ -1,6 +1,10 @@
 ﻿@page
 @model LoCoMPro_LV.Pages.Reports.TopReportsModel
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using LoCoMPro_LV.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "TopReports";
@@ -9,7 +13,6 @@
 
 
 @{
-    string username = "";
     if (SignInManager.IsSignedIn(User))
     {
         var AuthenticatedUserName = User.Identity.Name;
