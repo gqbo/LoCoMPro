@@ -50,8 +50,8 @@ namespace functional_tests
         [Test]
         public void TopReportsFunctionalTest()
         {
-            LoginPage loginPage = new LoginPage(driver);
-            loginPage.Login("Admin", "Admin1.");
+            LoginModerator loginModerator = new LoginModerator(driver);
+            loginModerator.Login("Admin", "Admin1.");
             TopReportsPage topReportsPage = new TopReportsPage(driver);
             topReportsPage.SearchTopReports();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(5000);
@@ -62,10 +62,10 @@ namespace functional_tests
             Assert.That(currentUrl, Is.EqualTo(expectedUrl));
         }
     }
-    public class LoginPage
+    public class LoginModerator
     {
         private IWebDriver driver;
-        public LoginPage(IWebDriver driver) {
+        public LoginModerator(IWebDriver driver) {
             this.driver = driver;
         }
 
