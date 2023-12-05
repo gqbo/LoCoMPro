@@ -6,10 +6,15 @@ namespace functional_tests
     public class FunctionalTests_FilterOptions
     {
         IWebDriver driver;
+        private FilterSearchPage searchPage;
+        private FilterHomePage homePage;
+
         [SetUp]
         public void Setup()
         {
             driver = new ChromeDriver();
+            homePage = new FilterHomePage(driver);
+            searchPage = new FilterSearchPage(driver);
         }
 
         [TearDown]
@@ -22,11 +27,8 @@ namespace functional_tests
         [Test]
         public void FilterCheckOption_Test()
         {
-            driver.Navigate().GoToUrl("http://localhost:5064/");
-            driver.Manage().Window.Size = new System.Drawing.Size(968, 1079);
-            driver.FindElement(By.Id("SearchString")).Click();
-            driver.FindElement(By.Id("SearchString")).SendKeys("Apple");
-            driver.FindElement(By.Id("searchButton")).Click();
+            homePage.NavigateTo();
+            searchPage.Search("Apple");
             driver.FindElement(By.CssSelector("div:nth-child(8) > .province-checkbox")).Click();
 
             string expectedProvince = "San José";
@@ -39,11 +41,8 @@ namespace functional_tests
         [Test]
         public void ClearFiltersButton_Test()
         {
-            driver.Navigate().GoToUrl("http://localhost:5064/");
-            driver.Manage().Window.Size = new System.Drawing.Size(968, 1079);
-            driver.FindElement(By.Id("SearchString")).Click();
-            driver.FindElement(By.Id("SearchString")).SendKeys("Apple");
-            driver.FindElement(By.Id("searchButton")).Click();
+            homePage.NavigateTo();
+            searchPage.Search("Apple");
             driver.FindElement(By.CssSelector("div:nth-child(8) > .province-checkbox")).Click();
 
             string expectedProvince = "San José";
@@ -52,6 +51,38 @@ namespace functional_tests
             IReadOnlyCollection<IWebElement> provinceCheckboxes = driver.FindElements(By.CssSelector(".province-checkbox:checked"));
 
             Assert.That(0, Is.EqualTo(provinceCheckboxes.Count), "Los checkboxes de provincia no se desmarcaron correctamente");
+        }
+    }
+    public class FilterHomePage
+    {
+        private readonly IWebDriver driver;
+
+        public FilterHomePage(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+
+        public void NavigateTo()
+        {
+            driver.Navigate().GoToUrl("http://localhost:5064/");
+            driver.Manage().Window.Size = new System.Drawing.Size(968, 1079);
+        }
+    }
+
+    public class FilterSearchPage
+    {
+        private readonly IWebDriver driver;
+
+        public FilterSearchPage(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+
+        public void Search(string searchString)
+        {
+            driver.FindElement(By.Id("SearchString")).Click();
+            driver.FindElement(By.Id("SearchString")).SendKeys(searchString);
+            driver.FindElement(By.Id("searchButton")).Click();
         }
     }
 }
