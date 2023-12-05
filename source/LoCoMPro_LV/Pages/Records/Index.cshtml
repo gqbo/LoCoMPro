@@ -1,0 +1,304 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Records.IndexModel
+@{
+    ViewData["Title"] = "Consulta";
+}
+
+<div class="container container-search index align-items-center">
+    <div class="row">
+        <form method="get" asp-page="/Records/Index">
+            <div class=" buscar-form">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="searchString" for="SearchString">Nombre del producto</label>
+                        <div class="row d-flex justify-content-center align-items-center">
+                            <div class="col-10">
+                                <div class="input-group mb-3 loupe-text">
+                                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                    <input class=" loupe-button btn btn-light" id="searchButton" type="submit" value="Buscar">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <input type="button" value="Opciones avanzadas" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="advancedSearch" class="collapse">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Province">Provincia</label>
+                                <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control_advanced form-control">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Canton">Cantón</label>
+                                <select id="Canton" asp-for="SearchCanton" class="form-control_advanced form-control">
+                                    <option value="">Todos</option>
+                                    @foreach (var province in Model.Cantons.Keys)
+                                    {
+                                        <optgroup label="@province">
+                                            @foreach (var canton in Model.Cantons[province])
+                                            {
+                                                <option value="@canton">@canton</option>
+                                            }
+                                        </optgroup>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Category">Categoría</label>
+                                <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control_advanced form-control">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
+
+        function actualizarDropdownCantones() {
+            var selectedProvince = provinceDropdown.value;
+            cantonDropdown.innerHTML = '';
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Todos";
+            cantonDropdown.appendChild(defaultOption);
+
+            if (selectedProvince in cantonsByProvince) {
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
+        }
+
+        provinceDropdown.addEventListener("change", actualizarDropdownCantones);
+        actualizarDropdownCantones();
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var advancedSearch = document.getElementById("advancedSearch");
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var categoryDropdown = document.getElementById("Category");
+
+        var isProvinceSelected = provinceDropdown.value !== "";
+        var isCantonSelected = cantonDropdown.value !== "";
+        var isCategorySelected = categoryDropdown.value !== "";
+
+        if (isProvinceSelected || isCantonSelected || isCategorySelected) {
+            advancedSearch.classList.add("show");
+        } else {
+            advancedSearch.classList.remove("show");
+        }
+    });
+</script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("searchButton");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var cantonDropdown = document.getElementById("Canton");
+        var selectedCanton = cantonDropdown.value;
+
+        document.querySelector("form").addEventListener("submit", function () {
+            var formAction = this.getAttribute("action");
+            var updatedAction = formAction + "?SearchCanton=" + encodeURIComponent(selectedCanton);
+            this.setAttribute("action", updatedAction);
+        });
+    });
+
+    window.addEventListener('load', function () {
+        var cantonDropdown = document.getElementById("Canton");
+        var selectedCanton = getParameterByName("SearchCanton");
+
+        if (selectedCanton) {
+            cantonDropdown.value = selectedCanton;
+        }
+    });
+
+    function getParameterByName(name, url) {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+</script>
+
+<script>
+    // Manejar el evento onpageshow para recargar la página al volver
+    window.onpageshow = function (event) {
+        if (event.persisted || (typeof window.performance != "undefined" && window.performance.navigation.type == 2)) {
+            location.reload();
+        }
+    };
+</script>
+
+<div class="container container-search index align-items-center">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="filtro-form filter-box bg-red">
+                <h4>Filtros</h4>
+                <div class="form-group">
+                    <h5>Ubicación</h5>
+                    @foreach (var province in Model.FilteredProvinces)
+                    {
+                        <div>
+                            <input type="checkbox" class="province-checkbox" value="@province"> @province
+                        </div>
+                        <div id="cantones-@province" class="cantones-list" style="display: none; padding-left: 20px;">
+                            @foreach (var canton in Model.Cantons[province])
+                            {
+                                if (Model.FilteredCantons.Contains(canton))
+                                {
+                                    <div>
+                                        <input type="checkbox" class="canton-checkbox province-@province" value="@canton"> @canton
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="form-group">
+                    <h5>Establecimiento</h5>
+                    @foreach (var store in Model.FilteredStores)
+                    {
+                        <div>
+                            <input type="checkbox" class="store-checkbox" value="@store"> @store
+                        </div>
+                    }
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button type="button" class="add_reject d-flex justify-content-center align-items-center" id="clear-filters">Limpiar</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <table class="table" id="miTabla">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Record[0].Record.NameProduct)
+                        </th>
+                        <th class="precio">
+                            <a class="a-ordering" id="orderPrice">@Html.DisplayNameFor(model => model.Record[0].Record.Price)</a>
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Record[0].Record.NameStore)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Record[0].Store.NameProvince)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Record[0].Store.NameCanton)
+                        </th>
+                        <th class="date">
+                            <a class="a-ordering" id="orderDate">@Html.DisplayNameFor(model => model.Record[0].Record.RecordDate)</a>
+                        </th>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <th class="distance">
+                                <a class="a-ordering" id="orderDistance">@Html.DisplayNameFor(model => model.Record[0].Distance)</a>
+                            </th>
+
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var firstItem in Model.Record)
+                    {
+
+                        <tr data-store="@firstItem.Record.NameStore" data-province="@firstItem.Store.NameProvince" data-canton="@firstItem.Store.NameCanton">
+                            <td>
+                                <div class="table-item">
+                                    <a class="election" asp-page="./Details" asp-route-NameGenerator="@firstItem.Record.NameGenerator" asp-route-RecordDate="@firstItem.Record.RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => firstItem.Record.NameProduct)</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item precio">
+                                    ₡@Html.DisplayFor(modelItem => firstItem.Record.Price)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item">
+                                    @Html.DisplayFor(modelItem => firstItem.Record.NameStore)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item">
+                                    @Html.DisplayFor(modelItem => firstItem.Store.NameProvince)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item">
+                                    @Html.DisplayFor(modelItem => firstItem.Store.NameCanton)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-item fecha">
+                                    @Html.DisplayFor(modelItem => firstItem.Record.RecordDate)
+                                </div>
+                            </td>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <td>
+                                    <div class="table-item distancia">
+                                        @(firstItem.Distance != 0 ? string.Format("{0:0.0} km", firstItem.Distance) : "N/A")
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="paginationContainer">
+    <button id="pagination-button-previous" class="pagination-button-next-previous">Anterior</button>
+    <div id="pageButtonsContainer"></div>
+    <button id="pagination-button-next" class="pagination-button-next-previous">Siguiente</button>
+</div>
+
+<script src="~/js/PaginationAndFilter.js"> </script>

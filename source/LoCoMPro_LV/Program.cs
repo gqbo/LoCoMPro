@@ -1,15 +1,47 @@
+using Microsoft.EntityFrameworkCore;
+using LoCoMPro_LV.Data;
+using LoCoMPro_LV.Models;
+using LoCoMPro_LV.Utils;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<DatabaseUtils>();
+string connectionStringName = builder.Configuration.GetSection("ConnectionStrings").GetChildren().FirstOrDefault()?.Key;
+
+if (string.IsNullOrEmpty(connectionStringName))
+{
+    throw new InvalidOperationException("Connection string name not found in the configuration.");
+}
+
+builder.Services.AddDataProtection();
+
+builder.Services.AddDbContext<LoComproContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString(connectionStringName) ?? throw new InvalidOperationException($"Connection string '{connectionStringName}' not found.")));
+builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.Password.RequiredLength = 6;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredUniqueChars = 1;
+    options.Password.RequireDigit = true;
+}).AddEntityFrameworkStores<LoComproContext>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<LoComproContext>();
+    DbInitializer.Initialize(context);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

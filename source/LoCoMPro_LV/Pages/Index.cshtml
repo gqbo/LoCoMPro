@@ -1,10 +1,157 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<script>
+    window.onload = function () {
+        document.getElementsByName("SearchString")[0].value = '';
+        document.getElementsByName("SearchProvince")[0].value = '';
+        document.getElementsByName("SearchCanton")[0].value = '';
+        document.getElementsByName("SearchCategory")[0].value = '';
+    };
+</script>
+
+<div class="container container-index index align-items-center">
+    <div class="row">
+        <form method="get" asp-page="/Records/Index">
+            <div class=" buscar-form">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="searchString" for="SearchString">Nombre del producto</label>
+                        <div class="row d-flex justify-content-center align-items-center">
+                            <div class="col-10">
+                                <div class="input-group mb-3 loupe-text">
+                                    <input type="text" name="SearchString" id="SearchString" value="@Model.SearchString" class="form-control" oninput="toggleSearchButton()" />
+                                    <input class=" loupe-button btn btn-light" id="searchButton" type="submit" value="Buscar">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <input type="button" value="Opciones avanzadas" class="advanced_search btn btn-primary" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="advancedSearch" class="collapse">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Province">Provincia</label>
+                                <select id="Province" asp-for="SearchProvince" asp-items="Model.Provinces" class="form-control_advanced form-control">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Canton">Cantón</label>
+                                <select id="Canton" asp-for="SearchCanton" class="form-control_advanced form-control">
+                                    <option value="">Todos</option>
+                                    @foreach (var province in Model.Cantons.Keys)
+                                    {
+                                        <optgroup label="@province">
+                                            @foreach (var canton in Model.Cantons[province])
+                                            {
+                                                <option value="@canton">@canton</option>
+                                            }
+                                        </optgroup>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group_advanced">
+                                <label for="Category">Categoría</label>
+                                <select id="Category" asp-for="SearchCategory" asp-items="Model.Categories" class="form-control_advanced form-control">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("searchButton");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var cantonsByProvince = @Html.Raw(Json.Serialize(Model.Cantons));
+
+        function actualizarDropdownCantones() {
+            var selectedProvince = provinceDropdown.value;
+            cantonDropdown.innerHTML = '';
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Todos";
+            cantonDropdown.appendChild(defaultOption);
+            if (selectedProvince in cantonsByProvince) {
+                cantonsByProvince[selectedProvince].forEach(function (canton) {
+                    var option = document.createElement("option");
+                    option.value = canton;
+                    option.text = canton;
+                    cantonDropdown.appendChild(option);
+                });
+            }
+        }
+
+        provinceDropdown.addEventListener("change", actualizarDropdownCantones);
+        actualizarDropdownCantones();
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var advancedSearch = document.getElementById("advancedSearch");
+        var provinceDropdown = document.getElementById("Province");
+        var cantonDropdown = document.getElementById("Canton");
+        var categoryDropdown = document.getElementById("Category");
+
+        var isProvinceSelected = provinceDropdown.value !== "";
+        var isCantonSelected = cantonDropdown.value !== "";
+        var isCategorySelected = categoryDropdown.value !== "";
+
+        if (isProvinceSelected || isCantonSelected || isCategorySelected) {
+            advancedSearch.classList.add("show");
+        } else {
+            advancedSearch.classList.remove("show");
+        }
+    });
+</script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        toggleSearchButton();
+    });
+
+    function toggleSearchButton() {
+        const searchStringInput = document.getElementById("SearchString");
+        const searchButton = document.getElementById("searchButton");
+
+        if (searchStringInput.value.trim() !== "") {
+            searchButton.disabled = false;
+        } else {
+            searchButton.disabled = true;
+        }
+    }
+</script>
