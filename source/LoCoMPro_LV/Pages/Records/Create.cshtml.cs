@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using LoCoMPro_LV.Utils;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using LoCoMPro_LV.Data;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -17,16 +22,21 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro sección de registros.
         /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager;
+        /// <summary>
+        /// Se utiliza para acceder a las utilidades de la base de datos.
+        /// </summary>
+        private readonly DatabaseUtils _databaseUtils;
 
-        public CreateModel(LoCoMPro_LV.Data.LoComproContext context, SignInManager<ApplicationUser> signInManager)
+        public CreateModel(LoComproContext context, SignInManager<ApplicationUser> signInManager, DatabaseUtils databaseUtils)
         {
             _context = context;
             _signInManager = signInManager;
+            _databaseUtils = databaseUtils;
         }
 
         /// <summary>
@@ -103,6 +113,9 @@ namespace LoCoMPro_LV.Pages.Records
         [BindProperty(SupportsGet = true)]
         public string NameProvince { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public List<IFormFile> ImageFiles { get; set; }
+
         /// <summary>
         /// Método que carga los datos ingresados por el usuario a los registros y a las diferentes tablas de la base de datos. 
         /// Realiza una serie de llamados que validan la consistencia de los datos que se desean añadir en la base de datos.
@@ -112,23 +125,51 @@ namespace LoCoMPro_LV.Pages.Records
             await ProcessStore();
             await ProcessProduct();
             await ProcessAssociated();
-            Record.RecordDate = GetCurrentDateTime();
+            await ProcessRecord();
+            await ProcessImage();
 
-            _context.Records.Add(Record);
-            await _context.SaveChangesAsync();
+            var user = await _context.ModeratorUsers
+                .FirstOrDefaultAsync(m => m.UserName == Record.NameGenerator);
+
+            if (user == null)
+                CallSetModeratorProcedure(Record.NameGenerator);
+
             return RedirectToPage("../Index");
+        }
+
+        /// <summary>
+        /// Llama al procedimiento almacenado para designar a un usuario como moderador.
+        /// </summary>
+        /// <param name="username">El nombre de usuario del usuario que se asignara como moderador.</param>
+        private void CallSetModeratorProcedure(string username)
+        {
+            string connectionString = _databaseUtils.GetConnectionString();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("SetModerator", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@NameGenerator", username);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
         /// String de validación de datos para Category.
         /// </summary>
         [BindProperty]
+        [Required(ErrorMessage = "La categoría es obligatoria")]
         public string SelectCategory { get; set; }
 
         /// <summary>
         /// Permite almacenar los locales en una colección de datos.
         /// </summary>
-        private async Task LoadStoresAsync()
+        public async Task LoadStoresAsync()
         {
             var stores = await _context.Stores.ToListAsync();
             Stores = new HashSet<string>(stores.Select(store => store.NameStore));
@@ -137,7 +178,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Permite obtener y almacenarlos productos en una lista.
         /// </summary>
-        private async Task LoadProductsAsync()
+        public async Task LoadProductsAsync()
         {
             var products = await _context.Products.ToListAsync();
             Product = products.Select(prod => prod.NameProduct).ToList();
@@ -146,7 +187,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Permite obtener y almacenar las categorías en una lista.
         /// </summary>
-        private async Task LoadCategoriesAsync()
+        public async Task LoadCategoriesAsync()
         {
             var categories = await _context.Categories.OrderBy(c => c.NameCategory).ToListAsync();
             Categories = new SelectList(categories, "NameCategory", "NameCategory");
@@ -278,6 +319,50 @@ namespace LoCoMPro_LV.Pages.Records
         {
             string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             return DateTime.ParseExact(currentDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Almacena en el contexto de la base de datos el registro, con la información recolectada.
+        /// </summary>
+        private async Task ProcessRecord()
+        {
+            Record.RecordDate = GetCurrentDateTime();
+            _context.Records.Add(Record);
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Procesa los datos del archivo para almacenar las imágenes del registro dentro de la base de datos.
+        /// </summary>
+        private async Task ProcessImage()
+        {
+            foreach (var imageFile in ImageFiles)
+            {
+                var fileName = imageFile.FileName;
+                var data = await GetBytesFromImageAsync(imageFile);
+                var image = new Image
+                {
+                    NameGenerator = Record.NameGenerator,
+                    RecordDate = Record.RecordDate,
+                    NameImage = fileName,
+                    DataImage = data
+                };
+                _context.Images.Add(image);
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Obtiene la cantidad de bytes que contiene el archivo IFormFile
+        /// </summary>
+        /// <param name="imageFile"> Archivo relacionado a la imagen.</param>
+        private async Task<byte[]> GetBytesFromImageAsync(IFormFile imageFile)
+        {
+            using (var stream = new MemoryStream())
+            {
+                await imageFile.CopyToAsync(stream);
+                return stream.ToArray();
+            }
         }
     }
 }

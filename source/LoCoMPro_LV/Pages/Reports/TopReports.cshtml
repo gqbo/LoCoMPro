@@ -1,0 +1,112 @@
+﻿@page
+@model LoCoMPro_LV.Pages.Reports.TopReportsModel
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using LoCoMPro_LV.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "TopReports";
+}
+
+
+
+@{
+    if (SignInManager.IsSignedIn(User))
+    {
+        var AuthenticatedUserName = User.Identity.Name;
+        var user = await UserManager.FindByNameAsync(AuthenticatedUserName);
+
+        if (user != null && user.IsModerator)
+        {
+            @attribute [Authorize]
+            <div class="container container-search index align-items-center">
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <h1 class="title_add">Top Reportados</h1>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table-top table" id="miTabla">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.InfoTopReports[0].NameGenerator)
+                        </th>
+                        <th>
+                            <a class="a-ordering" id="orderRecordsCount">@Html.DisplayNameFor(model => model.InfoTopReports[0].RecordsCount)</a>
+                            <span class="arrow" id="RecordsCountArrow"></span>   
+                        </th>
+                        <th>
+                            <a class="a-ordering" id="orderReportsReceived">@Html.DisplayNameFor(model => model.InfoTopReports[0].ReportsReceived)</a>
+                            <span class="arrow" id="ReportsReceivedArrow"></span>   
+                        </th>
+                        <th>
+                            <a class="a-ordering" id="orderAcceptedReportsCount">@Html.DisplayNameFor(model => model.InfoTopReports[0].AcceptedReportsCount)</a>
+                            <span class="arrow" id="AcceptedReportsCountArrow"></span>
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.InfoTopReports[0].UserRating)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var UserReported in Model.InfoTopReports)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => UserReported.NameGenerator)
+                        </td>
+                        <td>
+                            <div class="table-item recordsCount">
+                                @Html.DisplayFor(modelItem => UserReported.RecordsCount)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-item reportsReceived">
+                                @Html.DisplayFor(modelItem => UserReported.ReportsReceived)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-item acceptedReportsCount">
+                                @Html.DisplayFor(modelItem => UserReported.AcceptedReportsCount) ( @Html.DisplayFor(modelItem => UserReported.AcceptedReportsPercentage)% )
+                            </div>
+                
+                        </td>
+                        <td>
+                            <div class="ratings-container">
+                                <div class="ratings-wrapper">
+                                    <div class="ratings">
+                                            @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                            {
+                                            <span data-rating="@starNumber"
+                                                @(starNumber <= UserReported.UserRating ? "data-clicked" : "")>
+                                                <span>★</span>
+                                            </span>
+                                            }
+                                    </div>
+                                </div>
+                        
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div id="pagination" class="pagination">
+                <button id="previousPage" class="page-link">Anterior</button>
+                <button id="nextPage" class="page-link">Siguiente</button>
+            </div>
+
+            <script src="~/js/PaginationAndOrderingTopReports.js"> </script>
+        } else
+        {
+            var redirectUrl = "../Index";
+            var redirectResult = new RedirectResult(redirectUrl);
+            Response.Redirect(redirectResult.Url);
+        }
+    }
+}

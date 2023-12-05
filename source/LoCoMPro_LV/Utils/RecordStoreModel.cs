@@ -1,4 +1,5 @@
 ﻿using LoCoMPro_LV.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -10,6 +11,10 @@ namespace LoCoMPro_LV.Pages.Records
     {
         public Record Record { get; set; }
         public Store Store { get; set; }
+        public List<Image> Images { get; set; }
         public int AverageRating { get; set; }
+        [Display(Name = "Distancia")]
+        public double Distance { get; set; }
+        public int CountRating { get; set; }
     }
 }

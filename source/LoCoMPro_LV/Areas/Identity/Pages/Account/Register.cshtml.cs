@@ -223,6 +223,10 @@ namespace LoCoMPro_LV.Areas.Identity.Pages.Account
             await _signInManager.SignInAsync(user, isPersistent: false);
             GeneratorUser generatorUser = new GeneratorUser { UserName = user.UserName, ApplicationUser = user };
             _context.GeneratorUsers.Add(generatorUser);
+
+            List new_list = new List { UserName = user.UserName, NameList = user.UserName };
+            _context.Lists.Add(new_list);
+
             await _context.SaveChangesAsync();
             return LocalRedirect(returnUrl);
         }

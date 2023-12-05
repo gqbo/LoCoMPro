@@ -6,53 +6,91 @@
     ViewData["Title"] = "Details";
 }
 
+
 <div class="container details-container">
     <div class="row d-flex justify-content-center align-items-center">
         <div class="card">
             <div class="bg">
                 <div class="info_detail">
-                    <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col-10">
-                            <h2>
-                                @Html.DisplayFor(model => model.Records.First().Record.NameProduct)
-                            </h2>
+                    <div class="row">
+                        <div class="col-4 details-image d-flex align-items-center justify-content-center">
+                            <div id="imageCarousel" class="carousel carousel-dark slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    @{
+                                        var contador = 0;
+                                    }
+                                    @foreach (var record in Model.Records)
+                                    {
+                                        foreach (var (image, index) in record.Images.Select((value, i) => (value, i)))
+                                        {
+                                            <div class="carousel-item @(index == 0 && record == Model.Records.First() ? "active" : "")">
+                                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.DataImage)" alt="@image.NameImage" class="d-block w-100" style=max-width: 100%; max-height: 100%;">
+                                            </div>
+                                            contador++;
+                                        }
+                                    }
+                                    @if (contador == 0)
+                                    {
+                                        <div class="sinImagen">
+                                            <img src="~/Images/NoImage.jpg">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-2 d-flex justify-content-end">
-                            <h4>
-                                ₡@Html.DisplayFor(model => model.Records.First().Record.Price)
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col">
-                            <h3>
-                                Usuario: @Html.DisplayFor(model => model.Records.First().Record.NameGenerator)
-                            </h3>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col">
-                            <h6>
-                                Tienda: @Html.DisplayFor(model => model.Records.First().Record.NameStore)
-                                <br>
-                                Provincia: @Html.DisplayFor(model => model.Records.First().Store.NameProvince)
-                                <br>
-                                Cantón: @Html.DisplayFor(model => model.Records.First().Store.NameCanton)
-                            </h6>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col">
-                            <h7>
-                                Descripción: @Html.DisplayFor(model => model.Records.First().Record.Description)
-                            </h7>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col d-flex justify-content-end">
-                            <h7>
-                                @Html.DisplayFor(model => model.Records.First().Record.RecordDate)
-                            </h7>
+                        <div class="col-8">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-10">
+                                    <h4>
+                                        @Html.DisplayFor(model => model.Records.First().Record.NameProduct)
+                                    </h4>
+                                </div>
+                                <div class="col-2 d-flex justify-content-end">
+                                    <h4>
+                                        ₡@Html.DisplayFor(model => model.Records.First().Record.Price)
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h4>
+                                        Usuario: @Html.DisplayFor(model => model.Records.First().Record.NameGenerator)
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h7>
+                                        Tienda: @Html.DisplayFor(model => model.Records.First().Store.NameStore)
+                                        <br>
+                                        Provincia: @Html.DisplayFor(model => model.Records.First().Store.NameProvince)
+                                        <br>
+                                        Cantón: @Html.DisplayFor(model => model.Records.First().Store.NameCanton)
+                                    </h7>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col">
+                                    <h7>
+                                        Descripción: @Html.DisplayFor(model => model.Records.First().Record.Description)
+                                    </h7>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col d-flex justify-content-end">
+                                    <h7>
+                                        @Html.DisplayFor(model => model.Records.First().Record.RecordDate)
+                                    </h7>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,8 +98,35 @@
             <div class="blob"></div>
         </div>
     </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form method="post" asp-page-handler="ManageList" class="ml-auto">
+            <div class="row d-flex justify-content-end align-items-center details-container">
+                <input type="hidden" id="nameProduct" value="@Model.Records.First().Record.NameProduct" name="NameProduct" asp-for="NameProduct">
+                <input type="hidden" id="nameGenerator" name="NameGenerator" asp-for="NameGenerator">
+                <input type="hidden" id="recordDate" name="RecordDate" asp-for="RecordDate">
+
+                @if (Model.InList == 1)
+                {
+                    <button type="submit" class="button_quit button">
+                        <input type="hidden" id="InList" value="4" name="InList" asp-for="InList">
+                        <span class="button__text">Quitar de la lista</span>
+                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="button">
+                        <input type="hidden" id="InList" value="3" name="InList" asp-for="InList">
+                        <span class="button__text">Agregar a lista</span>
+                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                    </button>
+                }
+            </div>
+        </form>
+    }
     <div class="row">
-        <table class="table-details table table-striped" id="miTabla">
+        <table class="table-details table" id="miTabla">
             <thead>
                 <tr>
                     <th>
@@ -84,7 +149,7 @@
                         Valoración
                     </th>
                     <th class="report">
-                        Reportar
+
                     </th>
                 </tr>
             </thead>
@@ -94,7 +159,13 @@
                     <tr>
                         <td>
                             <div class="table-item fecha">
-                                @Html.DisplayFor(modelItem => firstItem.Record.RecordDate)
+                                <button class="btn-toggle-images" data-toggle="collapse" data-target="#imagesCollapse@(firstItem.Record.RecordDate.ToString("yyyy-MM-dd-HH-mm-ss"))">@Html.DisplayFor(modelItem => firstItem.Record.RecordDate)</button>
+                                <div id="imagesCollapse@(firstItem.Record.RecordDate.ToString("yyyy-MM-dd-HH-mm-ss"))" class="collapse images-container">
+                                    @foreach (var image in firstItem.Images)
+                                    {
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.DataImage)" alt="@image.NameImage" class="d-block w-100" style="max-width: 100%; max-height: 100%;">
+                                    }
+                                </div>
                             </div>
                         </td>
                         <td>
@@ -113,15 +184,20 @@
                             </div>
                         </td>
                         <td>
-                            <div class="ratings-wrapper">
-                                <div class="ratings">
-                                    @for (var starNumber = 5; starNumber >= 1; starNumber--)
-                                    {
-                                        <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate" 
-                                        @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
-                                            <span>★</span>
-                                        </span>
-                                    }
+                            <div class="ratings-container">
+                                <div class="ratings-wrapper">
+                                    <div class="ratings">
+                                        @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                        {
+                                            <span data-rating="@starNumber" data-nameGenerator="@firstItem.Record.NameGenerator" data-RecordDate="@firstItem.Record.RecordDate"
+                                            @(starNumber <= firstItem.AverageRating ? "data-clicked" : "")>
+                                                <span>★</span>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="count-rating" data-id="@firstItem.Record.NameGenerator-@firstItem.Record.RecordDate">
+                                    ( @Html.DisplayFor(modelItem => firstItem.CountRating) )
                                 </div>
                             </div>
                         </td>
@@ -133,11 +209,7 @@
                     </tr>
                 }
             </tbody>
-
         </table>
-    </div>
-    <div>
-        <a href="javascript:history.go(-1);">Volver</a>
     </div>
 </div>
 
@@ -158,17 +230,18 @@
 
             stars.forEach(star => {
                 star.addEventListener('click', () => {
-
                     if (isAuthenticated == "True") {
-                      
+
                         var rating = star.getAttribute('data-rating');
                         var nameGenerator = star.getAttribute('data-nameGenerator');
                         var recordDate = star.getAttribute('data-RecordDate');
 
                         updateStarColors(stars, rating);
-                        sendPost(rating, nameGenerator, recordDate);
+                        sendPostRating(rating, nameGenerator, recordDate);
+
                     } else {
                         window.location.href = '../Identity/Account/Login';
+                        return false;
                     }
                 });
             });
@@ -197,7 +270,7 @@
         console.log(`Usuario calificador: ${userName}`);
     }
 
-    function sendPost(rating, nameGenerator, recordDate) {
+    function sendPostRating(rating, nameGenerator, recordDate) {
         $.ajax({
             type: 'POST',
             beforeSend: function (xhr) {
@@ -206,13 +279,15 @@
             },
             url: '/Records/Details?handler=SubmitRating',
             data: { rating: rating, nameGenerator: nameGenerator, recordDate: recordDate },
-            success: function (data) {
+            success: function (result) {
+                console.log("SI SIRVIO EL POST para el promedio de la valoración");
+                var elementId = nameGenerator + "-" + recordDate;
+                $(".count-rating[data-id='" + elementId + "']").text("( " + result.countRating + " )");
             },
-            error: function (error) {
+            error: function () {
             }
         });
     }
- 
     manageStarRatings();
 
 </script>
@@ -389,5 +464,11 @@
         mostrarFilas();
         generarPaginacion();
     });
-</script>
 
+    $(document).ready(function () {
+        $(".btn-toggle-images").click(function () {
+            var targetId = $(this).data("target");
+            $("#" + targetId).toggleClass("show");
+        });
+    });
+</script>

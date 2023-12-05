@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - LoCoMPro_LV</title>
+    <link rel="stylesheet" href="~/css/Image.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/pagination.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/stars.css" asp-append-version="true" />
@@ -12,11 +18,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Belleza&family=Roboto&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <script src="https://kit.fontawesome.com/088dbcc73c.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
@@ -44,17 +53,46 @@
         </div>
     </row>
     <row>
-        <footer class="border-top footer text-muted">
+        <footer class="border-top site-footer">
             <div class="container">
-                &copy; 2023 - LoCoMPro_LV
+                <div class="row">
+                    <div class="text-center col-sm-12 col-md-4">
+                        <h6>Sobre nosotros</h6>
+                        <p>Somos un equipo de desarrolladores llamado Velociraptors, exploradores apasionados de la innovación constante en el mundo del desarrollo.</p>
+                    </div>
+
+                    <div class="text-center col-sm-12 col-md-4">
+                        <h6>Contáctanos</h6>
+                        <p>Jurassic Park, Costa Rica</p>
+                        <p>velociraptors@gmail.com</p>
+                    </div>
+
+                    <div class="text-center col-md-4 col-sm-6 col-xs-12">
+                        <ul class="social-icons">
+                            <li class="fa-brands fa-facebook fa-2xxl"></li>
+                            <li class="fa-brands fa-instagram fa-2xxl"></li>
+                            <li class="fa-brands fa-x-twitter fa-2xxl"></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
             </div>
         </footer>
     </row>
-
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@* Creditos 
+    Derechos de autor - 2023 vinodjangid07 (Vinod)
+    Copyright - 2023 e-coders (E - Coders (Aasheesh Agarwal))
+    Copyright - 2023 aboalsim114 (sami abdulhalim)
+    Copyright - 2023 andrew-demchenk0
+    Copyright - 2023 andrew-demchenk0 (A)
+*@
