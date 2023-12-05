@@ -22,6 +22,7 @@
 .a-ordering {
     cursor: pointer !important;
     color: black !important;
+    text-decoration: underline !important;
 }
 
 /*Consulta*/

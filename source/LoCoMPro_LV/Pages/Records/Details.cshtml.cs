@@ -203,6 +203,35 @@ namespace LoCoMPro_LV.Pages.Records
                 _context.Valorations.Add(valoration);
             }
             await _context.SaveChangesAsync();
+
+            var user = await _context.ModeratorUsers
+                .FirstOrDefaultAsync(m => m.UserName == valoration.NameGenerator);
+
+            if (user == null)
+                CallSetModeratorProcedure(valoration.NameGenerator);
+        }
+
+        /// <summary>
+        /// Llama al procedimiento almacenado para designar a un usuario como moderador.
+        /// </summary>
+        /// <param name="username">El nombre de usuario del usuario que se asignara como moderador.</param>
+        private void CallSetModeratorProcedure(string username)
+        {
+
+            string connectionString = _databaseUtils.GetConnectionString();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("SetModerator", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@NameGenerator", username);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
