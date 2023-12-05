@@ -22,7 +22,7 @@ namespace functional_tests
         [Test]
         public void FilterCheckOption_Test()
         {
-            driver.Navigate().GoToUrl("https://localhost:5064/");
+            driver.Navigate().GoToUrl("http://localhost:5064/");
             driver.Manage().Window.Size = new System.Drawing.Size(968, 1079);
             driver.FindElement(By.Id("SearchString")).Click();
             driver.FindElement(By.Id("SearchString")).SendKeys("Apple");
@@ -39,7 +39,7 @@ namespace functional_tests
         [Test]
         public void ClearFiltersButton_Test()
         {
-            driver.Navigate().GoToUrl("https://localhost:5064/");
+            driver.Navigate().GoToUrl("http://localhost:5064/");
             driver.Manage().Window.Size = new System.Drawing.Size(968, 1079);
             driver.FindElement(By.Id("SearchString")).Click();
             driver.FindElement(By.Id("SearchString")).SendKeys("Apple");
