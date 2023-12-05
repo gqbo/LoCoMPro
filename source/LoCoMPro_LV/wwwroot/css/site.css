@@ -931,6 +931,13 @@ table {
     color: red;
 }
 
+.filter-box {
+    padding: 1rem !important;
+    border-radius: 20px !important;
+    border: 1px solid #000 !important;
+    background: white !important;
+}
+
 .container-anomalie-tittle,
 .container-anomalie-buttons {
     padding: 30px;

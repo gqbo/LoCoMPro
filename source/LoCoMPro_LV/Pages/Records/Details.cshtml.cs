@@ -75,6 +75,10 @@ namespace LoCoMPro_LV.Pages.Records
             {
                 var allRecords = GetCombinedRecordsAndStores(FirstRecord).ToList();
                 List<RecordStoreModel> currentRecords = allRecords.Where(record => !record.Record.Hide).ToList();
+
+                await LoadImagesForRecordsAsync(currentRecords);
+                SetAverageAndCountRatings(currentRecords);
+
                 SetAverageAndCountRatings(currentRecords);
                 Records = currentRecords;
             }
@@ -97,6 +101,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             return Page();
         }
+
 
         /// <summary>
         /// Método utilizado para el manejo de la solicitud POST que se realiza a la hora de valorar con estrellas
@@ -152,6 +157,21 @@ namespace LoCoMPro_LV.Pages.Records
                             Store = store,
                         };
             return query;
+        }
+
+        /// <summary>
+        /// Método utilizado para cargar las imagenes para una lista de objetos RecordStoreModel.
+        /// <param name="records"> Lista de objetos RecordStoreModel.
+        /// </summary>
+        private async Task LoadImagesForRecordsAsync(List<RecordStoreModel> records)
+        {
+            foreach (var recordStoreModel in records)
+            {
+                recordStoreModel.Images = await _context.Images
+                    .Where(img => img.NameGenerator == recordStoreModel.Record.NameGenerator
+                                && img.RecordDate == recordStoreModel.Record.RecordDate)
+                    .ToListAsync();
+            }
         }
 
         /// <summary>

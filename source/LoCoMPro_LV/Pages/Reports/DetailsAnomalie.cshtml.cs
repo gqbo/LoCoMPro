@@ -75,6 +75,13 @@ namespace LoCoMPro_LV.Pages.Reports
 
             temp.reporterValorations = new List<int>();
 
+            var images = await _context.Images
+            .Where(img => img.NameGenerator == temp.Record.NameGenerator
+                    && img.RecordDate == temp.Record.RecordDate)
+            .ToListAsync();
+
+            temp.Record.Images = images;
+
             recordStoreAnomalies = temp;
 
             return Page();

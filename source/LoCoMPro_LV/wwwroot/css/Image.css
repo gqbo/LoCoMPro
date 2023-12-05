@@ -1,0 +1,43 @@
+﻿.carousel-control-prev,
+.carousel-control-next {
+    border-width: 6px; /* Puedes ajustar el valor según tu preferencia */
+}
+
+.images-container {
+    display: flex;
+}
+
+    .images-container img {
+        margin-right: 10px; /* Puedes ajustar el margen según tus preferencias */
+    }
+
+.details-image {
+    border: 2px solid #ddd; /* Color del marco */
+    padding: 10px; /* Espacio interno del marco */
+    border-radius: 10px; /* Bordes redondeados del marco */
+}
+
+    .details-image img {
+        border: 1px solid #ddd; /* Color del borde de la imagen dentro del marco */
+        border-radius: 8px; /* Bordes redondeados de la imagen */
+    }
+
+#imageCarousel {
+    max-width: 300px; /* Establece el ancho máximo según tus necesidades */
+    max-height: 300px; /* Establece la altura máxima según tus necesidades */
+    margin: 0 auto; /* Centra horizontalmente */
+}
+
+.carousel-item img {
+    width: 250px; /* Establece el ancho fijo */
+    height: 250px; /* Establece la altura fija */
+    object-fit: cover; /* Ajusta la imagen para cubrir completamente la caja sin distorsionar */
+    margin: 0 auto;
+}
+
+.sinImagen img {
+    width: 250px; /* Establece el ancho fijo */
+    height: 250px; /* Establece la altura fija */
+    object-fit: cover; /* Ajusta la imagen para cubrir completamente la caja sin distorsionar */
+    margin: 0 auto;
+}
