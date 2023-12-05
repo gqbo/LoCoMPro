@@ -25,29 +25,26 @@ namespace functional_tests
         {
             driver.Quit();
         }
+
+        // Test Funcional: James Araya Rodríguez. Sprint 3
         [Test]
-        public void anomaliesDateRefused()
+        public void anomaliasDate()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
-            driver.Manage().Window.Size = new System.Drawing.Size(1552, 840);
+            driver.Manage().Window.Size = new System.Drawing.Size(1051, 806);
             driver.FindElement(By.LinkText("Iniciar Sesión")).Click();
             driver.FindElement(By.Id("Input_UserName")).Click();
-            driver.FindElement(By.Id("Input_UserName")).SendKeys("anne");
-            driver.FindElement(By.Id("Input_Password")).SendKeys("Anne1.");
+            driver.FindElement(By.Id("Input_UserName")).SendKeys("Admin");
+            driver.FindElement(By.Id("Input_Password")).SendKeys("Admin1.");
             driver.FindElement(By.CssSelector(".register_submit")).Click();
             driver.FindElement(By.Id("trigger1")).Click();
-            driver.FindElement(By.LinkText("Ver Anomalías")).Click();
-            driver.FindElement(By.Id("anomalies-date")).Click();
-            driver.FindElement(By.LinkText("Camisa original Real Madrid #5 Bellingham")).Click();
+            driver.FindElement(By.LinkText("Anomalías")).Click();
+            driver.FindElement(By.LinkText("Funko Pop")).Click();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(50000);
             driver.FindElement(By.CssSelector(".add_cancel")).Click();
             driver.FindElement(By.Id("anomalies-date")).Click();
-            var elements = driver.FindElements(By.LinkText("Camisa original Real Madrid #5 Bellingham"));
-            Assert.True(elements.Count > 0);
+            Assert.That(driver.FindElement(By.LinkText("Funko Pop")).Text, Is.EqualTo("Funko Pop"));
         }
-
-
-        
-    
     }
 }
 
