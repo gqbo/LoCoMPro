@@ -49,6 +49,11 @@ namespace functional_tests
             _driver.FindElement(By.LinkText("Mi lista de interés")).Click();
         }
 
+        public void DeleteProductinList() 
+        {
+            _driver.FindElement(By.CssSelector("tr:nth-child(1) .button_delete")).Click();
+        }
+
         public void FindStoresWithList()
         {
             _driver.FindElement(By.LinkText("Ubicar tiendas")).Click();
@@ -80,7 +85,7 @@ namespace functional_tests
         public void AddProductToList()
         {
             LoginPage loginPage = new LoginPage(driver);
-            loginPage.LoginUser("yordi", "Yordi1.");
+            loginPage.LoginUser("selenium", "Selenium1.");
 
             SearchResultsPage searchResultsPage = new SearchResultsPage(driver);
             searchResultsPage.SearchForProduct("Apple");
@@ -90,6 +95,43 @@ namespace functional_tests
             listPage.AddOrDeleteToList();
 
             Assert.IsTrue(driver.PageSource.Contains("Quitar de la lista"));
+        }
+
+        // Test Funcional:  Cristopher Hernandez Calderon. Sprint 3
+        [Test]
+        public void DeleteProductinList()
+        {
+            LoginPage loginPage = new LoginPage(driver);
+            loginPage.LoginUser("selenium", "Selenium1.");
+
+            SearchResultsPage searchResultsPage = new SearchResultsPage(driver);
+            searchResultsPage.SearchForProduct("Apple");
+            searchResultsPage.ClickOnProductLink("Apple Iphone 11 64gb");
+
+            ListPage listPage = new ListPage(driver);
+            listPage.AddOrDeleteToList();
+
+            Assert.IsTrue(driver.PageSource.Contains("Agregar a lista"));
+        }
+
+        // Test Funcional:  Cristopher Hernandez Calderon. Sprint 3
+        [Test]
+        public void DeleteProductListPage()
+        {
+            LoginPage loginPage = new LoginPage(driver);
+            loginPage.LoginUser("selenium", "Selenium1.");
+
+            SearchResultsPage searchResultsPage = new SearchResultsPage(driver);
+            searchResultsPage.SearchForProduct("Apple");
+            searchResultsPage.ClickOnProductLink("Apple Iphone 11 64gb");
+
+            ListPage listPage = new ListPage(driver);
+            listPage.AddOrDeleteToList();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(20000);
+            listPage.ClickMyListDropdown();
+            listPage.DeleteProductinList();
+
+            Assert.IsFalse(driver.PageSource.Contains("Apple Iphone 11 64gb"));
         }
 
         // Test Funcional:  Gabriel González Flores. Sprint 3
@@ -117,12 +159,14 @@ namespace functional_tests
             searchResultsPage.ClickOnProductLink("Apple Iphone 11 64gb");
 
             ListPage listPage = new ListPage(driver);
+            listPage.AddOrDeleteToList();
             listPage.ClickMyListDropdown();
             listPage.FindStoresWithList();
 
             Assert.IsTrue(driver.PageSource.Contains("Búsqueda de mi lista"));
 
             listPage.ClickMyListDropdown();
+            listPage.DeleteProductinList();
         }
     }
 }
