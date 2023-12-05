@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-8">
                             <div class="row d-flex justify-content-between align-items-center">
-                                <div class="col-10">
+                                <div class="col-10  d-flex justify-content-left">
                                     <h4>
                                         @Html.DisplayFor(model => model.recordStoreReports.Record.NameProduct)
                                     </h4>
@@ -59,10 +59,21 @@
                                 </div>
                             </div>
                             <div class="row d-flex justify-content-between align-items-center">
-                                <div class="col">
+                                <div class="col-10  d-flex justify-content-left">
                                     <h4>
                                         Usuario: @Html.DisplayFor(model => model.recordStoreReports.Record.NameGenerator)
                                     </h4>
+                                    <div class="ratings-wrapper-report ratings-wrapper">
+                                        <div class="ratings">
+                                            @for (var starNumber = 5; starNumber >= 1; starNumber--)
+                                            {
+                                                <span data-rating="@starNumber"
+                                                @(starNumber <= Model.recordStoreReports.generatorValoration ? "data-clicked" : "")>
+                                                    <span>★</span>
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row d-flex justify-content-between align-items-center">

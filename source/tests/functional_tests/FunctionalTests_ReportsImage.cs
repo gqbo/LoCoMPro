@@ -25,41 +25,32 @@ namespace functional_tests
         {
             driver.Quit();
         }
+
+        // Test Funcional: James Araya Rodríguez. Sprint 3
         [Test]
-        public void detailsRecordImage()
+        public void ImageExists()
         {
-            driver.Navigate().GoToUrl("https://localhost:5064/");
-            driver.Manage().Window.Size = new System.Drawing.Size(1552, 840);
-            driver.FindElement(By.LinkText("Iniciar Sesión")).Click();
-            driver.FindElement(By.Id("Input_UserName")).Click();
-            driver.FindElement(By.Id("Input_UserName")).SendKeys("anne");
-            driver.FindElement(By.Id("Input_Password")).Click();
-            driver.FindElement(By.Id("Input_Password")).SendKeys("Anne1.");
-            driver.FindElement(By.CssSelector(".register_submit")).Click();
+            driver.Navigate().GoToUrl("http://localhost:5064/");
+            driver.Manage().Window.Size = new System.Drawing.Size(1206, 824);
             driver.FindElement(By.Id("SearchString")).Click();
-            driver.FindElement(By.Id("SearchString")).SendKeys("ca");
+            driver.FindElement(By.Id("SearchString")).SendKeys("Fun");
             driver.FindElement(By.Id("searchButton")).Click();
-            driver.FindElement(By.LinkText("Calcomania")).Click();
+            driver.FindElement(By.LinkText("Funko Pop")).Click();
             var elements = driver.FindElements(By.CssSelector(".active > .d-block"));
             Assert.True(elements.Count > 0);
         }
 
+        // Test Funcional: James Araya Rodríguez. Sprint 3
         [Test]
-        public void detailsRecordImage2()
+        public void ImageNotExists()
         {
-            driver.Navigate().GoToUrl("https://localhost:5064/");
-            driver.Manage().Window.Size = new System.Drawing.Size(1552, 840);
-            driver.FindElement(By.LinkText("Iniciar Sesión")).Click();
-            driver.FindElement(By.Id("Input_UserName")).Click();
-            driver.FindElement(By.Id("Input_UserName")).SendKeys("anne");
-            driver.FindElement(By.Id("Input_Password")).SendKeys("Anne1.");
-            driver.FindElement(By.CssSelector(".register_submit")).Click();
+            driver.Navigate().GoToUrl("http://localhost:5064/");
+            driver.Manage().Window.Size = new System.Drawing.Size(1206, 824);
             driver.FindElement(By.Id("SearchString")).Click();
-            driver.FindElement(By.Id("SearchString")).SendKeys("ca");
+            driver.FindElement(By.Id("SearchString")).SendKeys("Col");
             driver.FindElement(By.Id("searchButton")).Click();
-            driver.FindElement(By.LinkText("Calcomania")).Click();
-            driver.FindElement(By.CssSelector("tr:nth-child(1) .btn-toggle-images")).Click();
-            var elements = driver.FindElements(By.CssSelector("#imagesCollapse2023-11-26-17-04-15 > .d-block"));
+            driver.FindElement(By.LinkText("Colgate Pasta Total 12 Clean Mint 75ml")).Click();
+            var elements = driver.FindElements(By.CssSelector(".sinImagen > img"));
             Assert.True(elements.Count > 0);
         }
     }

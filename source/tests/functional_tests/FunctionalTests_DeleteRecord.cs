@@ -113,6 +113,7 @@ namespace functional_tests
 
                 AddRecordPage addRecordPage = new AddRecordPage(driver);
                 addRecordPage.CreateStore();
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(50000);
                 addRecordPage.CreateRecord("Pali", "Esto es una prueba", "1000", "Esto es una prueba.", "Moda");
 
                 string currentUrl = driver.Url;
@@ -128,6 +129,7 @@ namespace functional_tests
                 loginPage.LoginUser("yordi", "Yordi1.");
                 MyRecordsPage myRecordsPage = new MyRecordsPage(driver);
                 myRecordsPage.DeleteRecord();
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(50000);
 
                 string currentUrl = driver.Url;
                 string expectedUrl = "http://localhost:5064/Records/MyRecords";

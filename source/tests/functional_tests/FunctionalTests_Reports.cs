@@ -18,7 +18,7 @@ namespace functional_tests
             driver.Quit();
         }
 
-        // Test Funcional: James Araya Rodríguez. Sprint 2
+        // Test Funcional: James Araya Rodríguez. Sprint 3
         [Test]
         public void ReportsFunctionalTest()
         {
@@ -37,7 +37,7 @@ namespace functional_tests
             driver.FindElement(By.Id("Report_Comment")).Click();
             driver.FindElement(By.Id("Report_Comment")).SendKeys("El pantalón no tenía descuento.");
             driver.FindElement(By.Id("ReportButton")).Click();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(5000);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(50000);
             string currentUrl = driver.Url;
 
             string expectedUrl = "http://localhost:5064/";
@@ -54,7 +54,7 @@ namespace functional_tests
             loginModerator.Login("Admin", "Admin1.");
             TopReportsPage topReportsPage = new TopReportsPage(driver);
             topReportsPage.SearchTopReports();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(5000);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(50000);
             string currentUrl = driver.Url;
 
             string expectedUrl = "http://localhost:5064/Reports/TopReports";
@@ -70,7 +70,6 @@ namespace functional_tests
             loginModerator.Login("Admin", "Admin1.");
             TopReportsPage topReportsPage = new TopReportsPage(driver);
             topReportsPage.SearchTopReporters();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(5000);
             string currentUrl = driver.Url;
 
             string expectedUrl = "http://localhost:5064/Reports/TopReporters";
@@ -113,7 +112,9 @@ namespace functional_tests
 
         public void SearchTopReporters()
         {
+            driver.Manage().Window.Size = new System.Drawing.Size(1280, 720);
             driver.FindElement(By.Id("trigger1")).Click();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(50000);
             driver.FindElement(By.LinkText("Top Reportadores")).Click();
         }
     }

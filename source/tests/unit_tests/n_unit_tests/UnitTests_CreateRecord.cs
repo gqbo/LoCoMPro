@@ -22,6 +22,12 @@ namespace n_unit_tests
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
 
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var databaseUtils = new DatabaseUtils(mockConfiguration.Object);
+
             var dbContext = new LoComproContext(options);
 
             var store = new Store
@@ -46,7 +52,7 @@ namespace n_unit_tests
             dbContext.Add(store2);
             dbContext.SaveChanges();
 
-            var model = new CreateModel(dbContext, signInManager: null);
+            var model = new CreateModel(dbContext, signInManager: null, databaseUtils);
 
             await model.LoadStoresAsync();
 
@@ -63,9 +69,15 @@ namespace n_unit_tests
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
 
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var databaseUtils = new DatabaseUtils(mockConfiguration.Object);
+
             var dbContext = new LoComproContext(options);
 
-            var model = new CreateModel(dbContext, signInManager: null);
+            var model = new CreateModel(dbContext, signInManager: null, databaseUtils);
 
             await model.LoadStoresAsync();
 
@@ -82,6 +94,12 @@ namespace n_unit_tests
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
 
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var databaseUtils = new DatabaseUtils(mockConfiguration.Object);
+
             var dbContext = new LoComproContext(options);
 
             var product = new Product
@@ -92,7 +110,7 @@ namespace n_unit_tests
             dbContext.Add(product);
             dbContext.SaveChanges();
 
-            var model = new CreateModel(dbContext, signInManager: null);
+            var model = new CreateModel(dbContext, signInManager: null, databaseUtils);
 
             await model.LoadProductsAsync();
 
@@ -110,9 +128,15 @@ namespace n_unit_tests
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
 
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var databaseUtils = new DatabaseUtils(mockConfiguration.Object);
+
             var dbContext = new LoComproContext(options);
 
-            var model = new CreateModel(dbContext, signInManager: null);
+            var model = new CreateModel(dbContext, signInManager: null, databaseUtils);
 
             await model.LoadProductsAsync();
 
@@ -129,9 +153,15 @@ namespace n_unit_tests
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
 
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var databaseUtils = new DatabaseUtils(mockConfiguration.Object);
+
             var dbContext = new LoComproContext(options);
 
-            var model = new CreateModel(dbContext, signInManager: null);
+            var model = new CreateModel(dbContext, signInManager: null, databaseUtils);
 
             await model.LoadCategoriesAsync();
 
@@ -148,13 +178,19 @@ namespace n_unit_tests
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
 
+            var mockConfiguration = new Mock<IConfiguration>();
+
+            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+
+            var databaseUtils = new DatabaseUtils(mockConfiguration.Object);
+
             var dbContext = new LoComproContext(options);
             Category category1 = new Category { NameCategory = "Carros", NameTopCategory = "Juguetes" };
             Category category2 = new Category { NameCategory = "Motos", NameTopCategory = "Juguetes" };
             dbContext.Categories.Add(category1);
             dbContext.Categories.Add(category2);
             dbContext.SaveChanges();
-            var model = new CreateModel(dbContext, signInManager: null);
+            var model = new CreateModel(dbContext, signInManager: null, databaseUtils);
 
             await model.LoadCategoriesAsync();
 
