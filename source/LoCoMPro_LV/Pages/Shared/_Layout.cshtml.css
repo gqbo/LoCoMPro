@@ -1,6 +1,5 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+﻿﻿ /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
-
 .navbar {
     padding: 4mm;
     background-color: #114358;
@@ -16,6 +15,7 @@ for details on configuring this project to bundle and minify static web assets. 
 .nav-link, .navbar-brand {
     color: #FFF !important;
 }
+
 !important
 
 .nav-link {
@@ -47,44 +47,93 @@ for details on configuring this project to bundle and minify static web assets. 
     transition-property: color;
 }
 
-.navbar_button:focus, .navbar_button:hover {
-    color: #fff;
-}
+    .navbar_button:focus, .navbar_button:hover {
+        color: #fff;
+    }
 
-.navbar_button:focus:after, .navbar_button:hover:after {
-    width: 100%;
-    left: 0%;
-}
+        .navbar_button:focus:after, .navbar_button:hover:after {
+            width: 100%;
+            left: 0%;
+        }
 
-.navbar_button:after {
-    content: "";
-    pointer-events: none;
-    bottom: -2px;
-    left: 50%;
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    background-color: #fff;
-    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
-    transition-duration: 400ms;
-    transition-property: width, left;
-}
+    .navbar_button:after {
+        content: "";
+        pointer-events: none;
+        bottom: -2px;
+        left: 50%;
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        background-color: #fff;
+        transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition-duration: 400ms;
+        transition-property: width, left;
+    }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #114358 !important;
+    white-space: nowrap;
+    line-height: 100px !important;
+}
+
+.footer-text {
+    margin-left: 20px;
+    color: white;
+}
+
+.footer-content {
+    font-size: 0.8rem !important;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.margin-title {
+    margin-top: 20px;
+}
+
+.main-body {
+    margin-bottom: 180px;
+}
+
+h8 {
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .site-footer {
     position: absolute;
@@ -122,18 +171,18 @@ button.accept-policy {
             text-decoration: none;
         }
 
-.site-footer .social-icons {
-}
-
-    .site-footer .social-icons a {
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        margin-left: 6px;
-        margin-right: 0;
-        border-radius: 100%;
-        background-color: #33353d
+    .site-footer .social-icons {
     }
+
+        .site-footer .social-icons a {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            margin-left: 6px;
+            margin-right: 0;
+            border-radius: 100%;
+            background-color: #33353d
+        }
 
 .copyright-text {
     margin: 0

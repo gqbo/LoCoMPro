@@ -66,6 +66,7 @@ namespace functional_tests
             driver.FindElement(By.CssSelector(".leaflet-marker-icon")).Click();
             driver.FindElement(By.Id("Store")).Click();
             driver.FindElement(By.Id("Store")).SendKeys("Pan Suavecito");
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(50000);
             driver.FindElement(By.CssSelector(".add_confirm")).Click();
             string currentUrl = driver.Url;
             string expectedUrl = "http://localhost:5064/Records/Create?latitude=9.9281&longitude=-84.0907&nameStore=Pan%20Suavecito&nameProvince=San%20Jos%C3%A9&nameCanton=San%20Jos%C3%A9";
