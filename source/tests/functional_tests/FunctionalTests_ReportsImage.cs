@@ -28,7 +28,7 @@ namespace functional_tests
 
         // Test Funcional: James Araya Rodríguez. Sprint 3
         [Test]
-        public void vistaImagen()
+        public void ImageExists()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
             driver.Manage().Window.Size = new System.Drawing.Size(1206, 824);
@@ -42,7 +42,7 @@ namespace functional_tests
 
         // Test Funcional: James Araya Rodríguez. Sprint 3
         [Test]
-        public void vistaSinImagen()
+        public void ImageNotExists()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
             driver.Manage().Window.Size = new System.Drawing.Size(1206, 824);

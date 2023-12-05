@@ -28,10 +28,10 @@ namespace functional_tests
 
         // Test Funcional: James Araya Rodríguez. Sprint 3
         [Test]
-        public void anomaliasDate()
+        public void ValidateAnomalie()
         {
             driver.Navigate().GoToUrl("http://localhost:5064/");
-            driver.Manage().Window.Size = new System.Drawing.Size(1051, 806);
+            driver.Manage().Window.Size = new System.Drawing.Size(1400, 900);
             driver.FindElement(By.LinkText("Iniciar Sesión")).Click();
             driver.FindElement(By.Id("Input_UserName")).Click();
             driver.FindElement(By.Id("Input_UserName")).SendKeys("Admin");
