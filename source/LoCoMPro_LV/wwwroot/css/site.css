@@ -978,7 +978,6 @@ table {
     width: 8% !important;
     padding: 10px !important;
 }
-}
 
 #imagePreviewContainer {
     display: flex;
@@ -1000,6 +999,13 @@ table {
 
 #fileCountError {
     color: red;
+}
+
+.filter-box {
+    padding: 1rem !important;
+    border-radius: 20px !important;
+    border: 1px solid #000 !important;
+    background: white !important;
 }
 
 .container-anomalie-tittle,

@@ -57,15 +57,33 @@ namespace LoCoMPro_LV.Pages.Reports
                                    join store in _context.Stores on new { record.NameStore, record.Latitude, record.Longitude }
                                                               equals new { store.NameStore, store.Latitude, store.Longitude }
                                    select new RecordStoreModel { Record = record, Store = store };
+           
 
             if (firstRecordQuery.Count() == 0)
             {
                 return NotFound();
             }
+            List<RecordStoreModel> currentRecords = firstRecordQuery.ToList();
+            await LoadImagesForRecordsAsync(currentRecords);
 
-            Records = await firstRecordQuery.ToListAsync();
+            Records = currentRecords;
 
             return Page();
+        }
+
+        /// <summary>
+        /// Método utilizado para cargar las imagenes para una lista de objetos RecordStoreModel.
+        /// <param name="records"> Lista de objetos RecordStoreModel.
+        /// </summary>
+        private async Task LoadImagesForRecordsAsync(List<RecordStoreModel> records)
+        {
+            foreach (var recordStoreModel in records)
+            {
+                recordStoreModel.Images = await _context.Images
+                    .Where(img => img.NameGenerator == recordStoreModel.Record.NameGenerator
+                                && img.RecordDate == recordStoreModel.Record.RecordDate)
+                    .ToListAsync();
+            }
         }
 
         /// <summary>

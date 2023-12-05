@@ -71,6 +71,26 @@ La carpeta para la documentación corresponde a `doc` que contiene un archivo Do
 
 [Documentación del Sprint 2](source/doc)
 
+### Sprint 3
+
+Con respecto al Sprint 3, se crearon diferentes carpetas donde se contempla todo lo relacionado al Sprint 3.
+
+La carpeta principal corresponde a `source` que contiene el proyecto con el código fuente del Sprint 3.
+
+[Proyecto de código fuente del Sprint 3](source/LoCoMPro_LV)
+
+La carpeta para las pruebas unitarias corresponde a `tests/unit_tests` que contiene el proyecto con las pruebas unitarias del Sprint 3.
+
+[Proyecto de pruebas unitarias del Sprint 3](source/tests/unit_tests)
+
+La carpeta para las pruebas funcionales corresponde a `tests/functional_tests` que contiene el proyecto con las pruebas funcionales realizadas durante el Sprint 3.
+
+[Proyecto de pruebas unitarias del Sprint 3](source/tests/functional_tests)
+
+La carpeta para la documentación corresponde a `doc` que contiene un archivo Doxyfile que autogenera la documentación Doxygen del código fuente para el Sprint 3.
+
+[Documentación del Sprint 3](source/doc)
+
 ## Manual de usuario de la aplicación
 
 Cuando se ingresa a la página principal de la aplicación web se muestran diferentes funcionalidades como buscar productos, registrarse e iniciar sesión.
@@ -78,20 +98,28 @@ Cuando se ingresa a la página principal de la aplicación web se muestran difer
 #### 1. Puedes buscar productos ingresando el nombre del producto de la siguiente manera:
 
 ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/89c77c10-7688-4961-aa76-7af93e5aeb80)
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/bfb54dba-373a-4a95-ab91-afbe4299db40)
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/829b1353-42d3-4414-9c84-17ac8518dcb5)
+
 
 #### 2. Puedes realizar búsquedas de productos utilizando las opciones avanzadas de la siguiente manera:
 
 ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/69997150/5456a2ca-b28c-46ab-8169-e6f3a521f7cf)
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/4603c7f4-8c86-4eac-ac9b-5d7a522e197a)
 
-#### 3. Cuando efectúas una búsqueda de un producto, ya sea utilizando únicamente su nombre o haciendo uso de las opciones avanzadas, tienes la posibilidad de acceder a los registros asociados a dicho producto simplemente presionando el nombre del mismo.
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/16e74055-2046-40b1-896e-1f37e63cf3b7)
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/aaf4ea93-c0ac-4afa-a4ea-96505e37e282)
+#### 3. Cuando se encuentra en la vista del resultados de las búsquedas, es posible filtrar los resultados por ubicación o por establecimiento de la siguiente manera:
 
-Como se observa en la imagen en esta vista se pueden realizar valoraciones de un registro a la hora de presionar las estrellas. Por otro lado, se pueden realizar reportes a la hora de presionar el rectangulo rojo.
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/b68f6c0f-e3eb-4c87-8c0e-74bea2dd87ad)
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/d0c15287-1626-4fba-9a6a-6e92e87cf9cb)
+
+#### 4. Cuando efectúas una búsqueda de un producto, ya sea utilizando únicamente su nombre o haciendo uso de las opciones avanzadas, tienes la posibilidad de acceder a los registros asociados a dicho producto simplemente presionando el nombre del mismo.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/03f941c9-4d83-4940-aac3-5dd14550fb23)
+
+Como se observa en la imagen en esta vista se pueden realizar valoraciones de un registro a la hora de presionar las estrellas. A la vez es posible agregar el producto a una lista de interés presionando el botón `Agregar a la lista`. Por otro lado, se pueden realizar reportes a la hora de presionar el rectangulo rojo.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/c1afce84-f4c6-4e43-8137-b8b6c3458113)
 
 #### 4. Si deseas crear una cuenta en la aplicación web, puedes hacerlo presionando la opción "Registrarse" en la parte superior y completando los datos requeridos.
 
@@ -105,31 +133,66 @@ Como se observa en la imagen en esta vista se pueden realizar valoraciones de un
 
 #### 6. Una vez que un usuario inicia sesión, se habilita la funcionalidad de "Agregar Producto". Esto permite al usuario crear un registro de un producto existente o crear un producto completamente nuevo.
    
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/17a074d3-c1bb-430e-8186-2ef75a9a46d8)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/8ec3819f-421f-49f8-892a-9f5c0989cf88)
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/36dc1b86-f93e-4fa9-bffb-15eaba2fe934)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/65a4cbba-d1ca-48ee-9e50-f1fdcbba6c15)
 
-#### 7. Después de iniciar sesión, el usuario también tiene la opción de Mi Perfil en el que se dan a elegir 3 opciones distintas.
+#### 7. Después de iniciar sesión, el usuario también tiene la opción de Mi Perfil en el que se dan a elegir 4 opciones distintas.
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/927bffa8-06fc-4fe0-8bb3-59167b7b5e0e)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/d373aee1-fe96-46e4-a522-9533649c42e3)
 
 La opción 1 - Mis Aportes: Muestra todos los registros agregados por el usuario registrado.
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/cfe4dae0-430d-4572-aa51-fd362fcd5ad3)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/9d253469-2823-496e-9195-45d733599d99)
 
-La opción 2 - Gestionar Cuenta: Permite al usuario personalizar y controlar diversos aspectos de su perfil.
+La opción 2 - Mi lista de interés: Permite al usuario visualizar los productos de su lista de interés y realizar búsquedas en lote.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/ba038bb1-3582-4fc4-bd90-9b01c6f0ecc1)
+
+La opción 3 - Gestionar Cuenta: Permite al usuario personalizar y controlar diversos aspectos de su perfil.
 
 ![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/3edaac78-7e9b-495f-997c-d1aaf584f856)
 
-La opción 3 - Cerrar Sesión: Permite a un usuario finalizar la sesión activa en una plataforma.
+La opción 4 - Cerrar Sesión: Permite a un usuario finalizar la sesión activa en una plataforma.
 
-#### 8. Un usuario moderador tiene habilitada la opción de Ver Reportes, donde se muestra una tabla con todos los reportes realizados por diferentes usuarios.
+#### 8. Un usuario moderador tiene habilitada la opción Moderar, donde se comprenden 4 funcionalidades de moderación:
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/830d0500-5d50-46ff-b477-c66efd33623f)
+La opción 1 - Reportes: Muestra todos reportes relacionados a los registros creados por los usuarios.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/28fc547e-8aa9-48be-b6a6-4069e303db9f)
 
 Al presionar un reporte se muestra una pantalla con información del registro y usuario reportado. Además en la parte inferior se muestra el usuario que reporta y la razón del reporte con dos botones el de aceptar que indica que la razón del reporte es válida y el de recahazar que indicaría lo contrario.
 
-![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/94494689/7dde59a5-6071-4ccd-93b6-97cbf23b938e)
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/68618348-8656-4480-ac10-f10d00947ac5)
+
+
+La opción 2 - Top Reportados: Permite al moderador visualizar a los usuarios que más han sido reportados en sus registros.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/bc38afbc-e63f-4b2c-a0bf-d43241ad7a3e)
+
+La opción 3 - Top Reportadores: Permite al moderador visualizar a los usuarios que más reportes realizan.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/29df06b0-a0a2-451d-9495-8041ea1f02f7)
+
+La opción 4 - Anomalías: Permite al moderador visualizar las anomalías que se encuentren entre los registros, ya sea en la fecha de registro o bien en los precios.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/3b98697f-4f23-4dc6-83a7-be73f1822478)
+
+Al presionar el botón de `Buscar Anomalías en Fecha` se muestran los registros que posean anomalías en la fecha.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/68b4b673-4ff7-4df0-bf9f-67142e116a21)
+
+Si se presiona el título del registro, el moderador puede decidir si acepta o rechaza la anomalía.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/2d54916d-63fb-4ea4-b4f5-56f89e0b7f84)
+
+Al presionar el botón de `Buscar Anomalías en Precio` se muestran los registros que posean anomalías en el precio.
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/3219d4fe-a496-4f20-8b0c-a6e664665be7)
+
+Si se presiona el título del registro, el moderador puede decidir si acepta o rechaza la anomalía. 
+
+![image](https://github.com/gqbo/ci0128_23b_velociraptors/assets/102630255/bf1be3be-5c2a-4d41-9f39-c0dda76c7161)
 
 ## Manual técnico de la aplicación
 
