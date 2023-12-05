@@ -4,22 +4,300 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Details</h1>
-
-<div>
-    <h4>List</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.List.User)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.List.User.UserName)
-        </dd>
-    </dl>
+<div class="container container-search index align-items-center">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h2 class="title_add">Búsqueda de mi lista</h2>
+        </div>
+    </div>
+    <table class="table-list-results table" id="miTabla">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Results[0].Records[0].NameStore)</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Results[0].Store.NameCanton)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Results[0].Store.NameProvince)</th>
+                <th>
+                    <a class="a-ordering" id="orderCountProduct">Cantidad de productos</a>
+                    <span class="arrow" id="countProductArrow"></span>
+                </th>
+                <th>
+                    <div class="table-item precio">
+                        <a class="a-ordering" id="orderPrice">Precio total</a>
+                        <span class="arrow" id="priceArrow"></span>
+                    </div>
+                </th>
+                
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <th class="distance">
+                        <a class="a-ordering" id="orderDistance">Distancia</a>
+                        <span class="arrow" id="distanceArrow"></span>
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model.Results)
+            {
+                <tr>
+                    <td>
+                        <a class="election" asp-page="./ResultList" asp-route-NameGenerator="@result.Records[0].NameGenerator" asp-route-RecordDate="@result.Records[0].RecordDate.ToString("yyyy-MM-dd HH:mm:ss")">@Html.DisplayFor(modelItem => result.Store.NameStore)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => result.Store.NameCanton)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => result.Store.NameProvince)
+                    </td>
+                    <td>
+                        <div class="table-item cantProductos">
+                            @Html.DisplayFor(modelItem => result.productCount) (@Html.DisplayFor(modelItem => result.percentageInList)%)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="table-item precio">
+                            @Html.DisplayFor(modelItem => result.totalPrice)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="table-item distancia">
+                            @(result.Distance != 0 ? string.Format("{0:0.0} km", result.Distance) : "N/A")
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-page="./Index">Back to List</a>
+
+<div id="pagination" class="pagination">
+    <button id="previousPage" class="page-link">Anterior</button>
+    <button id="nextPage" class="page-link">Siguiente</button>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var tabla = document.getElementById("miTabla");
+        var tableBody = tabla.querySelector("tbody");
+        var pagination = document.getElementById("pagination");
+        var registrosPorPagina = 10;
+        var currentPage = 1;
+        var sortOrderPrice = "asc";
+        var sortOrderDistance = "asc";
+        var sortOrderCountProduct = "asc";
+        var currentSortColumn = null;
+
+        // Esta función se encarga de mostrar las filas de la tabla que deben estar visibles en la página actual.
+        // Filtra las filas según la página actual y oculta las demás.
+        function mostrarFilas() {
+            var filas = tableBody.querySelectorAll("tr");
+            var inicio = (currentPage - 1) * registrosPorPagina;
+            var fin = currentPage * registrosPorPagina;
+
+            filas.forEach(function (fila, index) {
+                if (index >= inicio && index < fin) {
+                    fila.style.display = "table-row";
+                } else {
+                    fila.style.display = "none";
+                }
+            });
+        }
+
+        // Esta función se encarga de ordenar la tabla por el precio de los productos en orden ascendente o descendente.
+        // Utiliza el valor de sortOrderPrice para determinar el orden y actualiza la tabla en consecuencia.
+        function ordenarTablaPorPrecio() {
+            var filas = Array.from(tableBody.querySelectorAll("tr"));
+
+            filas.sort(function (a, b) {
+                var valueA = a.querySelector(".precio").textContent.replace("₡", "").replace(/[.,]/g, "").trim();
+                var valueB = b.querySelector(".precio").textContent.replace("₡", "").replace(/[.,]/g, "").trim();
+
+                if (sortOrderPrice === "asc") {
+                    return parseFloat(valueA) - parseFloat(valueB);
+                } else {
+                    return parseFloat(valueB) - parseFloat(valueA);
+                }
+            });
+
+            filas.forEach(function (fila) {
+                tableBody.removeChild(fila);
+            });
+
+            filas.forEach(function (fila) {
+                tableBody.appendChild(fila);
+            });
+        }
+
+        function ordenarTablaPorDistancia() {
+            var filas = Array.from(tableBody.querySelectorAll("tr"));
+
+            filas.sort(function (a, b) {
+                var valueA = parseFloat(a.querySelector(".distancia").innerText.replace(' km', '')) || 0;
+                var valueB = parseFloat(b.querySelector(".distancia").innerText.replace(' km', '')) || 0;
+
+                if (sortOrderDistance === "asc") {
+                    return valueA - valueB;
+                } else {
+                    return valueB - valueA;
+                }
+            });
+
+            filas.forEach(function (fila) {
+                tableBody.removeChild(fila);
+            });
+
+            filas.forEach(function (fila) {
+                tableBody.appendChild(fila);
+            });
+        }
+
+        function ordenarTablaPorCantidadProductos() {
+            var filas = Array.from(tableBody.querySelectorAll("tr"));
+
+            filas.sort(function (a, b) {
+                var valueA = parseInt(a.querySelector(".cantProductos").innerText) || 0;
+                var valueB = parseInt(b.querySelector(".cantProductos").innerText) || 0;
+
+
+                if (sortOrderCountProduct === "asc") {
+                    return valueA - valueB;
+                } else {
+                    return valueB - valueA;
+                }
+            });
+
+            filas.forEach(function (fila) {
+                tableBody.removeChild(fila);
+            });
+
+            filas.forEach(function (fila) {
+                tableBody.appendChild(fila);
+            });
+        }
+
+        // Genera la paginación en la parte inferior de la tabla. Calcula el número de páginas y muestra los botones de
+        // navegación para ir a páginas anteriores y siguientes. Además, muestra un número limitado de botones de página alrededor de la página actual.
+        function generarPaginacion() {
+            var filas = tableBody.querySelectorAll("tr");
+            var totalRegistros = filas.length;
+            var totalPaginas = Math.ceil(totalRegistros / registrosPorPagina);
+            var paginaCercana = 2;
+
+            var html = "";
+
+            var inicioPaginacion = Math.max(1, currentPage - paginaCercana);
+            var finPaginacion = Math.min(totalPaginas, currentPage + paginaCercana);
+
+            if (currentPage > 1) {
+                html += '<button class="page-link" data-page="' + (currentPage - 1) + '">Anterior</button>';
+            }
+
+            if (currentPage > (paginaCercana + 1)) {
+                html += '<button class="page-link" data-page="1">1</button>';
+                if (currentPage > (paginaCercana + 2)) {
+                    html += '<span class="page-link">...</span>';
+                }
+            }
+
+            for (var i = inicioPaginacion; i <= finPaginacion; i++) {
+                var isCurrentPage = i === currentPage ? 'current-page' : '';
+                html += '<button class="page-link ' + isCurrentPage + '" data-page="' + i + '">' + i + '</button>';
+            }
+
+            if (currentPage < (totalPaginas - paginaCercana)) {
+                if (currentPage < (totalPaginas - paginaCercana - 1)) {
+                    html += '<span class="page-link">...</span>';
+                }
+                html += '<button class="page-link" data-page="' + totalPaginas + '">' + totalPaginas + '</button>';
+            }
+
+            if (currentPage < totalPaginas) {
+                html += '<button class="page-link" data-page="' + (currentPage + 1) + '">Siguiente</button>';
+            }
+
+            pagination.innerHTML = html;
+
+            var pageButtons = pagination.querySelectorAll("button");
+
+            pageButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    currentPage = parseInt(this.getAttribute("data-page"));
+                    if (currentSortColumn === "precio") {
+                        ordenarTablaPorPrecio();
+                    } else if (currentSortColumn === "distancia") {
+                        ordenarTablaPorDistancia();
+                    }
+                    mostrarFilas();
+                    generarPaginacion();
+                });
+            });
+        }
+
+        var orderPriceLink = document.getElementById("orderPrice");
+        orderPriceLink.addEventListener("click", function () {
+            if (sortOrderPrice === "asc") {
+                sortOrderPrice = "desc";
+                document.getElementById("priceArrow").innerHTML = " &#129095;";
+                document.getElementById("distanceArrow").innerHTML = "";
+                document.getElementById("countProductArrow").innerHTML = "";
+
+            } else {
+                sortOrderPrice = "asc";
+                document.getElementById("priceArrow").innerHTML = "&#129093;";
+                document.getElementById("distanceArrow").innerHTML = "";
+                document.getElementById("countProductArrow").innerHTML = "";
+
+            }
+            currentSortColumn = "precio";
+            ordenarTablaPorPrecio();
+            mostrarFilas();
+            generarPaginacion();
+        });
+
+        var orderDistanceLink = document.getElementById("orderDistance");
+        orderDistanceLink.addEventListener("click", function () {
+            if (sortOrderDistance === "asc") {
+                sortOrderDistance = "desc";
+                document.getElementById("distanceArrow").innerHTML = " &#129095;";
+                document.getElementById("priceArrow").innerHTML = "";
+                document.getElementById("countProductArrow").innerHTML = "";
+
+            } else {
+                sortOrderDistance = "asc";
+                document.getElementById("distanceArrow").innerHTML = "&#129093;";
+                document.getElementById("priceArrow").innerHTML = "";
+                document.getElementById("countProductArrow").innerHTML = "";
+
+            }
+            currentSortColumn = "distancia";
+            ordenarTablaPorDistancia();
+            mostrarFilas();
+            generarPaginacion();
+        });
+
+        var orderCountProductLink = document.getElementById("orderCountProduct");
+        orderCountProductLink.addEventListener("click", function () {
+            if (sortOrderCountProduct === "asc") {
+                sortOrderCountProduct = "desc";
+                document.getElementById("countProductArrow").innerHTML = " &#129095;";
+                document.getElementById("priceArrow").innerHTML = "";
+                document.getElementById("distanceArrow").innerHTML = "";
+            } else {
+                sortOrderCountProduct = "asc";
+                document.getElementById("countProductArrow").innerHTML = "&#129093;";
+                document.getElementById("priceArrow").innerHTML = "";
+                document.getElementById("distanceArrow").innerHTML = "";
+            }
+            currentSortColumn = "cantidadProductos";
+            ordenarTablaPorCantidadProductos();
+            mostrarFilas();
+            generarPaginacion();
+        });
+
+        mostrarFilas();
+        generarPaginacion();
+    });
+</script>

@@ -8,6 +8,9 @@ using System.Globalization;
 using LoCoMPro_LV.Utils;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using LoCoMPro_LV.Data;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace LoCoMPro_LV.Pages.Records
 {
@@ -19,16 +22,21 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro.
         /// </summary>
-        private readonly LoCoMPro_LV.Data.LoComproContext _context;
+        private readonly LoComproContext _context;
         /// <summary>
         /// Contexto de la base de datos de LoCoMPro sección de registros.
         /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager;
+        /// <summary>
+        /// Se utiliza para acceder a las utilidades de la base de datos.
+        /// </summary>
+        private readonly DatabaseUtils _databaseUtils;
 
-        public CreateModel(LoCoMPro_LV.Data.LoComproContext context, SignInManager<ApplicationUser> signInManager)
+        public CreateModel(LoComproContext context, SignInManager<ApplicationUser> signInManager, DatabaseUtils databaseUtils)
         {
             _context = context;
             _signInManager = signInManager;
+            _databaseUtils = databaseUtils;
         }
 
         /// <summary>
@@ -119,7 +127,36 @@ namespace LoCoMPro_LV.Pages.Records
             await ProcessAssociated();
             await ProcessRecord();
             await ProcessImage();
+
+            var user = await _context.ModeratorUsers
+                .FirstOrDefaultAsync(m => m.UserName == Record.NameGenerator);
+
+            if (user == null)
+                CallSetModeratorProcedure(Record.NameGenerator);
+
             return RedirectToPage("../Index");
+        }
+
+        /// <summary>
+        /// Llama al procedimiento almacenado para designar a un usuario como moderador.
+        /// </summary>
+        /// <param name="username">El nombre de usuario del usuario que se asignara como moderador.</param>
+        private void CallSetModeratorProcedure(string username)
+        {
+            string connectionString = _databaseUtils.GetConnectionString();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("SetModerator", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@NameGenerator", username);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
@@ -132,7 +169,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Permite almacenar los locales en una colección de datos.
         /// </summary>
-        private async Task LoadStoresAsync()
+        public async Task LoadStoresAsync()
         {
             var stores = await _context.Stores.ToListAsync();
             Stores = new HashSet<string>(stores.Select(store => store.NameStore));
@@ -141,7 +178,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Permite obtener y almacenarlos productos en una lista.
         /// </summary>
-        private async Task LoadProductsAsync()
+        public async Task LoadProductsAsync()
         {
             var products = await _context.Products.ToListAsync();
             Product = products.Select(prod => prod.NameProduct).ToList();
@@ -150,7 +187,7 @@ namespace LoCoMPro_LV.Pages.Records
         /// <summary>
         /// Permite obtener y almacenar las categorías en una lista.
         /// </summary>
-        private async Task LoadCategoriesAsync()
+        public async Task LoadCategoriesAsync()
         {
             var categories = await _context.Categories.OrderBy(c => c.NameCategory).ToListAsync();
             Categories = new SelectList(categories, "NameCategory", "NameCategory");

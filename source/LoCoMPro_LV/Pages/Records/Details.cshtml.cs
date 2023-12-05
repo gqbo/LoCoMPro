@@ -75,6 +75,10 @@ namespace LoCoMPro_LV.Pages.Records
             {
                 var allRecords = GetCombinedRecordsAndStores(FirstRecord).ToList();
                 List<RecordStoreModel> currentRecords = allRecords.Where(record => !record.Record.Hide).ToList();
+
+                await LoadImagesForRecordsAsync(currentRecords);
+                SetAverageAndCountRatings(currentRecords);
+
                 SetAverageAndCountRatings(currentRecords);
                 Records = currentRecords;
             }
@@ -97,6 +101,7 @@ namespace LoCoMPro_LV.Pages.Records
 
             return Page();
         }
+
 
         /// <summary>
         /// Método utilizado para el manejo de la solicitud POST que se realiza a la hora de valorar con estrellas
@@ -155,6 +160,21 @@ namespace LoCoMPro_LV.Pages.Records
         }
 
         /// <summary>
+        /// Método utilizado para cargar las imagenes para una lista de objetos RecordStoreModel.
+        /// <param name="records"> Lista de objetos RecordStoreModel.
+        /// </summary>
+        private async Task LoadImagesForRecordsAsync(List<RecordStoreModel> records)
+        {
+            foreach (var recordStoreModel in records)
+            {
+                recordStoreModel.Images = await _context.Images
+                    .Where(img => img.NameGenerator == recordStoreModel.Record.NameGenerator
+                                && img.RecordDate == recordStoreModel.Record.RecordDate)
+                    .ToListAsync();
+            }
+        }
+
+        /// <summary>
         /// Método utilizado para verificar si una valoración ya existe en la base de datos, con el objetivo de evitar crear una nueva tupla, 
         /// solo modificar la valoración de estrellas.
         /// <param name="valoration">Valoración utilizada para verificar si ya existe en la base de datos.</param>
@@ -183,6 +203,35 @@ namespace LoCoMPro_LV.Pages.Records
                 _context.Valorations.Add(valoration);
             }
             await _context.SaveChangesAsync();
+
+            var user = await _context.ModeratorUsers
+                .FirstOrDefaultAsync(m => m.UserName == valoration.NameGenerator);
+
+            if (user == null)
+                CallSetModeratorProcedure(valoration.NameGenerator);
+        }
+
+        /// <summary>
+        /// Llama al procedimiento almacenado para designar a un usuario como moderador.
+        /// </summary>
+        /// <param name="username">El nombre de usuario del usuario que se asignara como moderador.</param>
+        private void CallSetModeratorProcedure(string username)
+        {
+
+            string connectionString = _databaseUtils.GetConnectionString();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("SetModerator", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@NameGenerator", username);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>

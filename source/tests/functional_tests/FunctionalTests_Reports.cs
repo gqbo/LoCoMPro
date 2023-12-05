@@ -61,6 +61,22 @@ namespace functional_tests
 
             Assert.That(currentUrl, Is.EqualTo(expectedUrl));
         }
+
+        // Test Functional: Gabriel González Flores. Sprint 3
+        [Test]
+        public void TopReportersFunctionalTest()
+        {
+            LoginModerator loginModerator = new LoginModerator(driver);
+            loginModerator.Login("Admin", "Admin1.");
+            TopReportsPage topReportsPage = new TopReportsPage(driver);
+            topReportsPage.SearchTopReporters();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(5000);
+            string currentUrl = driver.Url;
+
+            string expectedUrl = "http://localhost:5064/Reports/TopReporters";
+
+            Assert.That(currentUrl, Is.EqualTo(expectedUrl));
+        }
     }
     public class LoginModerator
     {
@@ -93,6 +109,12 @@ namespace functional_tests
         {
             driver.FindElement(By.Id("trigger1")).Click();
             driver.FindElement(By.LinkText("Top Reportados")).Click();
+        }
+
+        public void SearchTopReporters()
+        {
+            driver.FindElement(By.Id("trigger1")).Click();
+            driver.FindElement(By.LinkText("Top Reportadores")).Click();
         }
     }
 }

@@ -6,15 +6,16 @@ using Moq;
 using LoCoMPro_LV.Utils;
 using LoCoMPro_LV.Pages.Lists ;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace n_unit_tests
 {
     [TestFixture]
-    public class UnitTests_Get_List_Items
+    public class UnitTests_ResultList
     {
-        // Test by Cristopher Hernandez Calderon - C13632. Sprint 3
+        // Test by Gabriel González Flores - C03376. Sprint 3
         [Test]
-        public async Task GetListItems()
+        public async Task GetFirstRecordAsync_Valid()
         {
             var dbName = Guid.NewGuid().ToString();
             var options = new DbContextOptionsBuilder<LoComproContext>()
@@ -23,37 +24,129 @@ namespace n_unit_tests
 
             var dbContext = new LoComproContext(options);
 
-            var mockConfiguration = new Mock<IConfiguration>();
+            var record = CreateSampleRecord();
 
-            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
+            dbContext.Add(record);
+            dbContext.SaveChanges();
+
+            var model = new ResultListModel(dbContext, userManager: null);
+
+            model.NameGenerator = "anne";
+            model.RecordDate = DateTime.Parse("2022-01-18");
+
+            var actualRecord = await model.GetFirstRecordAsync();
+
+            Assert.IsNotNull(actualRecord);
+        }
+
+        // Test by Gabriel González Flores - C03376. Sprint 3
+        [Test]
+        public async Task GetFirstRecordAsync_Invalid()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
+
+            var model = new ResultListModel(dbContext, userManager: null);
+
+            var actualRecord = await model.GetFirstRecordAsync();
+
+            Assert.IsNull(actualRecord);
+        }
+
+        // Test by Gabriel González Flores - C03376. Sprint 3
+        [Test]
+        public async Task GetStoreForRecordAsync_Valid()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
 
             var record = CreateSampleRecord();
-            var list = CreateSampleList();
+            var store = CreateSampleStore();
+
+            dbContext.Add(store);
+            dbContext.Add(record);
+            dbContext.SaveChanges();
+
+            var model = new ResultListModel(dbContext, userManager: null);
+
+            var actualStore = await model.GetStoreForRecordAsync(record);
+
+            Assert.IsNotNull(actualStore);
+        }
+
+        // Test by Gabriel González Flores - C03376. Sprint 3
+        [Test]
+        public async Task GetStoreForRecordAsync_Invalid()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
+
+            var record = CreateSampleRecordWithNoMatchingStore();
+
+            dbContext.Add(record);
+            dbContext.SaveChanges();
+
+            var model = new ResultListModel(dbContext, userManager: null);
+
+            var actualStore = await model.GetStoreForRecordAsync(record);
+
+            Assert.IsNotNull(actualStore);
+        }
+
+        // Test by Gabriel González Flores - C03376. Sprint 3
+        [Test]
+        public async Task GetRecordsForStoreAsync_ValidRecord()
+        {
+            var dbName = Guid.NewGuid().ToString();
+            var options = new DbContextOptionsBuilder<LoComproContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            var dbContext = new LoComproContext(options);
+
+            var store = CreateSampleStore();
+            var record = CreateSampleRecord();
+            var record2 = CreateSampleRecord2();
             var listed = CreateSampleListed();
             var listed2 = CreateSampleListed2();
 
+            dbContext.Add(store);
             dbContext.Add(record);
-            dbContext.Add(list);
+            dbContext.Add(record2);
             dbContext.Add(listed);
             dbContext.Add(listed2);
-            dbContext.SaveChanges(); ;
+            dbContext.SaveChanges();
 
-            var model = new IndexModel(dbContext);
+            var model = new ResultListModel(dbContext, userManager: null);
 
-            var items = await model.GetListedItemsAsync("anne");
-
-            List<Listed> expected_items = new List<Listed>
+            var tempRecord = new Record
             {
-                listed,
-                listed2
+                NameStore = "Ishop",
+                Latitude = 9.9516,
+                Longitude = -84.0990
             };
 
-            CollectionAssert.AreEqual(expected_items, items);
+            var result = await model.GetRecordsForStoreAsync(record);
+
+            Assert.IsNotNull(result);
+            Assert.That(result.Count, Is.EqualTo(2));
         }
 
-        // Test by Cristopher Hernandez Calderon - C13632. Sprint 3
+        // Test by Gabriel González Flores - C03376. Sprint 3
         [Test]
-        public async Task GetListItem()
+        public async Task GetRecordsForStoreAsync_InvalidRecord()
         {
             var dbName = Guid.NewGuid().ToString();
             var options = new DbContextOptionsBuilder<LoComproContext>()
@@ -62,26 +155,32 @@ namespace n_unit_tests
 
             var dbContext = new LoComproContext(options);
 
-            var mockConfiguration = new Mock<IConfiguration>();
-
-            mockConfiguration.Setup(c => c["SomeSetting"]).Returns("TestSettingValue");
-
+            var store = CreateSampleStore();
             var record = CreateSampleRecord();
-            var list = CreateSampleList();
+            var record2 = CreateSampleRecord2();
             var listed = CreateSampleListed();
+            var listed2 = CreateSampleListed2();
 
+            dbContext.Add(store);
             dbContext.Add(record);
-            dbContext.Add(list);
+            dbContext.Add(record2);
             dbContext.Add(listed);
+            dbContext.Add(listed2);
             dbContext.SaveChanges();
 
-            var model = new IndexModel(dbContext);
+            var model = new ResultListModel(dbContext, userManager: null);
 
-            model.NameProduct = "Apple Iphone 11 64gb";
+            var tempRecord = new Record
+            {
+                NameStore = "NoMatch",
+                Latitude = 9.9516,
+                Longitude = -84.0990
+            };
 
-            var item = await model.GetListedItemAsync("anne");
+            var result = await model.GetRecordsForStoreAsync(tempRecord);
 
-            Assert.AreEqual(listed, item);
+            Assert.IsNotNull(result);
+            Assert.That(result.Count, Is.EqualTo(0));
         }
 
         private LoCoMPro_LV.Models.List CreateSampleList()
@@ -248,6 +347,74 @@ namespace n_unit_tests
                 NameProduct = "Apple Iphone 11 64gb"
             };
 
+            return new Record
+            {
+                NameGenerator = "anne",
+                GeneratorUser = generatorUser,
+                RecordDate = DateTime.Parse("2022-01-18"),
+                Price = 280000.5643,
+                NameStore = "Ishop",
+                Latitude = 9.9516,
+                Longitude = -84.0990,
+                NameProduct = "Apple Iphone 11 64gb",
+                Product = product
+            };
+        }
+
+        private Record CreateSampleRecord2()
+        {
+
+            var product = new Product
+            {
+                NameProduct = "Apple Iphone 13 64gb"
+            };
+
+            return new Record
+            {
+                NameGenerator = "anne",
+                RecordDate = DateTime.Parse("2022-01-20"),
+                Price = 29000,
+                NameStore = "Ishop",
+                Latitude = 9.9516,
+                Longitude = -84.0990,
+                NameProduct = "Apple Iphone 13 64gb",
+                Product = product
+            };
+        }
+
+        private Record CreateSampleRecordWithNoMatchingStore()
+        {
+            var user = new ApplicationUser
+            {
+                UserName = "anne",
+                FirstName = "Anne",
+                LastName = "Hathaway",
+                Latitude = 10.009,
+                Longitude = -84.1211,
+                NameProvince = "Heredia",
+                NameCanton = "Barva",
+                NormalizedUserName = "ANNE",
+                Email = "anne@gmail.com",
+                NormalizedEmail = "ANNE@GMAIL.COM",
+                EmailConfirmed = false,
+                PasswordHash = "AQAAAAIAAYagAAAAEJmsnmp+Rm7C6VMHu1s21eBFFButNJUpJ6E6yV5OnERn6c2Hv7KutoQrAaUPyez1lQ==",
+                SecurityStamp = "5NFRN2JU2Z7T7WPCJZ4LY4TA45YHLSXW",
+                ConcurrencyStamp = "cd77e5d0-740a-43f8-9ad4-3d8633ec6d01",
+                LockoutEnabled = true,
+                AccessFailedCount = 0
+            };
+
+            var generatorUser = new GeneratorUser
+            {
+                UserName = "anne",
+                ApplicationUser = user
+            };
+
+            var product = new Product
+            {
+                NameProduct = "Apple Iphone 11 64gb"
+            };
+
             var province = new Province
             {
                 NameProvince = "San José"
@@ -262,12 +429,12 @@ namespace n_unit_tests
 
             var store = new Store
             {
-                NameStore = "Ishop",
+                NameStore = "NoMatch",
                 Canton = canton,
                 NameProvince = "San José",
                 NameCanton = "Tibás",
-                Latitude = 9.9516,
-                Longitude = -84.0990
+                Latitude = 9.9513,
+                Longitude = -84.0991
             };
 
             return new Record
@@ -282,6 +449,31 @@ namespace n_unit_tests
                 NameProduct = "Apple Iphone 11 64gb",
                 Store = store,
                 Product = product
+            };
+        }
+
+        private Store CreateSampleStore()
+        {
+            var province = new Province
+            {
+                NameProvince = "San José"
+            };
+
+            var canton = new Canton
+            {
+                NameCanton = "Tibás",
+                Province = province,
+                NameProvince = "San José"
+            };
+
+            return new Store
+            {
+                NameStore = "Ishop",
+                Canton = canton,
+                NameProvince = "San José",
+                NameCanton = "Tibás",
+                Latitude = 9.9516,
+                Longitude = -84.0990
             };
         }
     }

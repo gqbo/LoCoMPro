@@ -30,7 +30,8 @@ namespace functional_tests
             driver.FindElement(By.CssSelector(".row:nth-child(3) > .col")).Click();
             driver.FindElement(By.Id("Input_Password")).SendKeys("Admin1.");
             driver.FindElement(By.CssSelector(".register_submit")).Click();
-            driver.FindElement(By.LinkText("Ver reportes")).Click();
+            driver.FindElement(By.Id("trigger1")).Click();
+            driver.FindElement(By.LinkText("Reportes")).Click();
             driver.FindElement(By.LinkText("Hamburguesa con queso")).Click();
             string currentUrl = driver.Url;
 

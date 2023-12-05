@@ -86,54 +86,6 @@ button.accept-policy {
   line-height: inherit;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background-color: #114358 !important;
-    white-space: nowrap;
-    line-height: 100px !important;
-}
-
-.footer-text {
-    margin-left: 20px;
-    color: white;
-}
-
-.footer-content {
-    font-size: 0.8rem !important;
-    word-wrap: break-word;
-    width: 100%;
-}
-
-.margin-title {
-    margin-top: 20px;
-}
-
-.main-body {
-    margin-bottom: 180px;
-}
-
-h8{
-    width: 100%;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .site-footer {
     position: absolute;
     bottom: 0;
