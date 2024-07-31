@@ -5,6 +5,12 @@ using LoCoMPro_LV.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "8080"));
+});
+
+
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<DatabaseUtils>();
 string connectionStringName = builder.Configuration.GetSection("ConnectionStrings").GetChildren().FirstOrDefault()?.Key;
