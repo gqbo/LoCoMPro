@@ -1,10 +1,12 @@
 name: Keep Container Alive
+
 on:
   schedule:
-    - cron: '*/4 * * * *'
+    - cron: '*/4 * * * *'  # Cada 4 minutos
+
 jobs:
   keepalive:
     runs-on: ubuntu-latest
     steps:
-      - name: HTTP Request
-        run: curl -I https://locompro.live
+      - name: Send Keep-Alive Request
+        run: curl -X GET https://locompro.live
