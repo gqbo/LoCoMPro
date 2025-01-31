@@ -3,6 +3,7 @@ name: Keep Container Alive
 on:
   schedule:
     - cron: '*/4 * * * *'  # Cada 4 minutos
+  workflow_dispatch:
 
 jobs:
   keepalive:
