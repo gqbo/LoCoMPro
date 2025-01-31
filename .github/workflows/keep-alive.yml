@@ -6,5 +6,5 @@ jobs:
   keepalive:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping App
+      - name: HTTP Request
         run: curl -I https://locompro.live
