@@ -1,0 +1,10 @@
+name: Keep Container Alive
+on:
+  schedule:
+    - cron: '*/4 * * * *'
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping App
+        run: curl -I https://locompro.live
