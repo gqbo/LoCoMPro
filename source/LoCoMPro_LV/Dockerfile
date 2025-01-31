@@ -10,7 +10,7 @@ RUN dotnet restore
 COPY . .
 
 # Publicar el proyecto específico usando el archivo .csproj
-RUN dotnet publish ./LoCoMPro_LV.csproj -c Release -o /app/PublishedApp
+RUN dotnet publish ./LoCoMPro_LV.csproj -c Release -o /app/PublishedApp --no-self-contained
 
 # Imagen base para el runtime
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
@@ -20,7 +20,7 @@ WORKDIR /webapp
 COPY --from=build /app/PublishedApp .
 
 # Exponer los puertos necesarios
-EXPOSE 5064
+EXPOSE 8080
 
 # Comando para iniciar la aplicación
 ENTRYPOINT ["dotnet", "LoCoMPro_LV.dll"]
