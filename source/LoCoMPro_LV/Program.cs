@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using LoCoMPro_LV.Data;
 using LoCoMPro_LV.Models;
 using LoCoMPro_LV.Utils;
+using System.Collections;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,17 +15,21 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<DatabaseUtils>();
-string connectionStringName = builder.Configuration.GetSection("ConnectionStrings").GetChildren().FirstOrDefault()?.Key;
 
-if (string.IsNullOrEmpty(connectionStringName))
+string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__LoCoMProContextRemote");
+
+Console.WriteLine(connectionString);
+
+if (string.IsNullOrEmpty(connectionString))
 {
-    throw new InvalidOperationException("Connection string name not found in the configuration.");
+    throw new InvalidOperationException("Connection string not found in environment variables.");
 }
+
 
 builder.Services.AddDataProtection();
 
 builder.Services.AddDbContext<LoComproContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString(connectionStringName) ?? throw new InvalidOperationException($"Connection string '{connectionStringName}' not found.")));
+    options.UseSqlServer(connectionString));
 builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
